@@ -1,0 +1,108 @@
+@model XemTruocNhapSinhVienViewModel
+@{
+    var phien = Model.Phien;
+    ViewData["Title"] = "Kiểm tra file sinh viên";
+    ViewData["Breadcrumb"] = new[] { new MucBreadcrumb("Nhập/Xuất dữ liệu", "/Admin/DuLieu") };
+}
+
+<div class="the-noi-dung mb-3">
+    <div class="d-flex flex-wrap align-items-center gap-3">
+        <div class="me-auto">
+            <div class="small text-secondary">File</div>
+            <div class="fw-semibold"><i class="bi bi-file-earmark-excel text-success me-1"></i>@phien.TenFile</div>
+        </div>
+        <span class="badge text-bg-light fs-6">@phien.Dong.Count dòng</span>
+        <span class="badge badge-ket-qua-hop-le fs-6"><i class="bi bi-check-circle-fill me-1"></i>@(phien.Dong.Count - phien.SoLoi) hợp lệ</span>
+        <span class="badge badge-ket-qua-loi fs-6"><i class="bi bi-x-circle-fill me-1"></i>@phien.SoLoi lỗi</span>
+    </div>
+
+    @if (phien.Dong.Count == 0)
+    {
+        <div class="alert alert-warning mt-3 mb-0">File không có dòng dữ liệu nào bên dưới dòng tiêu đề cột.</div>
+    }
+    else if (phien.SoLoi > 0)
+    {
+        <div class="alert alert-danger mt-3 mb-0">
+            <i class="bi bi-exclamation-octagon me-1"></i>
+            File có <strong>@phien.SoLoi dòng lỗi</strong> nên <strong>chưa ghi gì vào cơ sở dữ liệu</strong>.
+            Sửa các dòng tô đỏ trong file rồi tải lên lại.
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-success mt-3 mb-0">
+            <i class="bi bi-check2-circle me-1"></i>
+            Tất cả @phien.Dong.Count dòng hợp lệ. Bấm <strong>Xác nhận nhập</strong> để thêm sinh viên và tạo tài khoản.
+        </div>
+    }
+</div>
+
+@if (phien.Dong.Count > 0)
+{
+    <div class="the-noi-dung mb-3">
+        <div class="khung-bang table-responsive">
+            <table class="table bang-du-lieu">
+                <thead>
+                    <tr>
+                        <th class="text-center">Dòng</th>
+                        <th>MSSV</th>
+                        <th>Họ tên</th>
+                        <th>Ngày sinh</th>
+                        <th>Giới tính</th>
+                        <th>Email</th>
+                        <th>SĐT</th>
+                        <th>Mã lớp</th>
+                        <th>Kết quả kiểm tra</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var d in phien.Dong)
+                    {
+                        <tr class="@(d.HopLe ? "dong-hop-le" : "dong-bi-chan")">
+                            <td class="text-center">@d.SoDong</td>
+                            <td class="ma">@d.MaSV</td>
+                            <td>@d.HoTen</td>
+                            <td>@d.NgaySinh</td>
+                            <td>@d.GioiTinh</td>
+                            <td>@d.Email</td>
+                            <td>@d.SoDienThoai</td>
+                            <td class="ma">@d.MaLop</td>
+                            <td>
+                                @if (d.HopLe)
+                                {
+                                    <span class="text-success"><i class="bi bi-check-circle-fill me-1"></i>Hợp lệ</span>
+                                }
+                                else
+                                {
+                                    <ul class="danh-sach-loi">
+                                        @foreach (var loi in d.Loi)
+                                        {
+                                            <li>@loi</li>
+                                        }
+                                    </ul>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+<div class="the-noi-dung">
+    <div class="d-flex flex-wrap align-items-center gap-2">
+        <a href="/Admin/DuLieu" class="btn btn-light me-auto"><i class="bi bi-arrow-left me-1"></i>Quay lại</a>
+        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modal-nhap-lai"><i class="bi bi-upload me-1"></i>Tải file khác</button>
+        @if (phien.CoTheGhi)
+        {
+            <form method="post" asp-action="XacNhanSinhVien" class="d-inline">
+                <input type="hidden" name="ma" value="@Model.MaPhien" />
+                <button type="submit" class="btn btn-success"><i class="bi bi-check2-circle me-1"></i>Xác nhận nhập @phien.Dong.Count sinh viên</button>
+            </form>
+        }
+    </div>
+</div>
+
+<partial name="_ModalNhapExcel" model='new ModalNhapExcelViewModel("modal-nhap-lai", "Nhập danh sách sinh viên",
+    "/Admin/DuLieu/NhapSinhVien", "Kiểm tra lại toàn bộ file mới.", "/Admin/DuLieu/MauSinhVien")' />

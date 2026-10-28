@@ -32,6 +32,7 @@ DT2_LMS_NHOM6/                  ← gốc repo (CLAUDE.md, README.md, DT2_LMS_NH
 dotnet build DT2_LMS_NHOM6.sln
 dotnet run --project DT2_LMS_NHOM6                 # http://localhost:5207 ; DB trống → tự seed
 dotnet run --project DT2_LMS_NHOM6 -- --reset      # xóa DB eduscore, tạo lại validator/index/seed rồi chạy
+dotnet run --project DT2_LMS_NHOM6 -- --reset --tao-file-demo   # tạo lại docs/demo/*.xlsx rồi thoát
 mongosh eduscore --quiet --eval "db.sinhvien.countDocuments()"
 ```
 - Windows khóa file exe khi app đang chạy: **dừng app trước khi build** (`taskkill //IM DT2_LMS_NHOM6.exe //F` trong Git Bash, hoặc `Stop-Process -Name DT2_LMS_NHOM6` trong PowerShell).
@@ -75,7 +76,7 @@ mongosh eduscore --quiet --eval "db.sinhvien.countDocuments()"
 | 4 | CRUD Admin: lớp, sinh viên, giảng viên, môn học | ✅ A-02→A-08 + A9; lan truyền tên môn/GV có toast lệnh; chặn xóa đúng; phân trang SV 20; `_BangDiem` dùng chung |
 | 5 | Ghi danh ($push/$pull) + nhập điểm ($set+arrayFilters) | ✅ A-09 (xem trước từ `BangDiem`, bulkWrite $push), hủy $pull ở A-06; G-01/02/03 lưu từng dòng + lưu tất cả, quyền trong arrayFilters; toast lệnh |
 | 6 | Báo cáo học lực, tổng quan, cổng sinh viên | ✅ A-10/G-04 dùng chung `_BaoCaoHocLuc` (7 thẻ, biểu đồ, sắp xếp, Xem pipeline); A-01 donut + cột; A-03 thẻ xếp loại; S-01/02/03 MSSV từ claim |
-| 7 | Nhập/Xuất Excel | ⬜ |
+| 7 | Nhập/Xuất Excel | ✅ A-11 + nút ở A-03/04/06/10, G-03/04, S-02; nhập SV (insertMany + TK, hoàn tác) và điểm (bulkWrite $set+arrayFilters, ô trống giữ nguyên) qua xem trước; `--tao-file-demo` 4 file |
 | 8 | (Tùy chọn) Hiệu năng + API/Swagger | ⬜ |
 | 9 | Hoàn thiện, export DB, README, tài liệu | ⬜ |
 
@@ -119,3 +120,10 @@ mongosh eduscore --quiet --eval "db.sinhvien.countDocuments()"
 - A-10 phạm vi: `tichluy` hoặc `namHoc_hocKy`; chỉ nhận học kỳ có trong pipeline `HocKyCoDuLieu` và lớp có thật, giá trị lạ → mặc định. Phạm vi học kỳ: cột đổi tên "TC đạt", "Số môn F".
 - G-04 chỉ phạm vi tích lũy (G5). Bộ lọc luôn chứa maGV từ claim (`TheoGiangVien` / `TheoLopHocPhan`); `lhp` không thuộc GV → bỏ qua. Không có link hồ sơ SV (`UrlHoSoSV = null`).
 - Cổng SV: `SinhVienControllerBase.MaSV` từ claim; action không có tham số maSV. S-01 lọc môn học kỳ hiện tại từ kết quả `BangDiem`; biểu đồ GPA chỉ vẽ học kỳ đã có GPA. S-02 = `_BangDiem` (HienTongKetCuoi, không cột hủy).
+- GĐ7 Excel: `ExcelService` (static, chỉ ClosedXML – không DB, không tính điểm); `XuatExcelService` lấy dữ liệu bằng đúng pipeline của màn hình; `NhapExcelService` kiểm tra; `TepExcel(TenFile, NoiDung)`; lỗi mức file = `LoiFileExcelException` (thông báo thân thiện → toast).
+- Phiên nhập: `KhoPhienNhap` (IMemoryCache 30 phút, khóa Guid, gắn `User.TenDangNhap()`), không dùng TempData cookie (quá lớn). PRG: POST file → kiểm tra → lưu phiên → redirect GET `XemTruoc...?ma=` → POST `XacNhan...` → xóa phiên.
+- Bố cục file xuất: dòng 1 tiêu đề hệ thống, dòng 2 tên báo cáo, các dòng "Nhãn:" (A:B gộp) | giá trị Text (C:cuối gộp), 1 dòng trống, header. `GopO` chỉ ghi ô đầu rồi gộp (gán Value cho cả range sẽ lặp giá trị → đọc lại sai).
+- Đọc bảng điểm: phần đầu tra theo nhãn ("Mã môn", "Năm học", "Học kỳ", "Giảng viên" = "GV005 - ThS. ..." lấy phần trước " - "), header tìm theo ô MSSV/CC/GK/CK. Ô số đọc theo InvariantCulture rồi qua `DiemNhap.TryParse` (giống G-03). Lớp học phần lấy từ file, không từ trang; GV khác maGV → lỗi file. Chỉ `$set` thành phần có giá trị mới khác điểm cũ (`DiemService.TaoLenhSetDiem` dùng chung với lưu từng dòng).
+- Nhập SV: kiểm tra lại trùng MSSV/tên đăng nhập lúc xác nhận; insertMany sinhvien → `TaiKhoanService.TaoNhieuAsync` (insertMany taikhoan); lỗi → xóa theo `_id` vừa sinh. Toast in `MongoCommandFormatter.InsertMany` (document đầu + tổng).
+- Pipeline nhỏ `LopHocPhanToanTruong` (ô chọn xuất bảng điểm A-11, mã `INT301_2026-2027_1_GV005`). Tên file bảng điểm lớp học phần thêm mã GV: `BangDiem_INT301_2026-2027_HK1_GV005.xlsx`.
+- `--tao-file-demo`: chạy sau DbInitializer, cần dữ liệu nguyên bản (`--reset --tao-file-demo`). File có "Ngày xuất" nên mỗi lần tạo khác nhị phân.

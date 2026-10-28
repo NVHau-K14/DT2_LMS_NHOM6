@@ -13,11 +13,13 @@ public class KetQuaController : SinhVienControllerBase
 {
     private readonly DiemService _diem;
     private readonly BaoCaoService _baoCao;
+    private readonly XuatExcelService _xuat;
 
-    public KetQuaController(DiemService diem, BaoCaoService baoCao)
+    public KetQuaController(DiemService diem, BaoCaoService baoCao, XuatExcelService xuat)
     {
         _diem = diem;
         _baoCao = baoCao;
+        _xuat = xuat;
     }
 
     public async Task<IActionResult> Index()
@@ -30,5 +32,14 @@ public class KetQuaController : SinhVienControllerBase
         // HienTongKetCuoi = true (mặc định): dòng GPA tích lũy / TC tích lũy / xếp loại ở cuối trang;
         // QuayLaiHuyGhiDanh = null: SV không có cột hủy ghi danh
         return View(BangDiemViewModel.Tao(bangDiem.DuLieu, gpaHocKy.DuLieu, tongKet));
+    }
+
+    /// <summary>Xuất Excel bảng điểm cá nhân của chính SV đăng nhập (MSSV từ claim, không nhận tham số).</summary>
+    [HttpGet]
+    public async Task<IActionResult> XuatExcel()
+    {
+        var tep = await _xuat.BangDiemCaNhanAsync(MaSV);
+        if (tep == null) return NotFound();
+        return File(tep.NoiDung, ExcelService.LoaiNoiDung, tep.TenFile);
     }
 }

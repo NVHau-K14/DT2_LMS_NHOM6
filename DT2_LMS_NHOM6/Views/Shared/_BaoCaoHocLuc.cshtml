@@ -29,8 +29,11 @@
             <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modal-pipeline">
                 <i class="bi bi-code-slash me-1"></i>Xem pipeline
             </button>
-            @* Xuất Excel làm ở giai đoạn 7 *@
-            <button type="button" class="btn btn-sm btn-outline-secondary" disabled title="Chức năng Excel sẽ được bổ sung"><i class="bi bi-file-earmark-excel me-1"></i>Xuất Excel</button>
+            @if (Model.UrlXuatExcel != null)
+            {
+                @* Xuất theo đúng bộ lọc / phạm vi đang chọn *@
+                <a href="@Model.UrlXuatExcel" class="btn btn-sm btn-outline-secondary"><i class="bi bi-file-earmark-excel me-1"></i>Xuất Excel</a>
+            }
         </div>
     </div>
 

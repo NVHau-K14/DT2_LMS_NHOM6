@@ -43,6 +43,10 @@ public class DiemService
     public async Task<LopHocPhanRow?> LayLopHocPhanAsync(string maGV, string maMon, string namHoc, int hocKy)
         => (await LopHocPhanCuaGVAsync(maGV, namHoc, hocKy)).DuLieu.FirstOrDefault(l => l.MaMon == maMon);
 
+    /// <summary>Mọi lớp học phần toàn trường (Admin chọn lớp học phần để xuất bảng điểm ở A-11).</summary>
+    public async Task<List<LopHocPhanToanTruongRow>> LopHocPhanToanTruongAsync()
+        => (await PipelineRunner.ChayAsync<LopHocPhanToanTruongRow>(_db, ThongKeDanhMucPipeline.LopHocPhanToanTruong())).DuLieu;
+
     /// <summary>SV của một lớp học phần kèm điểm; maGV = null khi Admin xem.</summary>
     public Task<KetQuaPipeline<DongNhapDiem>> DanhSachNhapDiemAsync(string? maGV, string maMon, string namHoc, int hocKy)
         => PipelineRunner.ChayAsync<DongNhapDiem>(_db, DanhSachNhapDiemPipeline.Tao(maGV, maMon, namHoc, hocKy));
@@ -144,30 +148,81 @@ public class DiemService
             !DiemNhap.TryParse(dong.Ck, out var ck, out loi))
             return false;
 
+        lenh = TaoLenhSetDiem(maGV, dong.MaSV, maDK, new BsonDocument
+        {
+            { "cc", GiaTriDiem(cc) },
+            { "gk", GiaTriDiem(gk) },
+            { "ck", GiaTriDiem(ck) }
+        }, bayGio);
+        return true;
+    }
+
+    /// <summary>
+    /// Ghi điểm từ file Excel đã kiểm tra (G4, A7): bulkWrite các updateOne $set + arrayFilters.
+    /// Mỗi dòng chỉ $set các thành phần có giá trị mới (ô trống trong file = giữ nguyên điểm cũ).
+    /// maGV = null khi Admin nhập (bỏ điều kiện maGV, capNhatBoi "admin").
+    /// </summary>
+    public async Task<KetQuaGhi> GhiDiemTuExcelAsync(string? maGV, IReadOnlyList<DongGhiDiemExcel> cacDong)
+    {
+        if (cacDong.Count == 0)
+            return KetQuaGhi.Loi("File không có điểm nào khác với điểm hiện tại – không cần ghi.");
+
+        var bayGio = DateTime.UtcNow;
+        var cacLenh = cacDong.Select(d =>
+        {
+            var diemMoi = new BsonDocument();
+            foreach (var (thanhPhan, giaTri) in d.DiemMoi)
+                diemMoi.Add(thanhPhan, new BsonDouble(giaTri));
+            return TaoLenhSetDiem(maGV, d.MaSV, d.MaDK, diemMoi, bayGio);
+        }).ToList();
+
+        BulkWriteResult kq;
+        try
+        {
+            kq = await _db.Database.GetCollection<BsonDocument>(MongoContext.TenSinhVien)
+                .BulkWriteAsync(cacLenh.Select(l => l.TaoModel()), new BulkWriteOptions { IsOrdered = false });
+        }
+        catch (MongoBulkWriteException<BsonDocument> ex)
+        {
+            kq = ex.Result;
+        }
+        var chuoiLenh = MongoCommandFormatter.BulkWriteUpdateOne(MongoContext.TenSinhVien, cacLenh, false, kq);
+
+        var soLoi = cacLenh.Count - kq.ModifiedCount;
+        var thongBao = $"Đã nhập điểm từ Excel cho {kq.ModifiedCount}/{cacLenh.Count} sinh viên."
+                     + (soLoi > 0 ? $" {soLoi} dòng không có quyền hoặc không tìm thấy lần học." : "");
+        return kq.ModifiedCount > 0
+            ? KetQuaGhi.Thanh(thongBao, chuoiLenh)
+            : new KetQuaGhi { ThanhCong = false, ThongBao = thongBao, MongoCommand = chuoiLenh };
+    }
+
+    /// <summary>
+    /// Dựng một lệnh updateOne nhập điểm (thiết kế 4.8). <paramref name="diemMoi"/> gồm các thành phần cần $set,
+    /// ví dụ { cc: 9, gk: 8, ck: 8.5 } (lưu từng dòng) hoặc chỉ { ck: 7.5 } (nhập Excel, ô trống giữ nguyên).
+    /// </summary>
+    private static LenhUpdateOne TaoLenhSetDiem(string? maGV, string maSV, ObjectId maDK, BsonDocument diemMoi, DateTime bayGio)
+    {
         var dieuKien = new BsonDocument("maDK", maDK);
         if (maGV != null) dieuKien.Add("giangVien.maGV", maGV);
 
         var filter = new BsonDocument
         {
-            { "maSV", dong.MaSV },
+            { "maSV", maSV },
             { "monHoc", new BsonDocument("$elemMatch", dieuKien) }
         };
-        var update = new BsonDocument("$set", new BsonDocument
-        {
-            { "monHoc.$[e].diem.cc", GiaTriDiem(cc) },
-            { "monHoc.$[e].diem.gk", GiaTriDiem(gk) },
-            { "monHoc.$[e].diem.ck", GiaTriDiem(ck) },
-            { "monHoc.$[e].capNhatLuc", bayGio },
-            { "monHoc.$[e].capNhatBoi", maGV ?? HangSo.MaAdmin },
-            { "ngayCapNhat", bayGio }
-        });
+        var set = new BsonDocument();
+        foreach (var phanTu in diemMoi)
+            set.Add("monHoc.$[e].diem." + phanTu.Name, phanTu.Value);
+        set.Add("monHoc.$[e].capNhatLuc", bayGio);
+        set.Add("monHoc.$[e].capNhatBoi", maGV ?? HangSo.MaAdmin);
+        set.Add("ngayCapNhat", bayGio);
+
         // arrayFilters: { "e.maDK": ..., "e.giangVien.maGV": ... } – cùng điều kiện, viết theo biến e
         var locPhanTu = new BsonDocument();
         foreach (var phanTu in dieuKien)
             locPhanTu.Add("e." + phanTu.Name, phanTu.Value);
 
-        lenh = new LenhUpdateOne(filter, update, [locPhanTu]);
-        return true;
+        return new LenhUpdateOne(filter, new BsonDocument("$set", set), [locPhanTu]);
     }
 
     /// <summary>Điểm lưu kiểu double (validator cho phép double / int / null); ô trống → null.</summary>

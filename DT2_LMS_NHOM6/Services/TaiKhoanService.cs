@@ -58,6 +58,47 @@ public class TaiKhoanService
         });
     }
 
+    /// <summary>Có tài khoản nào dùng một trong các tên đăng nhập này không: { tenDangNhap: { $in: [...] } }</summary>
+    public async Task<HashSet<string>> TenDangNhapDaDungAsync(IEnumerable<string> dsTen)
+    {
+        var ds = await _db.TaiKhoan.Find(Builders<TaiKhoan>.Filter.In(tk => tk.TenDangNhap, dsTen))
+            .Project(tk => tk.TenDangNhap).ToListAsync();
+        return ds.ToHashSet();
+    }
+
+    /// <summary>
+    /// Tạo nhiều tài khoản một lần (nhập Excel): db.taikhoan.insertMany([...]).
+    /// Lỗi giữa chừng → xóa các tài khoản đã chèn (theo _id) rồi ném lại lỗi để bên gọi hoàn tác tiếp.
+    /// Trả về các document đã chèn (để in lệnh cho toast).
+    /// </summary>
+    public async Task<List<TaiKhoan>> TaoNhieuAsync(string vaiTro, IEnumerable<(string Ma, string HoTen, string MatKhau)> ds)
+    {
+        var bayGio = DateTime.UtcNow;
+        var cacTaiKhoan = ds.Select(t => new TaiKhoan
+        {
+            Id = ObjectId.GenerateNewId(),
+            TenDangNhap = t.Ma,
+            MatKhauHash = BCrypt.Net.BCrypt.HashPassword(t.MatKhau),
+            VaiTro = vaiTro,
+            MaThamChieu = t.Ma,
+            HoTen = t.HoTen,
+            TrangThai = HangSo.TrangThaiTaiKhoan.HoatDong,
+            LanDangNhapCuoi = null,
+            NgayTao = bayGio
+        }).ToList();
+        try
+        {
+            await _db.TaiKhoan.InsertManyAsync(cacTaiKhoan, new InsertManyOptions { IsOrdered = true });
+        }
+        catch (MongoException)
+        {
+            var dsId = cacTaiKhoan.Select(tk => tk.Id).ToList();
+            await _db.TaiKhoan.DeleteManyAsync(Builders<TaiKhoan>.Filter.In(tk => tk.Id, dsId));
+            throw;
+        }
+        return cacTaiKhoan;
+    }
+
     /// <summary>db.taikhoan.deleteOne({ vaiTro, maThamChieu: ma })</summary>
     public async Task<long> XoaAsync(string vaiTro, string ma)
     {

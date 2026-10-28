@@ -1,0 +1,11 @@
+@model XemTruocNhapDiemViewModel
+@{
+    ViewData["Title"] = $"Nhập điểm Excel {Model.Phien.LopHocPhan.MaMon}";
+    ViewData["Breadcrumb"] = new[]
+    {
+        new MucBreadcrumb("Lớp học phần", "/GiangVien/LopHocPhan"),
+        new MucBreadcrumb($"Nhập điểm {Model.Phien.LopHocPhan.MaMon}", Model.UrlQuayLai)
+    };
+}
+
+<partial name="_XemTruocNhapDiem" model="Model" />

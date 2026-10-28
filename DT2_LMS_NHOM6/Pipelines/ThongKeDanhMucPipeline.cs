@@ -3,7 +3,7 @@ using MongoDB.Bson;
 namespace DT2_LMS_NHOM6.Pipelines;
 
 /// <summary>
-/// Hai pipeline đếm nhỏ phục vụ màn hình danh mục (không tính điểm):
+/// Các pipeline đếm / liệt kê nhỏ phục vụ màn hình danh mục (không tính điểm):
 ///
 /// SiSoTheoLop – sĩ số mỗi lớp sinh hoạt (A-02). Sĩ số KHÔNG lưu trong lophoc mà luôn đếm từ sinhvien (mục 4).
 ///   1. $group – theo maLop, đếm số document.        [barem: $group]
@@ -20,6 +20,13 @@ namespace DT2_LMS_NHOM6.Pipelines;
 ///   2. $group  – theo (namHoc, hocKy).
 ///   3. $project – namHoc, hocKy.
 ///   4. $sort   – namHoc ↓, hocKy ↓.
+///
+/// LopHocPhanToanTruong – mọi lớp học phần (maMon, namHoc, hocKy, maGV) của toàn trường, cho Admin chọn
+/// lớp học phần cần xuất bảng điểm ở A-11 (GĐ7):
+///   1. $unwind – mỗi lần học một document.
+///   2. $group  – theo (maMon, namHoc, hocKy, giangVien.maGV): tên môn, tên GV, sĩ số.
+///   3. $project – trường phẳng.
+///   4. $sort   – học kỳ mới nhất trước, rồi mã môn, mã GV.
 /// </summary>
 public static class ThongKeDanhMucPipeline
 {
@@ -49,6 +56,29 @@ public static class ThongKeDanhMucPipeline
           { "$sort": { "namHoc": -1, "hocKy": -1 } }
         ]
         """;
+
+    public const string LopHocPhanToanTruongJson = """
+        [
+          { "$unwind": "$monHoc" },
+          { "$group": {
+              "_id": { "maMon": "$monHoc.maMon", "namHoc": "$monHoc.namHoc", "hocKy": "$monHoc.hocKy", "maGV": "$monHoc.giangVien.maGV" },
+              "tenMon": { "$first": "$monHoc.tenMon" },
+              "tenGV": { "$first": "$monHoc.giangVien.hoTen" },
+              "siSo": { "$sum": 1 } } },
+          { "$project": {
+              "_id": 0,
+              "maMon": "$_id.maMon",
+              "namHoc": "$_id.namHoc",
+              "hocKy": "$_id.hocKy",
+              "maGV": "$_id.maGV",
+              "tenMon": 1,
+              "tenGV": 1,
+              "siSo": 1 } },
+          { "$sort": { "namHoc": -1, "hocKy": -1, "maMon": 1, "maGV": 1 } }
+        ]
+        """;
+
+    public static BsonDocument[] LopHocPhanToanTruong() => PipelineJson.Tao(LopHocPhanToanTruongJson);
 
     public static BsonDocument[] SiSoTheoLop() => PipelineJson.Tao(SiSoTheoLopJson);
 

@@ -13,10 +13,12 @@ using Microsoft.Extensions.WebEncoders;
 //   --reset            xóa database rồi tạo lại validator, index, dữ liệu mẫu
 //   --kiem-thu-gpa     chạy pipeline cho 5 SV kiểm thử, so với bảng 7.5, ghi docs/kiem-thu-gpa.md rồi thoát
 //   --export-pipelines ghi mọi pipeline ra database/pipelines/*.json rồi thoát
-string[] coDongLenh = ["--reset", "--kiem-thu-gpa", "--export-pipelines"];
+//   --tao-file-demo    ghi các file Excel demo nhập/xuất vào docs/demo/ rồi thoát
+string[] coDongLenh = ["--reset", "--kiem-thu-gpa", "--export-pipelines", "--tao-file-demo"];
 var reset = args.Contains("--reset");
 var kiemThuGpa = args.Contains("--kiem-thu-gpa");
 var xuatPipeline = args.Contains("--export-pipelines");
+var taoFileDemo = args.Contains("--tao-file-demo");
 var builder = WebApplication.CreateBuilder(args.Where(a => !coDongLenh.Contains(a)).ToArray());
 
 // Culture vi-VN nhưng dấu thập phân là dấu chấm – áp dụng cho thread mặc định và mọi request
@@ -41,6 +43,12 @@ builder.Services.AddScoped<SinhVienService>();
 builder.Services.AddScoped<GiangVienService>();
 builder.Services.AddScoped<MonHocService>();
 builder.Services.AddScoped<GhiDanhService>();
+builder.Services.AddScoped<XuatExcelService>();
+builder.Services.AddScoped<NhapExcelService>();
+
+// Kết quả kiểm tra file Excel giữ tạm trong bộ nhớ giữa bước xem trước và bước xác nhận (thiết kế mục 6)
+builder.Services.AddMemoryCache();
+builder.Services.AddSingleton<KhoPhienNhap>();
 
 // Xác thực bằng cookie: hết hạn 8 giờ, gia hạn trượt khi còn hoạt động
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -78,6 +86,11 @@ if (xuatPipeline)
 {
     await XuatPipeline.ChayAsync(thuMucGoc);
     if (!kiemThuGpa) return;
+}
+if (taoFileDemo)
+{
+    Environment.ExitCode = await TaoFileDemo.ChayAsync(app.Services, thuMucGoc);
+    return;
 }
 if (kiemThuGpa)
 {

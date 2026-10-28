@@ -72,6 +72,25 @@ public static class MongoCommandFormatter
         return sb.ToString();
     }
 
+    /// <summary>
+    /// db.&lt;collection&gt;.insertMany([ {...}, ... ]) – chỉ in document ĐẦU TIÊN + tổng số document.
+    /// Ví dụ: db.sinhvien.insertMany([ { maSV: "2001250101", ... }, // ... tổng cộng 5 document ], { ordered: true })
+    /// </summary>
+    public static string InsertMany(string collection, IReadOnlyList<BsonDocument> cacDocument, bool ordered)
+    {
+        var sb = new StringBuilder();
+        sb.Append("db.").Append(collection).Append(".insertMany([\n");
+        if (cacDocument.Count > 0)
+        {
+            sb.Append("  ").Append(DinhDang(cacDocument[0]));
+            if (cacDocument.Count > 1)
+                sb.Append(",\n  // ... cùng dạng, tổng cộng ").Append(cacDocument.Count).Append(" document");
+        }
+        sb.Append("\n], { ordered: ").Append(ordered ? "true" : "false").Append(" })");
+        sb.Append("\n// insertedCount: ").Append(cacDocument.Count);
+        return sb.ToString();
+    }
+
     private static string LenhUpdate(string collection, string phuongThuc, BsonDocument filter, BsonDocument update,
         IEnumerable<BsonDocument>? arrayFilters, UpdateResult? ketQua)
     {

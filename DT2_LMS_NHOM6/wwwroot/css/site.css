@@ -1188,3 +1188,38 @@ a.the-so-link {
     .chu-thich-quy-tac li + li {
         margin-top: .25rem;
     }
+
+/* =========================================================================
+   GĐ7 – Nhập / Xuất Excel: trang xem trước (dòng hợp lệ xanh, lỗi đỏ, thay đổi vàng)
+   ========================================================================= */
+.dong-hop-le td { background: #F0FDF4 !important; }
+.dong-thay-doi td { background: #FEFCE8 !important; }
+
+.badge-ket-qua-hop-le { background: #DCFCE7; color: #166534; font-weight: 500; }
+.badge-ket-qua-loi { background: #FEE2E2; color: #B91C1C; font-weight: 500; }
+.badge-ket-qua-thay-doi { background: #FEF9C3; color: #854D0E; font-weight: 500; }
+
+.danh-sach-loi {
+    margin: 0;
+    padding-left: 1rem;
+    color: #B91C1C;
+    font-size: .875rem;
+}
+
+.diem-cu { color: #64748B; text-decoration: line-through; }
+.diem-moi { color: #166534; font-weight: 600; }
+.diem-giu { color: #94A3B8; }
+
+/* Ô màu nhỏ trong chú thích */
+.o-chu-thich {
+    display: inline-block;
+    width: .9rem;
+    height: .9rem;
+    border-radius: 3px;
+    border: 1px solid var(--es-vien);
+    vertical-align: -2px;
+    margin-right: .3rem;
+}
+
+    .o-chu-thich.dong-thay-doi { background: #FEFCE8; }
+    .o-chu-thich.dong-bi-chan { background: #FEF2F2; }

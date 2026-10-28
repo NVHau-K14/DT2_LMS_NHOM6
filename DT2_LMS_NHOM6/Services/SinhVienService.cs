@@ -1,5 +1,6 @@
 using System.Text.RegularExpressions;
 using DT2_LMS_NHOM6.Data;
+using DT2_LMS_NHOM6.Infrastructure;
 using DT2_LMS_NHOM6.Models;
 using DT2_LMS_NHOM6.Models.Documents;
 using DT2_LMS_NHOM6.ViewModels;
@@ -44,17 +45,7 @@ public class SinhVienService
     public async Task<(List<SinhVien> DanhSach, long TongSo)> DanhSachAsync(
         string? maLop, string? trangThai, string? q, int trang, int kichThuoc)
     {
-        var b = Builders<SinhVien>.Filter;
-        var filter = b.Empty;
-        if (!string.IsNullOrWhiteSpace(maLop)) filter &= b.Eq(sv => sv.MaLop, maLop);
-        if (!string.IsNullOrWhiteSpace(trangThai)) filter &= b.Eq(sv => sv.TrangThai, trangThai);
-        if (!string.IsNullOrWhiteSpace(q))
-        {
-            // Regex.Escape: ký tự đặc biệt người dùng gõ (. * ( ...) được hiểu theo nghĩa đen; "i" = không phân biệt hoa thường
-            var regex = new BsonRegularExpression(Regex.Escape(q.Trim()), "i");
-            filter &= b.Or(b.Regex(sv => sv.MaSV, regex), b.Regex(sv => sv.HoTen, regex));
-        }
-
+        var filter = TaoBoLoc(maLop, trangThai, q);
         var tongSo = await _db.SinhVien.CountDocumentsAsync(filter);
         var danhSach = await _db.SinhVien.Find(filter)
             .Project<SinhVien>(Builders<SinhVien>.Projection.Exclude(sv => sv.MonHoc))
@@ -111,6 +102,72 @@ public class SinhVienService
 
         return KetQuaGhi.Thanh($"Đã thêm sinh viên {maSV} – {sinhVien.HoTen}. Tài khoản: {maSV} / mật khẩu {matKhau}.");
     }
+
+    /// <summary>
+    /// Thêm nhiều SV từ file Excel đã kiểm tra (A7). Không có transaction nên ghi tuần tự:
+    ///   Bước 1: db.sinhvien.insertMany([...])   (monHoc: [])
+    ///   Bước 2: db.taikhoan.insertMany([...])   (mật khẩu = ngày sinh ddMMyyyy)
+    /// Bước 1 lỗi → xóa các SV đã chèn; bước 2 lỗi → TaiKhoanService tự xóa tài khoản đã chèn, ở đây xóa SV.
+    /// Xóa theo _id do chính lệnh này sinh ra nên không đụng tới hồ sơ có sẵn.
+    /// </summary>
+    public async Task<KetQuaGhi> ThemNhieuAsync(List<SinhVien> ds)
+    {
+        if (ds.Count == 0) return KetQuaGhi.Loi("Không có sinh viên nào để thêm.");
+
+        // Kiểm tra lại ngay trước khi ghi: trong lúc xem trước có thể đã có người thêm trùng MSSV
+        var dsMa = ds.Select(sv => sv.MaSV).ToList();
+        if (await _db.SinhVien.Find(Builders<SinhVien>.Filter.In(sv => sv.MaSV, dsMa)).AnyAsync()
+            || (await _taiKhoan.TenDangNhapDaDungAsync(dsMa)).Count > 0)
+            return KetQuaGhi.Loi("Một số MSSV vừa được thêm bởi thao tác khác. Vui lòng tải file lên lại để kiểm tra.");
+
+        var bayGio = DateTime.UtcNow;
+        foreach (var sv in ds)
+        {
+            sv.Id = ObjectId.GenerateNewId();
+            sv.NgayTao = bayGio;
+            sv.NgayCapNhat = bayGio;
+            sv.MonHoc = new();
+        }
+        var locTheoId = Builders<SinhVien>.Filter.In(sv => sv.Id, ds.Select(sv => sv.Id));
+
+        // Bước 1
+        try
+        {
+            await _db.SinhVien.InsertManyAsync(ds, new InsertManyOptions { IsOrdered = true });
+        }
+        catch (MongoException)
+        {
+            await _db.SinhVien.DeleteManyAsync(locTheoId);
+            return KetQuaGhi.Loi("Không ghi được danh sách sinh viên nên đã hủy toàn bộ thao tác. Vui lòng thử lại.");
+        }
+
+        // Bước 2
+        List<TaiKhoan> cacTaiKhoan;
+        try
+        {
+            cacTaiKhoan = await _taiKhoan.TaoNhieuAsync(HangSo.VaiTro.SinhVien,
+                ds.Select(sv => (sv.MaSV, sv.HoTen, TaiKhoanService.MatKhauMacDinhSinhVien(sv.NgaySinh))));
+        }
+        catch (MongoException)
+        {
+            await _db.SinhVien.DeleteManyAsync(locTheoId);
+            return KetQuaGhi.Loi("Không tạo được tài khoản cho sinh viên nên đã hủy toàn bộ thao tác nhập. Vui lòng thử lại.");
+        }
+
+        var lenh = MongoCommandFormatter.GhepLenh(
+        [
+            MongoCommandFormatter.InsertMany(MongoContext.TenSinhVien, ds.Select(sv => sv.ToBsonDocument()).ToList(), true),
+            MongoCommandFormatter.InsertMany(MongoContext.TenTaiKhoan, cacTaiKhoan.Select(tk => tk.ToBsonDocument()).ToList(), true)
+        ]);
+        return KetQuaGhi.Thanh($"Đã nhập {ds.Count} sinh viên và tạo {cacTaiKhoan.Count} tài khoản (tên đăng nhập = MSSV, mật khẩu = ngày sinh ddMMyyyy).", lenh);
+    }
+
+    /// <summary>Mọi SV khớp bộ lọc của A-04 (không phân trang, không kèm monHoc) – dùng cho Xuất Excel.</summary>
+    public Task<List<SinhVien>> DanhSachTatCaAsync(string? maLop, string? trangThai, string? q)
+        => _db.SinhVien.Find(TaoBoLoc(maLop, trangThai, q))
+            .Project<SinhVien>(Builders<SinhVien>.Projection.Exclude(sv => sv.MonHoc))
+            .SortBy(sv => sv.MaSV)
+            .ToListAsync();
 
     /// <summary>Sửa hồ sơ (MSSV không đổi). Đổi họ tên → cập nhật luôn taikhoan.hoTen.</summary>
     public async Task<KetQuaGhi> SuaAsync(string maSV, SinhVienFormViewModel form)
@@ -189,6 +246,22 @@ public class SinhVienService
         return KetQuaGhi.Thanh(trangThai == HangSo.TrangThaiTaiKhoan.Khoa
             ? $"Đã khóa tài khoản {maSV}."
             : $"Đã mở khóa tài khoản {maSV}.");
+    }
+
+    /// <summary>{ maLop, trangThai, $or: [{ maSV: /q/i }, { hoTen: /q/i }] } – điều kiện nào trống thì bỏ.</summary>
+    private static FilterDefinition<SinhVien> TaoBoLoc(string? maLop, string? trangThai, string? q)
+    {
+        var b = Builders<SinhVien>.Filter;
+        var filter = b.Empty;
+        if (!string.IsNullOrWhiteSpace(maLop)) filter &= b.Eq(sv => sv.MaLop, maLop);
+        if (!string.IsNullOrWhiteSpace(trangThai)) filter &= b.Eq(sv => sv.TrangThai, trangThai);
+        if (!string.IsNullOrWhiteSpace(q))
+        {
+            // Regex.Escape: ký tự đặc biệt người dùng gõ (. * ( ...) được hiểu theo nghĩa đen; "i" = không phân biệt hoa thường
+            var regex = new BsonRegularExpression(Regex.Escape(q.Trim()), "i");
+            filter &= b.Or(b.Regex(sv => sv.MaSV, regex), b.Regex(sv => sv.HoTen, regex));
+        }
+        return filter;
     }
 
     private async Task<KetQuaGhi?> KiemTraLopAsync(string maLop)

@@ -1,0 +1,101 @@
+@model DuLieuViewModel
+@{
+    ViewData["Title"] = "Nhập/Xuất dữ liệu";
+}
+
+<p class="text-secondary">
+    Nhập: hệ thống <strong>kiểm tra toàn bộ file trước</strong> và hiện kết quả từng dòng (hợp lệ / lỗi kèm lý do).
+    Có dòng lỗi thì không ghi gì; file sạch mới cho bấm <strong>Xác nhận</strong> để ghi hàng loạt.
+    Chỉ nhận file <code>.xlsx</code>, tối đa 5 MB.
+</p>
+
+<div class="row g-3">
+    @* ---------- Nhập danh sách sinh viên ---------- *@
+    <div class="col-lg-6">
+        <div class="the-noi-dung h-100" id="nhap-sinh-vien">
+            <h2 class="h5 mb-1"><i class="bi bi-person-lines-fill me-2 text-primary"></i>Nhập danh sách sinh viên</h2>
+            <p class="small text-secondary">
+                Cột: MSSV | Họ tên | Ngày sinh (dd/MM/yyyy) | Giới tính | Email | SĐT | Địa chỉ | Mã lớp.
+                Mỗi sinh viên được tạo kèm tài khoản (MSSV / ngày sinh ddMMyyyy) – ghi bằng <code>insertMany</code>.
+            </p>
+            <form method="post" asp-action="NhapSinhVien" enctype="multipart/form-data" class="d-flex flex-wrap gap-2">
+                <input type="file" name="tep" class="form-control flex-grow-1 w-auto" required aria-label="File danh sách sinh viên"
+                       accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+                <button type="submit" class="btn btn-primary"><i class="bi bi-search me-1"></i>Kiểm tra file</button>
+            </form>
+            <a asp-action="MauSinhVien" class="d-inline-block small mt-2"><i class="bi bi-file-earmark-arrow-down me-1"></i>Tải file mẫu</a>
+        </div>
+    </div>
+
+    @* ---------- Nhập bảng điểm ---------- *@
+    <div class="col-lg-6">
+        <div class="the-noi-dung h-100" id="nhap-bang-diem">
+            <h2 class="h5 mb-1"><i class="bi bi-journal-arrow-up me-2 text-primary"></i>Nhập bảng điểm</h2>
+            <p class="small text-secondary">
+                File bảng điểm của <strong>bất kỳ lớp học phần nào</strong> (lấy từ "Xuất bảng điểm lớp học phần" bên dưới).
+                Lớp học phần xác định từ phần đầu file. Ô trống = giữ nguyên điểm cũ.
+                Ghi bằng <code>bulkWrite</code> + <code>$set</code> + <code>arrayFilters</code>, <code>capNhatBoi: "admin"</code>.
+            </p>
+            <form method="post" asp-action="NhapDiem" enctype="multipart/form-data" class="d-flex flex-wrap gap-2">
+                <input type="file" name="tep" class="form-control flex-grow-1 w-auto" required aria-label="File bảng điểm"
+                       accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+                <button type="submit" class="btn btn-primary"><i class="bi bi-search me-1"></i>Kiểm tra file</button>
+            </form>
+        </div>
+    </div>
+
+    @* ---------- Xuất bảng điểm lớp học phần ---------- *@
+    <div class="col-lg-6">
+        <div class="the-noi-dung h-100">
+            <h2 class="h5 mb-1"><i class="bi bi-file-earmark-excel me-2 text-success"></i>Xuất bảng điểm lớp học phần</h2>
+            <p class="small text-secondary">Chọn môn – học kỳ – giảng viên (các lớp học phần đã có sinh viên ghi danh). File này cũng là file mẫu để nhập điểm.</p>
+            @if (Model.DsLopHocPhan.Count == 0)
+            {
+                <p class="text-secondary mb-0">Chưa có lớp học phần nào.</p>
+            }
+            else
+            {
+                <form method="get" asp-action="XuatBangDiem" class="d-flex flex-wrap gap-2">
+                    <select name="lhp" class="form-select flex-grow-1 w-auto" aria-label="Lớp học phần" required>
+                        @foreach (var nhom in Model.DsLopHocPhan.GroupBy(l => (l.NamHoc, l.HocKy)))
+                        {
+                            <optgroup label="@HienThi.HocKy(nhom.Key.NamHoc, nhom.Key.HocKy)">
+                                @foreach (var l in nhom)
+                                {
+                                    <option value="@l.Ma">@l.MaMon – @l.TenMon · @l.TenGV (@l.SiSo SV)</option>
+                                }
+                            </optgroup>
+                        }
+                    </select>
+                    <button type="submit" class="btn btn-success"><i class="bi bi-download me-1"></i>Xuất Excel</button>
+                </form>
+            }
+        </div>
+    </div>
+
+    @* ---------- Xuất báo cáo học lực ---------- *@
+    <div class="col-lg-6">
+        <div class="the-noi-dung h-100">
+            <h2 class="h5 mb-1"><i class="bi bi-bar-chart-line me-2 text-success"></i>Xuất báo cáo học lực</h2>
+            <p class="small text-secondary">Cùng số liệu với màn hình Báo cáo học lực (pipeline <code>BaoCaoHocLuc</code> + <code>ThongKeXepLoai</code>).</p>
+            <form method="get" action="/Admin/BaoCao/XuatExcel" class="d-flex flex-wrap gap-2">
+                <select name="maLop" class="form-select w-auto" aria-label="Lớp">
+                    <option value="">Tất cả lớp</option>
+                    @foreach (var lop in Model.DsLop)
+                    {
+                        <option value="@lop.MaLop">@lop.MaLop</option>
+                    }
+                </select>
+                <select name="phamVi" class="form-select w-auto" aria-label="Phạm vi">
+                    <option value="@BaoCaoAdminViewModel.PhamViTichLuy">Tích lũy</option>
+                    @foreach (var k in Model.DsHocKy)
+                    {
+                        <option value="@LopHocPhanViewModel.MaKy(k.NamHoc, k.HocKy)">@HienThi.HocKy(k.NamHoc, k.HocKy)</option>
+                    }
+                </select>
+                <button type="submit" class="btn btn-success"><i class="bi bi-download me-1"></i>Xuất Excel</button>
+            </form>
+            <a href="/Admin/SinhVien/XuatExcel" class="d-inline-block small mt-2"><i class="bi bi-people me-1"></i>Xuất danh sách toàn bộ sinh viên</a>
+        </div>
+    </div>
+</div>

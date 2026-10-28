@@ -21,8 +21,7 @@
                 <div class="nhom-nut">
                     <a asp-action="Sua" asp-route-id="@sv.MaSV" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil me-1"></i>Sửa</a>
                     <a href="/Admin/GhiDanh?maSV=@Uri.EscapeDataString(sv.MaSV)" class="btn btn-sm btn-primary"><i class="bi bi-person-plus me-1"></i>Ghi danh môn</a>
-                    @* Xuất bảng điểm làm ở giai đoạn 7 *@
-                    <button type="button" class="btn btn-sm btn-outline-secondary" disabled title="Chức năng Excel sẽ được bổ sung"><i class="bi bi-file-earmark-excel me-1"></i>Xuất bảng điểm</button>
+                    <a asp-action="XuatBangDiem" asp-route-id="@sv.MaSV" class="btn btn-sm btn-outline-secondary"><i class="bi bi-file-earmark-excel me-1"></i>Xuất bảng điểm</a>
                     <button type="button" class="btn btn-sm btn-outline-danger" data-xac-nhan-xoa
                             data-url="@Url.Action("Xoa", new { id = sv.MaSV, quayLai = urlHoSo })"
                             data-noi-dung="Xóa sinh viên @sv.MaSV – @sv.HoTen? Toàn bộ hồ sơ, điểm và tài khoản đăng nhập sẽ bị xóa.">

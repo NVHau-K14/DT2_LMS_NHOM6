@@ -30,3 +30,20 @@ public class SoLanHocMonRow
     /// <summary>Số SV khác nhau đã từng học môn này.</summary>
     [BsonElement("soSV")] public int SoSV { get; set; }
 }
+
+/// <summary>Một dòng của pipeline LopHocPhanToanTruong: một lớp học phần (maMon, namHoc, hocKy, maGV).</summary>
+[BsonIgnoreExtraElements]
+public class LopHocPhanToanTruongRow
+{
+    [BsonElement("maMon")] public string MaMon { get; set; } = "";
+    [BsonElement("tenMon")] public string TenMon { get; set; } = "";
+    [BsonElement("namHoc")] public string NamHoc { get; set; } = "";
+    [BsonElement("hocKy")] public int HocKy { get; set; }
+    [BsonElement("maGV")] public string MaGV { get; set; } = "";
+    /// <summary>Họ tên kèm học vị (ảnh chụp trong monHoc.giangVien.hoTen).</summary>
+    [BsonElement("tenGV")] public string TenGV { get; set; } = "";
+    [BsonElement("siSo")] public int SiSo { get; set; }
+
+    /// <summary>Mã dùng trong ô chọn / query string: "INT301_2026-2027_1_GV005".</summary>
+    public string Ma => $"{MaMon}_{NamHoc}_{HocKy}_{MaGV}";
+}

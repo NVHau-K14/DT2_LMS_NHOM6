@@ -4,6 +4,8 @@
     var phanTram = LopHocPhanViewModel.PhanTramTienDo(l);
     ViewData["Title"] = $"Nhập điểm {l.MaMon}";
     ViewData["Breadcrumb"] = new[] { new MucBreadcrumb("Lớp học phần", "/GiangVien/LopHocPhan") };
+    var thamSoLhp = $"maMon={Uri.EscapeDataString(l.MaMon)}&namHoc={Uri.EscapeDataString(l.NamHoc)}&hocKy={l.HocKy}";
+    var urlXuat = "/GiangVien/NhapDiem/XuatExcel?" + thamSoLhp;
 }
 
 @* ---------- Đầu trang: thông tin lớp học phần ---------- *@
@@ -47,10 +49,9 @@
             <span class="small text-secondary ms-2" id="so-dong-hien"></span>
         </div>
         <div class="nhom-nut">
-            @* Excel làm ở giai đoạn 7 *@
-            <button type="button" class="btn btn-outline-secondary btn-sm" disabled title="Chức năng Excel sẽ được bổ sung"><i class="bi bi-download me-1"></i>Tải mẫu</button>
-            <button type="button" class="btn btn-outline-secondary btn-sm" disabled title="Chức năng Excel sẽ được bổ sung"><i class="bi bi-file-earmark-excel me-1"></i>Xuất Excel</button>
-            <button type="button" class="btn btn-outline-secondary btn-sm" disabled title="Chức năng Excel sẽ được bổ sung"><i class="bi bi-upload me-1"></i>Nhập Excel</button>
+            @* File mẫu nhập điểm = bảng điểm xuất ra (danh sách lớp học phần kèm điểm đang có) *@
+            <a href="@urlXuat" class="btn btn-outline-secondary btn-sm" title="Danh sách lớp học phần kèm điểm hiện có – dùng làm file mẫu để nhập điểm"><i class="bi bi-file-earmark-excel me-1"></i>Tải mẫu / Xuất Excel</a>
+            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-nhap-diem"><i class="bi bi-upload me-1"></i>Nhập Excel</button>
             <button type="button" class="btn btn-primary btn-sm" id="nut-luu-tat-ca" disabled>
                 <i class="bi bi-save me-1"></i>Lưu tất cả (<span id="so-dong-sua">0</span>)
             </button>
@@ -121,6 +122,11 @@
         </div>
     }
 </div>
+
+<partial name="_ModalNhapExcel" model='new ModalNhapExcelViewModel("modal-nhap-diem", $"Nhập điểm Excel – {l.MaMon}",
+    "/GiangVien/NhapDiem/NhapExcel?" + thamSoLhp,
+    "Dùng file tải từ nút Tải mẫu / Xuất Excel, điền điểm rồi tải lên. Ô trống = giữ nguyên điểm cũ. Bạn sẽ xem trước điểm cũ → mới trước khi xác nhận.",
+    urlXuat)' />
 
 @section Scripts {
     <script src="~/js/nhap-diem.js" asp-append-version="true"></script>

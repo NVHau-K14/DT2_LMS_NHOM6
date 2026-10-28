@@ -2,7 +2,7 @@
 
 - **Ngày hoàn thành:** 28/10/2026
 - **Trạng thái:** ✅ Hoàn thành
-- **Commit:** `<mã commit>` (điền sau khi người dùng nghiệm thu và commit)
+- **Commit:** `b7ec3c7` (điền sau khi người dùng nghiệm thu và commit)
 
 ## 1. Đã làm gì
 - **A-10 `/Admin/BaoCao`:**

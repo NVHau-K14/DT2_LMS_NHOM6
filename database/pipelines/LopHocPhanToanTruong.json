@@ -1,0 +1,44 @@
+[
+  {
+    "$unwind": "$monHoc"
+  },
+  {
+    "$group": {
+      "_id": {
+        "maMon": "$monHoc.maMon",
+        "namHoc": "$monHoc.namHoc",
+        "hocKy": "$monHoc.hocKy",
+        "maGV": "$monHoc.giangVien.maGV"
+      },
+      "tenMon": {
+        "$first": "$monHoc.tenMon"
+      },
+      "tenGV": {
+        "$first": "$monHoc.giangVien.hoTen"
+      },
+      "siSo": {
+        "$sum": 1
+      }
+    }
+  },
+  {
+    "$project": {
+      "_id": 0,
+      "maMon": "$_id.maMon",
+      "namHoc": "$_id.namHoc",
+      "hocKy": "$_id.hocKy",
+      "maGV": "$_id.maGV",
+      "tenMon": 1,
+      "tenGV": 1,
+      "siSo": 1
+    }
+  },
+  {
+    "$sort": {
+      "namHoc": -1,
+      "hocKy": -1,
+      "maMon": 1,
+      "maGV": 1
+    }
+  }
+]

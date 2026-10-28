@@ -1,3 +1,5 @@
+using DT2_LMS_NHOM6.Infrastructure;
+using DT2_LMS_NHOM6.Models.Results;
 using DT2_LMS_NHOM6.Pipelines;
 using DT2_LMS_NHOM6.Services;
 using DT2_LMS_NHOM6.ViewModels;
@@ -16,25 +18,36 @@ public class BaoCaoController : GiangVienControllerBase
 {
     private readonly BaoCaoService _baoCao;
     private readonly DiemService _diem;
+    private readonly XuatExcelService _xuat;
 
-    public BaoCaoController(BaoCaoService baoCao, DiemService diem)
+    public BaoCaoController(BaoCaoService baoCao, DiemService diem, XuatExcelService xuat)
     {
         _baoCao = baoCao;
         _diem = diem;
+        _xuat = xuat;
+    }
+
+    /// <summary>
+    /// Bộ lọc SV luôn chứa maGV từ claim; lhp không thuộc GV → bỏ qua (mọi lớp học phần).
+    /// Dùng chung cho Index và XuatExcel.
+    /// </summary>
+    private async Task<(List<LopHocPhanRow> DsLhp, LopHocPhanRow? LhpChon, BoLocSinhVien BoLoc)> DocBoLocAsync(string? lhp)
+    {
+        var dsLhp = (await _diem.LopHocPhanCuaGVAsync(MaGV)).DuLieu
+            .OrderByDescending(l => l.NamHoc).ThenByDescending(l => l.HocKy).ThenBy(l => l.MaMon)
+            .ToList();
+        var lhpChon = dsLhp.FirstOrDefault(l => BaoCaoGiangVienViewModel.MaLhp(l) == lhp);
+        var boLoc = lhpChon == null
+            ? BoLocSinhVien.TheoGiangVien(MaGV)
+            : BoLocSinhVien.TheoLopHocPhan(MaGV, lhpChon.MaMon, lhpChon.NamHoc, lhpChon.HocKy);
+        return (dsLhp, lhpChon, boLoc);
     }
 
     /// <param name="lhp">Lớp học phần dạng "INT301_2026-2027_1"; trống = mọi lớp học phần.</param>
     [HttpGet]
     public async Task<IActionResult> Index(string? lhp)
     {
-        var dsLhp = (await _diem.LopHocPhanCuaGVAsync(MaGV)).DuLieu
-            .OrderByDescending(l => l.NamHoc).ThenByDescending(l => l.HocKy).ThenBy(l => l.MaMon)
-            .ToList();
-
-        var lhpChon = dsLhp.FirstOrDefault(l => BaoCaoGiangVienViewModel.MaLhp(l) == lhp);
-        var boLoc = lhpChon == null
-            ? BoLocSinhVien.TheoGiangVien(MaGV)
-            : BoLocSinhVien.TheoLopHocPhan(MaGV, lhpChon.MaMon, lhpChon.NamHoc, lhpChon.HocKy);
+        var (dsLhp, lhpChon, boLoc) = await DocBoLocAsync(lhp);
         var phamVi = PhamViBaoCao.TichLuy();
 
         var baoCao = await _baoCao.BaoCaoHocLucAsync(boLoc, phamVi);
@@ -51,6 +64,7 @@ public class BaoCaoController : GiangVienControllerBase
                 TenPhamVi = "Tích lũy",
                 LaTichLuy = true,
                 UrlHoSoSV = null, // GV không có quyền xem hồ sơ SV
+                UrlXuatExcel = Url.Action(nameof(XuatExcel), new { lhp = lhpChon == null ? null : lhp }),
                 Pipelines =
                 [
                     PipelineDaChay.Tu("BaoCaoHocLuc", "Bảng học lực: mỗi sinh viên một dòng (GPA, xếp loại, TC, số môn nợ).", baoCao),
@@ -58,5 +72,20 @@ public class BaoCaoController : GiangVienControllerBase
                 ]
             }
         });
+    }
+
+    /// <summary>Xuất Excel báo cáo học lực (tích lũy) theo lớp học phần đang chọn.</summary>
+    [HttpGet]
+    public async Task<IActionResult> XuatExcel(string? lhp)
+    {
+        var (_, lhpChon, boLoc) = await DocBoLocAsync(lhp);
+        var tenLhp = lhpChon == null
+            ? "Tất cả lớp học phần của giảng viên"
+            : $"{lhpChon.MaMon} – {lhpChon.TenMon} · {HienThi.HocKy(lhpChon.NamHoc, lhpChon.HocKy)}";
+        var tep = await _xuat.BaoCaoHocLucAsync(boLoc, PhamViBaoCao.TichLuy(),
+            [("Giảng viên", $"{MaGV} – {User.HoTen()}"), ("Lớp học phần", tenLhp), ("Phạm vi", "Tích lũy")],
+            MaGV, lhpChon?.MaMon, lhpChon?.NamHoc,
+            lhpChon == null ? null : XuatExcelService.HocKyTrongTenFile(lhpChon.HocKy), "TichLuy");
+        return File(tep.NoiDung, ExcelService.LoaiNoiDung, tep.TenFile);
     }
 }

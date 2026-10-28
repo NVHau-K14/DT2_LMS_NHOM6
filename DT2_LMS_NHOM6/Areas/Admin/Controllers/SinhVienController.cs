@@ -19,10 +19,12 @@ public class SinhVienController : AdminControllerBase
     private readonly TaiKhoanService _taiKhoan;
     private readonly BaoCaoService _baoCao;
     private readonly DiemService _diem;
+    private readonly XuatExcelService _xuat;
 
     public SinhVienController(SinhVienService sinhVien, LopHocService lopHoc, TaiKhoanService taiKhoan,
-        BaoCaoService baoCao, DiemService diem)
+        BaoCaoService baoCao, DiemService diem, XuatExcelService xuat)
     {
+        _xuat = xuat;
         _sinhVien = sinhVien;
         _lopHoc = lopHoc;
         _taiKhoan = taiKhoan;
@@ -190,5 +192,22 @@ public class SinhVienController : AdminControllerBase
     {
         ThongBaoKetQua(await _sinhVien.DoiTrangThaiTaiKhoanAsync(id));
         return QuayLai(quayLai, DuongDanDanhSach);
+    }
+
+    /// <summary>A-04 "Xuất Excel": mọi SV khớp bộ lọc đang chọn (không phân trang).</summary>
+    [HttpGet]
+    public async Task<IActionResult> XuatExcel(string? maLop, string? trangThai, string? q)
+    {
+        var tep = await _xuat.DanhSachSinhVienAsync(maLop, trangThai, q);
+        return File(tep.NoiDung, ExcelService.LoaiNoiDung, tep.TenFile);
+    }
+
+    /// <summary>A-06 "Xuất bảng điểm": bảng điểm cá nhân theo học kỳ + tổng kết.</summary>
+    [HttpGet]
+    public async Task<IActionResult> XuatBangDiem(string id)
+    {
+        var tep = await _xuat.BangDiemCaNhanAsync(id);
+        if (tep == null) return NotFound();
+        return File(tep.NoiDung, ExcelService.LoaiNoiDung, tep.TenFile);
     }
 }

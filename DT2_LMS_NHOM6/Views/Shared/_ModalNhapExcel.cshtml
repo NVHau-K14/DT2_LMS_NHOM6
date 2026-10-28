@@ -1,0 +1,30 @@
+@model ModalNhapExcelViewModel
+@*
+    Modal chọn file Excel để nhập (A-04 nhập danh sách SV, G-03 nhập điểm). Mở bằng nút
+    data-bs-toggle="modal" data-bs-target="#@Model.Id". Form POST multipart có antiforgery token.
+    Server kiểm tra lại đuôi .xlsx và kích thước ≤ 5 MB (thuộc tính accept chỉ là gợi ý cho trình duyệt).
+*@
+<div class="modal fade" id="@Model.Id" tabindex="-1" aria-labelledby="@(Model.Id)-tieu-de" aria-hidden="true">
+    <div class="modal-dialog">
+        <form class="modal-content" method="post" action="@Model.UrlNhap" enctype="multipart/form-data" asp-antiforgery="true">
+            <div class="modal-header">
+                <h2 class="modal-title h5" id="@(Model.Id)-tieu-de"><i class="bi bi-upload me-2 text-primary"></i>@Model.TieuDe</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+            </div>
+            <div class="modal-body">
+                <label class="form-label" for="@(Model.Id)-tep">Chọn file Excel (.xlsx, tối đa 5 MB)</label>
+                <input class="form-control" type="file" name="tep" id="@(Model.Id)-tep" required
+                       accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+                <p class="small text-secondary mt-2 mb-0">@Model.GhiChu</p>
+                @if (Model.UrlTaiMau != null)
+                {
+                    <a href="@Model.UrlTaiMau" class="small"><i class="bi bi-file-earmark-arrow-down me-1"></i>Tải file mẫu</a>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Hủy</button>
+                <button type="submit" class="btn btn-primary"><i class="bi bi-search me-1"></i>Kiểm tra file</button>
+            </div>
+        </form>
+    </div>
+</div>

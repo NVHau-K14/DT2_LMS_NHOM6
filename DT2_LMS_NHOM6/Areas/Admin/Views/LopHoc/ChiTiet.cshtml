@@ -24,7 +24,8 @@
             <h2 class="h6 text-secondary mb-1">Thao tác</h2>
             <a href="/Admin/GhiDanh?maLop=@Uri.EscapeDataString(lop.MaLop)" class="btn btn-primary"><i class="bi bi-person-plus me-1"></i>Ghi danh cả lớp</a>
             <a asp-controller="SinhVien" asp-action="Them" asp-route-maLop="@lop.MaLop" class="btn btn-outline-primary"><i class="bi bi-plus-lg me-1"></i>Thêm sinh viên vào lớp</a>
-            <button type="button" class="btn btn-outline-secondary" disabled title="Chức năng xuất Excel sẽ được bổ sung"><i class="bi bi-file-earmark-excel me-1"></i>Xuất báo cáo lớp</button>
+            @* Báo cáo học lực tích lũy của lớp – dùng chung chức năng xuất của A-10 *@
+            <a href="/Admin/BaoCao/XuatExcel?maLop=@Uri.EscapeDataString(lop.MaLop)&amp;phamVi=tichluy" class="btn btn-outline-secondary"><i class="bi bi-file-earmark-excel me-1"></i>Xuất báo cáo lớp</a>
         </div>
     </div>
 </div>

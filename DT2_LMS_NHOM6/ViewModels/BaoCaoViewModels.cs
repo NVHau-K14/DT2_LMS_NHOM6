@@ -84,6 +84,9 @@ public class BaoCaoHocLucViewModel
     /// <summary>Tiền tố URL hồ sơ SV (Admin: "/Admin/SinhVien/HoSo/"); null = không có link (GV không xem hồ sơ).</summary>
     public string? UrlHoSoSV { get; set; }
 
+    /// <summary>Nút "Xuất Excel" – URL xuất theo đúng bộ lọc đang chọn.</summary>
+    public string? UrlXuatExcel { get; set; }
+
     public CauHinhBieuDo BieuDo => CauHinhBieuDo.PhanBoXepLoai(ThongKe, "bar");
 
     /// <summary>Xếp kết quả ThongKeXepLoai vào đủ 7 mức (mức không có SV → 0).</summary>

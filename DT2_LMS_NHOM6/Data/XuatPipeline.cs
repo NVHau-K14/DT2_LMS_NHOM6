@@ -39,6 +39,7 @@ public static class XuatPipeline
             ("SiSoTheoLop", ThongKeDanhMucPipeline.SiSoTheoLop()),
             ("SoLanHocTheoMon", ThongKeDanhMucPipeline.SoLanHocTheoMon()),
             ("HocKyCoDuLieu", ThongKeDanhMucPipeline.HocKyCoDuLieu()),
+            ("LopHocPhanToanTruong", ThongKeDanhMucPipeline.LopHocPhanToanTruong()),
         };
 
         foreach (var (ten, pipeline) in danhSach)

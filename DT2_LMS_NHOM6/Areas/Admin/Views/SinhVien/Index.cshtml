@@ -29,10 +29,11 @@
             }
         </form>
         <div class="nhom-nut">
-            @* Nhập / Xuất Excel làm ở giai đoạn 7 *@
-            <button type="button" class="btn btn-outline-secondary" disabled title="Chức năng Excel sẽ được bổ sung"><i class="bi bi-upload me-1"></i>Nhập Excel</button>
-            <button type="button" class="btn btn-outline-secondary" disabled title="Chức năng Excel sẽ được bổ sung"><i class="bi bi-file-earmark-arrow-down me-1"></i>Tải mẫu</button>
-            <button type="button" class="btn btn-outline-secondary" disabled title="Chức năng Excel sẽ được bổ sung"><i class="bi bi-file-earmark-excel me-1"></i>Xuất Excel</button>
+            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modal-nhap-sinh-vien"><i class="bi bi-upload me-1"></i>Nhập Excel</button>
+            <a href="/Admin/DuLieu/MauSinhVien" class="btn btn-outline-secondary"><i class="bi bi-file-earmark-arrow-down me-1"></i>Tải mẫu</a>
+            @* Xuất toàn bộ SV khớp bộ lọc đang chọn (không chỉ trang hiện tại) *@
+            <a asp-action="XuatExcel" asp-route-maLop="@Model.MaLop" asp-route-trangThai="@Model.TrangThai" asp-route-q="@Model.Q"
+               class="btn btn-outline-secondary"><i class="bi bi-file-earmark-excel me-1"></i>Xuất Excel</a>
             <a asp-action="Them" asp-route-maLop="@Model.MaLop" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>Thêm sinh viên</a>
         </div>
     </div>
@@ -123,3 +124,8 @@
     }
     <partial name="_PhanTrang" model="Model.PhanTrang" />
 </div>
+
+<partial name="_ModalNhapExcel" model='new ModalNhapExcelViewModel("modal-nhap-sinh-vien", "Nhập danh sách sinh viên",
+    "/Admin/DuLieu/NhapSinhVien?quayLai=" + Uri.EscapeDataString(Model.UrlHienTai),
+    "Hệ thống kiểm tra toàn bộ file và hiện kết quả từng dòng; chỉ khi không có dòng lỗi mới cho xác nhận ghi.",
+    "/Admin/DuLieu/MauSinhVien")' />

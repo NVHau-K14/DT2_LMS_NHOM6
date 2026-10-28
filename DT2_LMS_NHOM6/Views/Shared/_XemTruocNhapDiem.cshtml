@@ -1,0 +1,156 @@
+@model XemTruocNhapDiemViewModel
+@*
+    Xem trước nhập bảng điểm từ Excel – dùng chung Admin (A-11) và Giảng viên (G-03).
+    Mỗi ô điểm: "cũ → mới" khi có thay đổi; ô trống trong file = giữ nguyên điểm cũ (chữ xám).
+    Dòng lỗi tô đỏ kèm lý do; còn lỗi thì không có nút Xác nhận (không ghi gì).
+*@
+@{
+    var phien = Model.Phien;
+    var lhp = phien.LopHocPhan;
+    var soKhongCoTrongFile = phien.SiSo - phien.Dong.Count(d => d.MaDK != null);
+}
+
+<div class="the-noi-dung mb-3">
+    <div class="row g-3 align-items-center">
+        <div class="col-lg-7">
+            <span class="ma text-primary fw-semibold">@lhp.MaMon</span>
+            <h2 class="h5 mb-1">@lhp.TenMon</h2>
+            <div class="text-secondary small">
+                @HienThi.HocKy(lhp.NamHoc, lhp.HocKy) · @lhp.TenGV ·
+                trọng số CC/GK/CK <strong class="text-body">@lhp.TrongSo.Cc/@lhp.TrongSo.Gk/@lhp.TrongSo.Ck</strong> ·
+                sĩ số <strong class="text-body">@phien.SiSo</strong>
+            </div>
+            <div class="small mt-1"><i class="bi bi-file-earmark-excel text-success me-1"></i>@phien.TenFile</div>
+        </div>
+        <div class="col-lg-5 d-flex flex-wrap gap-2 justify-content-lg-end">
+            <span class="badge text-bg-light fs-6">@phien.Dong.Count dòng</span>
+            <span class="badge badge-ket-qua-thay-doi fs-6"><i class="bi bi-pencil-square me-1"></i>@phien.SoThayDoi thay đổi</span>
+            <span class="badge badge-ket-qua-loi fs-6"><i class="bi bi-x-circle-fill me-1"></i>@phien.SoLoi lỗi</span>
+        </div>
+    </div>
+
+    @if (phien.SoLoi > 0)
+    {
+        <div class="alert alert-danger mt-3 mb-0">
+            <i class="bi bi-exclamation-octagon me-1"></i>
+            File có <strong>@phien.SoLoi dòng lỗi</strong> nên <strong>chưa ghi điểm nào</strong>. Sửa các dòng tô đỏ trong file rồi tải lên lại.
+        </div>
+    }
+    else if (phien.SoThayDoi == 0)
+    {
+        <div class="alert alert-info mt-3 mb-0">
+            <i class="bi bi-info-circle me-1"></i>File hợp lệ nhưng không có điểm nào khác với điểm hiện tại – không cần ghi.
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-success mt-3 mb-0">
+            <i class="bi bi-check2-circle me-1"></i>
+            File hợp lệ: <strong>@phien.SoThayDoi sinh viên</strong> có điểm thay đổi (tô vàng). Bấm <strong>Xác nhận ghi điểm</strong> để lưu bằng
+            <code>bulkWrite</code> (<code>$set</code> + <code>arrayFilters</code>).
+        </div>
+    }
+    @if (soKhongCoTrongFile > 0 && phien.SoLoi == 0)
+    {
+        <div class="small text-secondary mt-2">@soKhongCoTrongFile sinh viên của lớp học phần không có trong file – điểm giữ nguyên.</div>
+    }
+</div>
+
+<div class="the-noi-dung mb-3">
+    <div class="d-flex flex-wrap gap-3 small text-secondary mb-2">
+        <span><span class="o-chu-thich dong-thay-doi"></span>Có thay đổi</span>
+        <span><span class="o-chu-thich dong-bi-chan"></span>Lỗi – không ghi</span>
+        <span><span class="diem-cu">8.0</span> → <span class="diem-moi">9.0</span> điểm cũ → mới</span>
+        <span><span class="diem-giu">8.0</span> ô trống trong file = giữ nguyên</span>
+    </div>
+    <div class="khung-bang table-responsive">
+        <table class="table bang-du-lieu">
+            <thead>
+                <tr>
+                    <th class="text-center">Dòng</th>
+                    <th>MSSV</th>
+                    <th>Họ tên</th>
+                    <th>Lớp</th>
+                    <th class="text-center">CC (@lhp.TrongSo.Cc%)</th>
+                    <th class="text-center">GK (@lhp.TrongSo.Gk%)</th>
+                    <th class="text-center">CK (@lhp.TrongSo.Ck%)</th>
+                    <th>Kết quả kiểm tra</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var d in phien.Dong)
+                {
+                    <tr class="@(!d.HopLe ? "dong-bi-chan" : d.CoThayDoi ? "dong-thay-doi" : "")">
+                        <td class="text-center">@d.SoDong</td>
+                        <td class="ma">@d.MaSV</td>
+                        <td>@d.HoTen</td>
+                        <td>@d.MaLop</td>
+                        @foreach (var (nhap, cu, moi, thayDoi) in new[]
+                        {
+                            (d.CcNhap, d.DiemCu.Cc, d.CcMoi, d.CcThayDoi),
+                            (d.GkNhap, d.DiemCu.Gk, d.GkMoi, d.GkThayDoi),
+                            (d.CkNhap, d.DiemCu.Ck, d.CkMoi, d.CkThayDoi)
+                        })
+                        {
+                            <td class="text-center text-nowrap">
+                                @if (!d.HopLe)
+                                {
+                                    @* Dòng lỗi: hiện nguyên giá trị trong file để dễ tìm *@
+                                    <span>@nhap</span>
+                                }
+                                else if (thayDoi)
+                                {
+                                    <span class="diem-cu">@HienThi.Diem(cu)</span><text> → </text><span class="diem-moi">@HienThi.Diem(moi)</span>
+                                }
+                                else if (moi == null)
+                                {
+                                    <span class="diem-giu" title="Ô trống trong file – giữ nguyên">@HienThi.Diem(cu)</span>
+                                }
+                                else
+                                {
+                                    <span>@HienThi.Diem(cu)</span>
+                                }
+                            </td>
+                        }
+                        <td>
+                            @if (!d.HopLe)
+                            {
+                                <ul class="danh-sach-loi">
+                                    @foreach (var loi in d.Loi)
+                                    {
+                                        <li>@loi</li>
+                                    }
+                                </ul>
+                            }
+                            else if (d.CoThayDoi)
+                            {
+                                <span class="text-warning-emphasis"><i class="bi bi-pencil-square me-1"></i>Cập nhật</span>
+                            }
+                            else
+                            {
+                                <span class="text-secondary"><i class="bi bi-dash-circle me-1"></i>Không đổi</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="the-noi-dung">
+    <div class="d-flex flex-wrap align-items-center gap-2">
+        <a href="@Model.UrlQuayLai" class="btn btn-light me-auto"><i class="bi bi-arrow-left me-1"></i>Quay lại</a>
+        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modal-nhap-lai"><i class="bi bi-upload me-1"></i>Tải file khác</button>
+        @if (phien.CoTheGhi)
+        {
+            <form method="post" action="@Model.UrlXacNhan" asp-antiforgery="true" class="d-inline">
+                <input type="hidden" name="ma" value="@Model.MaPhien" />
+                <button type="submit" class="btn btn-success"><i class="bi bi-check2-circle me-1"></i>Xác nhận ghi điểm (@phien.SoThayDoi sinh viên)</button>
+            </form>
+        }
+    </div>
+</div>
+
+<partial name="_ModalNhapExcel" model='new ModalNhapExcelViewModel("modal-nhap-lai", "Nhập bảng điểm",
+    Model.UrlTaiLen, "Kiểm tra lại toàn bộ file mới. Ô trống = giữ nguyên điểm cũ.")' />
