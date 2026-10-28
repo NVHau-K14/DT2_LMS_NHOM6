@@ -1,0 +1,174 @@
+@model LopHocIndexViewModel
+@{
+    ViewData["Title"] = "Lớp học";
+    var coLoc = !string.IsNullOrEmpty(Model.Nganh) || !string.IsNullOrEmpty(Model.NienKhoa) || !string.IsNullOrEmpty(Model.Q);
+}
+
+<div class="the-noi-dung">
+    <div class="thanh-cong-cu">
+        <form method="get" asp-action="Index" class="thanh-loc">
+            <select name="nganh" class="form-select" aria-label="Lọc theo ngành">
+                <option value="">Tất cả ngành</option>
+                @foreach (var nganh in Model.DsNganh)
+                {
+                    <option value="@nganh" selected="@(nganh == Model.Nganh)">@nganh</option>
+                }
+            </select>
+            <select name="nienKhoa" class="form-select" aria-label="Lọc theo niên khóa">
+                <option value="">Tất cả niên khóa</option>
+                @foreach (var nk in Model.DsNienKhoa)
+                {
+                    <option value="@nk" selected="@(nk == Model.NienKhoa)">@nk</option>
+                }
+            </select>
+            <input type="search" name="q" value="@Model.Q" class="form-control o-tim" placeholder="Tìm mã hoặc tên lớp..." aria-label="Tìm lớp" />
+            <button type="submit" class="btn btn-outline-primary"><i class="bi bi-funnel me-1"></i>Lọc</button>
+            @if (coLoc)
+            {
+                <a asp-action="Index" class="btn btn-light">Bỏ lọc</a>
+            }
+        </form>
+        <button type="button" class="btn btn-primary" data-mo-modal="#modal-lop" data-tieu-de="Thêm lớp"
+                data-gia-tri="@Json.Serialize(new LopHocFormViewModel()).ToString()">
+            <i class="bi bi-plus-lg me-1"></i>Thêm lớp
+        </button>
+    </div>
+
+    @if (Model.DanhSach.Count == 0)
+    {
+        <partial name="_TrangTrong" model='new TrangTrongViewModel("Không có lớp nào", coLoc ? "Không có lớp khớp bộ lọc." : "Bấm \"Thêm lớp\" để tạo lớp đầu tiên.", "bi-people")' />
+    }
+    else
+    {
+        <div class="khung-bang table-responsive">
+            <table class="table bang-du-lieu">
+                <thead>
+                    <tr>
+                        <th>Mã lớp</th>
+                        <th>Tên lớp</th>
+                        <th>Niên khóa</th>
+                        <th>Ngành</th>
+                        <th>Cố vấn học tập</th>
+                        <th class="text-center">Sĩ số</th>
+                        <th class="text-end"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var dong in Model.DanhSach)
+                    {
+                        var lop = dong.Lop;
+                        var giaTriSua = new LopHocFormViewModel
+                        {
+                            LaSua = true, MaLop = lop.MaLop, TenLop = lop.TenLop, NienKhoa = lop.NienKhoa,
+                            Nganh = lop.Nganh, Khoa = lop.Khoa, MaGVCoVan = lop.CoVanHocTap?.MaGV
+                        };
+                        <tr>
+                            <td class="ma"><a asp-action="ChiTiet" asp-route-id="@lop.MaLop">@lop.MaLop</a></td>
+                            <td>@lop.TenLop</td>
+                            <td>@lop.NienKhoa</td>
+                            <td>@lop.Nganh</td>
+                            <td>@(lop.CoVanHocTap?.HoTen ?? "–")</td>
+                            <td class="text-center">@dong.SiSo</td>
+                            <td class="text-end">
+                                <div class="dropdown">
+                                    <button class="btn nut-thao-tac" type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                                            data-bs-popper-config='{"strategy":"fixed"}' aria-label="Thao tác với lớp @lop.MaLop">
+                                        <i class="bi bi-three-dots-vertical"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                                        <li><a class="dropdown-item" asp-action="ChiTiet" asp-route-id="@lop.MaLop"><i class="bi bi-eye"></i>Xem chi tiết</a></li>
+                                        <li>
+                                            <button type="button" class="dropdown-item" data-mo-modal="#modal-lop" data-tieu-de="Sửa lớp @lop.MaLop"
+                                                    data-gia-tri="@Json.Serialize(giaTriSua).ToString()">
+                                                <i class="bi bi-pencil"></i>Sửa
+                                            </button>
+                                        </li>
+                                        <li><hr class="dropdown-divider" /></li>
+                                        <li>
+                                            <button type="button" class="dropdown-item text-danger" data-xac-nhan-xoa
+                                                    data-url="@Url.Action("Xoa", new { id = lop.MaLop })"
+                                                    data-noi-dung="Xóa lớp @lop.MaLop – @lop.TenLop?">
+                                                <i class="bi bi-trash"></i>Xóa
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="phan-trang"><div>Tổng cộng <strong>@Model.DanhSach.Count</strong> lớp</div></div>
+    }
+</div>
+
+@* ---------- Modal thêm / sửa lớp ---------- *@
+<div class="modal fade" id="modal-lop" tabindex="-1" aria-labelledby="modal-lop-tieu-de" aria-hidden="true" data-mo-san="@(Model.MoModal ? "true" : "false")">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <form asp-action="Luu" method="post" novalidate>
+                <div class="modal-header">
+                    <h2 class="modal-title h5" id="modal-lop-tieu-de" data-tieu-de-modal>@(Model.Form.LaSua ? $"Sửa lớp {Model.Form.MaLop}" : "Thêm lớp")</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                </div>
+                <div class="modal-body">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 small" role="alert"></div>
+                    <input type="hidden" asp-for="Form.LaSua" />
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label asp-for="Form.MaLop" class="form-label"></label>
+                            <input asp-for="Form.MaLop" class="form-control" data-khoa-khi-sua placeholder="16DHTH03" />
+                            <span asp-validation-for="Form.MaLop" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-8">
+                            <label asp-for="Form.TenLop" class="form-label"></label>
+                            <input asp-for="Form.TenLop" class="form-control" placeholder="Đại học Công nghệ thông tin 16 - Lớp 03" />
+                            <span asp-validation-for="Form.TenLop" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="Form.NienKhoa" class="form-label"></label>
+                            <input asp-for="Form.NienKhoa" class="form-control" placeholder="2025-2029" />
+                            <span asp-validation-for="Form.NienKhoa" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-8">
+                            <label asp-for="Form.Nganh" class="form-label"></label>
+                            <input asp-for="Form.Nganh" class="form-control" list="ds-nganh" placeholder="Công nghệ thông tin" />
+                            <datalist id="ds-nganh">
+                                @foreach (var nganh in Model.DsNganh)
+                                {
+                                    <option value="@nganh"></option>
+                                }
+                            </datalist>
+                            <span asp-validation-for="Form.Nganh" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Form.Khoa" class="form-label"></label>
+                            <input asp-for="Form.Khoa" class="form-control" />
+                            <span asp-validation-for="Form.Khoa" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Form.MaGVCoVan" class="form-label"></label>
+                            <select asp-for="Form.MaGVCoVan" class="form-select">
+                                <option value="">– Chưa phân công –</option>
+                                @foreach (var gv in Model.DsGiangVien)
+                                {
+                                    <option value="@gv.MaGV">@gv.MaGV – @gv.HoTenKemHocVi</option>
+                                }
+                            </select>
+                            <span asp-validation-for="Form.MaGVCoVan" class="text-danger small"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-check2 me-1"></i>Lưu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

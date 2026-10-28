@@ -1,0 +1,17 @@
+[
+  {
+    "$group": {
+      "_id": "$maLop",
+      "siSo": {
+        "$sum": 1
+      }
+    }
+  },
+  {
+    "$project": {
+      "_id": 0,
+      "maLop": "$_id",
+      "siSo": 1
+    }
+  }
+]

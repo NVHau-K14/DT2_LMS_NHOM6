@@ -35,6 +35,11 @@ builder.Services.AddSingleton<MongoContext>();
 builder.Services.AddScoped<AccountService>();
 builder.Services.AddScoped<DiemService>();
 builder.Services.AddScoped<BaoCaoService>();
+builder.Services.AddScoped<TaiKhoanService>();
+builder.Services.AddScoped<LopHocService>();
+builder.Services.AddScoped<SinhVienService>();
+builder.Services.AddScoped<GiangVienService>();
+builder.Services.AddScoped<MonHocService>();
 
 // Xác thực bằng cookie: hết hạn 8 giờ, gia hạn trượt khi còn hoạt động
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

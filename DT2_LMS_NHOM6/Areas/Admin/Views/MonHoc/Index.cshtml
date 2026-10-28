@@ -1,0 +1,187 @@
+@model MonHocIndexViewModel
+@{
+    ViewData["Title"] = "Môn học";
+}
+
+<div class="the-noi-dung">
+    <div class="thanh-cong-cu">
+        <p class="text-secondary small mb-0">
+            Đổi tên môn sẽ <strong>lan truyền</strong> sang mọi lần học trong hồ sơ sinh viên. Đổi tín chỉ / trọng số chỉ áp dụng cho lần ghi danh mới.
+        </p>
+        <button type="button" class="btn btn-primary" data-mo-modal="#modal-mon" data-tieu-de="Thêm môn học"
+                data-gia-tri="@Json.Serialize(new MonHocFormViewModel()).ToString()" data-so-lan-hoc="0">
+            <i class="bi bi-plus-lg me-1"></i>Thêm môn học
+        </button>
+    </div>
+
+    @if (Model.DanhSach.Count == 0)
+    {
+        <partial name="_TrangTrong" model='new TrangTrongViewModel("Chưa có môn học", null, "bi-journal-bookmark")' />
+    }
+    else
+    {
+        <div class="khung-bang table-responsive">
+            <table class="table bang-du-lieu">
+                <thead>
+                    <tr>
+                        <th>Mã môn</th>
+                        <th>Tên môn</th>
+                        <th class="text-center">Tín chỉ</th>
+                        <th class="text-center" title="Chuyên cần / Giữa kỳ / Cuối kỳ (%)">Trọng số CC/GK/CK</th>
+                        <th class="text-center">Số lần học</th>
+                        <th class="text-center">Số SV đã học</th>
+                        <th class="text-end"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var dong in Model.DanhSach)
+                    {
+                        var mon = dong.MonHoc;
+                        var ts = mon.TrongSoMacDinh;
+                        var giaTriSua = new MonHocFormViewModel
+                        {
+                            LaSua = true, MaMon = mon.MaMon, TenMon = mon.TenMon, SoTinChi = mon.SoTinChi,
+                            TrongSoCC = ts.Cc, TrongSoGK = ts.Gk, TrongSoCK = ts.Ck, Khoa = mon.Khoa
+                        };
+                        <tr>
+                            <td class="ma">@mon.MaMon</td>
+                            <td>@mon.TenMon</td>
+                            <td class="text-center">@mon.SoTinChi</td>
+                            <td class="text-center">@ts.Cc / @ts.Gk / @ts.Ck</td>
+                            <td class="text-center">@dong.SoLanHoc</td>
+                            <td class="text-center">@dong.SoSV</td>
+                            <td class="text-end">
+                                <div class="dropdown">
+                                    <button class="btn nut-thao-tac" type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                                            data-bs-popper-config='{"strategy":"fixed"}' aria-label="Thao tác với môn @mon.MaMon">
+                                        <i class="bi bi-three-dots-vertical"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                                        <li>
+                                            <button type="button" class="dropdown-item" data-mo-modal="#modal-mon" data-tieu-de="Sửa môn @mon.MaMon"
+                                                    data-gia-tri="@Json.Serialize(giaTriSua).ToString()" data-so-lan-hoc="@dong.SoLanHoc">
+                                                <i class="bi bi-pencil"></i>Sửa
+                                            </button>
+                                        </li>
+                                        <li><hr class="dropdown-divider" /></li>
+                                        <li>
+                                            <button type="button" class="dropdown-item text-danger" data-xac-nhan-xoa
+                                                    data-url="@Url.Action("Xoa", new { id = mon.MaMon })"
+                                                    data-noi-dung="Xóa môn @mon.MaMon – @mon.TenMon khỏi danh mục?">
+                                                <i class="bi bi-trash"></i>Xóa
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="phan-trang"><div>Tổng cộng <strong>@Model.DanhSach.Count</strong> môn học</div></div>
+    }
+</div>
+
+@* ---------- Modal thêm / sửa môn học ---------- *@
+<div class="modal fade" id="modal-mon" tabindex="-1" aria-labelledby="modal-mon-tieu-de" aria-hidden="true"
+     data-mo-san="@(Model.MoModal ? "true" : "false")"
+     data-ten-goc="@(Model.Form.LaSua ? Model.DanhSach.FirstOrDefault(d => d.MonHoc.MaMon == Model.Form.MaMon)?.MonHoc.TenMon : "")"
+     data-so-lan-hoc="@Model.SoLanHocDangSua">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <form asp-action="Luu" method="post" novalidate>
+                <div class="modal-header">
+                    <h2 class="modal-title h5" id="modal-mon-tieu-de" data-tieu-de-modal>@(Model.Form.LaSua ? $"Sửa môn {Model.Form.MaMon}" : "Thêm môn học")</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                </div>
+                <div class="modal-body">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 small" role="alert"></div>
+                    <input type="hidden" asp-for="Form.LaSua" />
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label asp-for="Form.MaMon" class="form-label"></label>
+                            <input asp-for="Form.MaMon" class="form-control" data-khoa-khi-sua placeholder="INT302" />
+                            <span asp-validation-for="Form.MaMon" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-8">
+                            <label asp-for="Form.TenMon" class="form-label"></label>
+                            <input asp-for="Form.TenMon" class="form-control" placeholder="Lập trình web" />
+                            <span asp-validation-for="Form.TenMon" class="text-danger small"></span>
+                            <div class="alert alert-warning py-2 small mt-2 mb-0 d-none" id="canh-bao-doi-ten" role="alert">
+                                <i class="bi bi-exclamation-triangle me-1"></i><span id="canh-bao-doi-ten-noi-dung"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label asp-for="Form.SoTinChi" class="form-label"></label>
+                            <input asp-for="Form.SoTinChi" type="number" min="1" max="10" class="form-control" />
+                            <span asp-validation-for="Form.SoTinChi" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <label asp-for="Form.TrongSoCC" class="form-label"></label>
+                            <input asp-for="Form.TrongSoCC" type="number" min="0" max="100" class="form-control" />
+                            <span asp-validation-for="Form.TrongSoCC" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <label asp-for="Form.TrongSoGK" class="form-label"></label>
+                            <input asp-for="Form.TrongSoGK" type="number" min="0" max="100" class="form-control" />
+                            <span asp-validation-for="Form.TrongSoGK" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <label asp-for="Form.TrongSoCK" class="form-label"></label>
+                            <input asp-for="Form.TrongSoCK" type="number" min="0" max="100" class="form-control" />
+                            <span asp-validation-for="Form.TrongSoCK" class="text-danger small"></span>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="Form.Khoa" class="form-label"></label>
+                            <input asp-for="Form.Khoa" class="form-control" />
+                            <span asp-validation-for="Form.Khoa" class="text-danger small"></span>
+                        </div>
+                    </div>
+                    <p class="small text-secondary mt-3 mb-0">
+                        <i class="bi bi-info-circle me-1"></i>Tổng trọng số CC + GK + CK phải bằng 100.
+                        Thay đổi <strong>tín chỉ / trọng số chỉ áp dụng cho lần ghi danh mới</strong>; các lần học đã ghi danh giữ nguyên giá trị lúc ghi danh.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-check2 me-1"></i>Lưu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Cảnh báo khi đổi tên môn đã có người học: "Cập nhật tên cho N lần học" (thiết kế A-08)
+        (function () {
+            var modal = document.getElementById('modal-mon');
+            var oTen = document.getElementById('Form_TenMon');
+            var canhBao = document.getElementById('canh-bao-doi-ten');
+            var noiDung = document.getElementById('canh-bao-doi-ten-noi-dung');
+
+            function kiemTra() {
+                var tenGoc = modal.dataset.tenGoc || '';
+                var soLanHoc = parseInt(modal.dataset.soLanHoc || '0', 10);
+                var doiTen = tenGoc !== '' && oTen.value.trim() !== tenGoc;
+                if (doiTen && soLanHoc > 0) {
+                    noiDung.textContent = 'Đổi tên sẽ cập nhật tên cho ' + soLanHoc + ' lần học trong hồ sơ sinh viên (updateMany + arrayFilters).';
+                    canhBao.classList.remove('d-none');
+                } else {
+                    canhBao.classList.add('d-none');
+                }
+            }
+
+            modal.addEventListener('eduscore:mo-modal', function (e) {
+                var duLieu = e.detail.duLieu;
+                modal.dataset.tenGoc = duLieu.laSua ? duLieu.tenMon : '';
+                modal.dataset.soLanHoc = e.detail.nut.dataset.soLanHoc || '0';
+                kiemTra();
+            });
+            oTen.addEventListener('input', kiemTra);
+            kiemTra();
+        })();
+    </script>
+}

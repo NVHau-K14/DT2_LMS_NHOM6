@@ -1,0 +1,173 @@
+@model GiangVienIndexViewModel
+@{
+    ViewData["Title"] = "Giảng viên";
+}
+
+<div class="the-noi-dung">
+    <div class="thanh-cong-cu">
+        <p class="text-secondary small mb-0">
+            Đổi họ tên hoặc học vị sẽ <strong>lan truyền</strong> tên mới sang hồ sơ sinh viên (mảng <code>monHoc</code>), lớp có GV làm cố vấn và tài khoản.
+        </p>
+        <button type="button" class="btn btn-primary" data-mo-modal="#modal-gv" data-tieu-de="Thêm giảng viên"
+                data-gia-tri="@Json.Serialize(new GiangVienFormViewModel()).ToString()">
+            <i class="bi bi-plus-lg me-1"></i>Thêm giảng viên
+        </button>
+    </div>
+
+    @if (Model.DanhSach.Count == 0)
+    {
+        <partial name="_TrangTrong" model='new TrangTrongViewModel("Chưa có giảng viên", null, "bi-person-workspace")' />
+    }
+    else
+    {
+        <div class="khung-bang table-responsive">
+            <table class="table bang-du-lieu">
+                <thead>
+                    <tr>
+                        <th>Mã GV</th>
+                        <th>Họ tên</th>
+                        <th>Học vị</th>
+                        <th>Khoa</th>
+                        <th>Email</th>
+                        <th class="text-center" title="Số lớp học phần đang dạy ở @Model.NhanHocKyHienTai">Lớp HP (@Model.NhanHocKyHienTai)</th>
+                        <th>Tài khoản</th>
+                        <th class="text-end"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var dong in Model.DanhSach)
+                    {
+                        var gv = dong.GiangVien;
+                        var biKhoa = dong.TaiKhoan?.TrangThai == HangSo.TrangThaiTaiKhoan.Khoa;
+                        var giaTriSua = new GiangVienFormViewModel
+                        {
+                            LaSua = true, MaGV = gv.MaGV, HoTen = gv.HoTen, HocVi = gv.HocVi,
+                            Email = gv.Email, SoDienThoai = gv.SoDienThoai, Khoa = gv.Khoa
+                        };
+                        <tr>
+                            <td class="ma">@gv.MaGV</td>
+                            <td>@gv.HoTen</td>
+                            <td>@gv.HocVi</td>
+                            <td>@gv.Khoa</td>
+                            <td>@(gv.Email ?? "–")</td>
+                            <td class="text-center">@dong.SoLopHocPhan</td>
+                            <td>
+                                @if (dong.TaiKhoan == null)
+                                {
+                                    <span class="text-secondary">–</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-trang-thai @HienThi.LopBadgeTrangThai(dong.TaiKhoan.TrangThai)">@dong.TaiKhoan.TrangThai</span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <div class="dropdown">
+                                    <button class="btn nut-thao-tac" type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                                            data-bs-popper-config='{"strategy":"fixed"}' aria-label="Thao tác với giảng viên @gv.MaGV">
+                                        <i class="bi bi-three-dots-vertical"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                                        <li>
+                                            <button type="button" class="dropdown-item" data-mo-modal="#modal-gv" data-tieu-de="Sửa giảng viên @gv.MaGV"
+                                                    data-gia-tri="@Json.Serialize(giaTriSua).ToString()">
+                                                <i class="bi bi-pencil"></i>Sửa
+                                            </button>
+                                        </li>
+                                        <li><hr class="dropdown-divider" /></li>
+                                        <li>
+                                            <button type="button" class="dropdown-item" data-xac-nhan-xoa
+                                                    data-url="@Url.Action("ResetMatKhau", new { id = gv.MaGV })"
+                                                    data-tieu-de="Đặt lại mật khẩu" data-nut="Đặt lại"
+                                                    data-noi-dung="Đặt lại mật khẩu của @gv.MaGV – @gv.HoTenKemHocVi về mặc định (123456)?"
+                                                    data-ghi-chu="Mật khẩu hiện tại của giảng viên sẽ không dùng được nữa.">
+                                                <i class="bi bi-key"></i>Reset mật khẩu
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button type="button" class="dropdown-item" data-xac-nhan-xoa
+                                                    data-url="@Url.Action("KhoaTaiKhoan", new { id = gv.MaGV })"
+                                                    data-tieu-de="@(biKhoa ? "Mở khóa tài khoản" : "Khóa tài khoản")" data-nut="@(biKhoa ? "Mở khóa" : "Khóa")"
+                                                    data-noi-dung="@(biKhoa ? "Mở khóa" : "Khóa") tài khoản của @gv.MaGV – @gv.HoTenKemHocVi?"
+                                                    data-ghi-chu="@(biKhoa ? "Giảng viên sẽ đăng nhập lại được." : "Giảng viên sẽ không đăng nhập được cho đến khi được mở khóa.")">
+                                                <i class="bi @(biKhoa ? "bi-unlock" : "bi-lock")"></i>@(biKhoa ? "Mở khóa tài khoản" : "Khóa tài khoản")
+                                            </button>
+                                        </li>
+                                        <li><hr class="dropdown-divider" /></li>
+                                        <li>
+                                            <button type="button" class="dropdown-item text-danger" data-xac-nhan-xoa
+                                                    data-url="@Url.Action("Xoa", new { id = gv.MaGV })"
+                                                    data-noi-dung="Xóa giảng viên @gv.MaGV – @gv.HoTenKemHocVi và tài khoản đăng nhập?">
+                                                <i class="bi bi-trash"></i>Xóa
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="phan-trang"><div>Tổng cộng <strong>@Model.DanhSach.Count</strong> giảng viên</div></div>
+    }
+</div>
+
+@* ---------- Modal thêm / sửa giảng viên ---------- *@
+<div class="modal fade" id="modal-gv" tabindex="-1" aria-labelledby="modal-gv-tieu-de" aria-hidden="true" data-mo-san="@(Model.MoModal ? "true" : "false")">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <form asp-action="Luu" method="post" novalidate>
+                <div class="modal-header">
+                    <h2 class="modal-title h5" id="modal-gv-tieu-de" data-tieu-de-modal>@(Model.Form.LaSua ? $"Sửa giảng viên {Model.Form.MaGV}" : "Thêm giảng viên")</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                </div>
+                <div class="modal-body">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 small" role="alert"></div>
+                    <input type="hidden" asp-for="Form.LaSua" />
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label asp-for="Form.MaGV" class="form-label"></label>
+                            <input asp-for="Form.MaGV" class="form-control" data-khoa-khi-sua placeholder="GV009" />
+                            <span asp-validation-for="Form.MaGV" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <label asp-for="Form.HocVi" class="form-label"></label>
+                            <select asp-for="Form.HocVi" class="form-select" asp-items="@(new SelectList(GiangVienFormViewModel.DsHocVi))"></select>
+                            <span asp-validation-for="Form.HocVi" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-5">
+                            <label asp-for="Form.HoTen" class="form-label"></label>
+                            <input asp-for="Form.HoTen" class="form-control" placeholder="Nguyễn Văn An" />
+                            <span asp-validation-for="Form.HoTen" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Form.Email" class="form-label"></label>
+                            <input asp-for="Form.Email" type="email" class="form-control" placeholder="annv@eduscore.vn" />
+                            <span asp-validation-for="Form.Email" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Form.SoDienThoai" class="form-label"></label>
+                            <input asp-for="Form.SoDienThoai" class="form-control" inputmode="tel" maxlength="10" placeholder="0987654321" />
+                            <span asp-validation-for="Form.SoDienThoai" class="text-danger small"></span>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="Form.Khoa" class="form-label"></label>
+                            <input asp-for="Form.Khoa" class="form-control" />
+                            <span asp-validation-for="Form.Khoa" class="text-danger small"></span>
+                        </div>
+                    </div>
+                    <p class="small text-secondary mt-3 mb-0"><i class="bi bi-info-circle me-1"></i>Thêm giảng viên sẽ tạo tài khoản: tên đăng nhập = mã GV, mật khẩu 123456.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-check2 me-1"></i>Lưu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

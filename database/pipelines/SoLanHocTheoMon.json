@@ -1,0 +1,26 @@
+[
+  {
+    "$unwind": "$monHoc"
+  },
+  {
+    "$group": {
+      "_id": "$monHoc.maMon",
+      "soLanHoc": {
+        "$sum": 1
+      },
+      "dsSV": {
+        "$addToSet": "$maSV"
+      }
+    }
+  },
+  {
+    "$project": {
+      "_id": 0,
+      "maMon": "$_id",
+      "soLanHoc": 1,
+      "soSV": {
+        "$size": "$dsSV"
+      }
+    }
+  }
+]

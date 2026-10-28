@@ -1,0 +1,100 @@
+@model BangDiemViewModel
+@*
+    Bảng điểm theo học kỳ – dùng chung cho A-06 (Admin xem hồ sơ SV) và S-02 (SV xem kết quả).
+    Mỗi học kỳ một khối thu gọn được, học kỳ mới nhất mở sẵn. Mọi con số (TK, chữ, hệ 4, kết quả, ✓,
+    GPA học kỳ, tích lũy) lấy nguyên từ pipeline BangDiem / GpaHocKy / BaoCaoHocLuc – view chỉ hiển thị.
+*@
+@if (Model.CacHocKy.Count == 0)
+{
+    <partial name="_TrangTrong" model='new TrangTrongViewModel("Chưa có môn học nào", "Sinh viên chưa được ghi danh môn học nào.", "bi-journal-x")' />
+}
+else
+{
+    <div class="accordion bang-diem" id="bang-diem">
+        @for (var i = 0; i < Model.CacHocKy.Count; i++)
+        {
+            var khoi = Model.CacHocKy[i];
+            var moSan = i == 0;
+            <div class="accordion-item">
+                <h3 class="accordion-header">
+                    <button class="accordion-button @(moSan ? "" : "collapsed")" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#@khoi.IdHtml"
+                            aria-expanded="@(moSan ? "true" : "false")" aria-controls="@khoi.IdHtml">
+                        <i class="bi bi-calendar3"></i>@HienThi.HocKy(khoi.NamHoc, khoi.HocKy)
+                        <span class="tom-tat-ky">
+                            @khoi.CacMon.Count môn · GPA học kỳ <strong>@HienThi.Gpa(khoi.Gpa?.Gpa)</strong>
+                        </span>
+                    </button>
+                </h3>
+                <div id="@khoi.IdHtml" class="accordion-collapse collapse @(moSan ? "show" : "")">
+                    <div class="accordion-body p-0">
+                        <div class="table-responsive">
+                            <table class="table bang-du-lieu">
+                                <thead>
+                                    <tr>
+                                        <th>Mã môn</th>
+                                        <th>Tên môn</th>
+                                        <th class="text-center">TC</th>
+                                        <th>Lần / Hình thức</th>
+                                        <th class="text-center">CC</th>
+                                        <th class="text-center">GK</th>
+                                        <th class="text-center">CK</th>
+                                        <th class="text-center">TK</th>
+                                        <th class="text-center">Chữ</th>
+                                        <th class="text-center">Hệ 4</th>
+                                        <th>Kết quả</th>
+                                        <th class="text-center" title="Lần học được chọn để tính GPA tích lũy">Tính tích lũy</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var mon in khoi.CacMon)
+                                    {
+                                        <tr>
+                                            <td class="ma">@mon.MaMon</td>
+                                            <td>
+                                                @mon.TenMon
+                                                <div class="small text-secondary">@mon.GiangVien.HoTen · @mon.TrongSo.Cc/@mon.TrongSo.Gk/@mon.TrongSo.Ck</div>
+                                            </td>
+                                            <td class="text-center">@mon.SoTinChi</td>
+                                            <td>@mon.LanHoc / @mon.HinhThuc</td>
+                                            <td class="text-center">@HienThi.Diem(mon.Diem.Cc)</td>
+                                            <td class="text-center">@HienThi.Diem(mon.Diem.Gk)</td>
+                                            <td class="text-center">@HienThi.Diem(mon.Diem.Ck)</td>
+                                            <td class="text-center fw-semibold">@HienThi.Diem(mon.DiemTK)</td>
+                                            <td class="text-center"><diem-chu gia-tri="@mon.DiemChu" /></td>
+                                            <td class="text-center">@(mon.DiemHe4?.ToString() ?? "–")</td>
+                                            <td class="@(mon.Dat switch { true => "ket-qua-dat", false => "ket-qua-truot", null => "ket-qua-chua" })">
+                                                @HienThi.KetQua(mon.Dat)
+                                            </td>
+                                            <td class="text-center">
+                                                @if (mon.TinhTichLuy)
+                                                {
+                                                    <i class="bi bi-check-circle-fill dau-tich" title="Tính vào GPA tích lũy" aria-label="Có"></i>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="chan-ky">
+                            <span>GPA học kỳ: <strong>@HienThi.Gpa(khoi.Gpa?.Gpa)</strong> <xep-loai gia-tri="@khoi.Gpa?.XepLoai" /></span>
+                            <span>TC đăng ký: <strong>@(khoi.Gpa?.TinChiDangKy ?? 0)</strong></span>
+                            <span>TC đạt: <strong>@(khoi.Gpa?.TinChiDat ?? 0)</strong></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (Model.HienTongKetCuoi && Model.TongKet != null)
+    {
+        <div class="the-noi-dung tong-ket-tich-luy mt-2">
+            <span>GPA tích lũy: <strong>@HienThi.Gpa(Model.TongKet.Gpa)</strong></span>
+            <span>TC tích lũy: <strong>@Model.TongKet.TinChiTichLuy</strong></span>
+            <span>Xếp loại: <xep-loai gia-tri="@Model.TongKet.XepLoai" /></span>
+            <span>Số môn nợ: <strong>@Model.TongKet.SoMonNo</strong></span>
+        </div>
+    }
+}

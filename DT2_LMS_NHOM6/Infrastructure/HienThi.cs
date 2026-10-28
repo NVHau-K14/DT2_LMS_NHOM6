@@ -50,6 +50,25 @@ public static class HienThi
         _ => "badge-trong"
     };
 
+    /// <summary>Lớp CSS badge cho trạng thái sinh viên / tài khoản.</summary>
+    public static string LopBadgeTrangThai(string? trangThai) => trangThai switch
+    {
+        HangSo.TrangThaiSinhVien.DangHoc => "tt-dang-hoc",
+        HangSo.TrangThaiSinhVien.BaoLuu => "tt-bao-luu",
+        HangSo.TrangThaiSinhVien.ThoiHoc => "tt-thoi-hoc",
+        HangSo.TrangThaiTaiKhoan.HoatDong => "tt-hoat-dong",
+        HangSo.TrangThaiTaiKhoan.Khoa => "tt-khoa",
+        _ => "badge-trong"
+    };
+
+    /// <summary>Cột "Kết quả" của bảng điểm: dat null → chưa có điểm.</summary>
+    public static string KetQua(bool? dat) => dat switch
+    {
+        true => "Đạt",
+        false => "Không đạt",
+        null => "Chưa có điểm"
+    };
+
     /// <summary>Lớp CSS badge cho xếp loại học lực (thiết kế mục 3.4).</summary>
     public static string LopBadgeXepLoai(string? xepLoai) => xepLoai switch
     {

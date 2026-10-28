@@ -1,0 +1,125 @@
+@model SinhVienIndexViewModel
+@{
+    ViewData["Title"] = "Sinh viên";
+    var coLoc = !string.IsNullOrEmpty(Model.MaLop) || !string.IsNullOrEmpty(Model.TrangThai) || !string.IsNullOrEmpty(Model.Q);
+}
+
+<div class="the-noi-dung">
+    <div class="thanh-cong-cu">
+        <form method="get" asp-action="Index" class="thanh-loc">
+            <select name="maLop" class="form-select" aria-label="Lọc theo lớp">
+                <option value="">Tất cả lớp</option>
+                @foreach (var lop in Model.DsLop)
+                {
+                    <option value="@lop.MaLop" selected="@(lop.MaLop == Model.MaLop)">@lop.MaLop</option>
+                }
+            </select>
+            <select name="trangThai" class="form-select" aria-label="Lọc theo trạng thái">
+                <option value="">Tất cả trạng thái</option>
+                @foreach (var tt in SinhVienFormViewModel.DsTrangThai)
+                {
+                    <option value="@tt" selected="@(tt == Model.TrangThai)">@tt</option>
+                }
+            </select>
+            <input type="search" name="q" value="@Model.Q" class="form-control o-tim" placeholder="Tìm MSSV hoặc họ tên..." aria-label="Tìm sinh viên" />
+            <button type="submit" class="btn btn-outline-primary"><i class="bi bi-funnel me-1"></i>Lọc</button>
+            @if (coLoc)
+            {
+                <a asp-action="Index" class="btn btn-light">Bỏ lọc</a>
+            }
+        </form>
+        <div class="nhom-nut">
+            @* Nhập / Xuất Excel làm ở giai đoạn 7 *@
+            <button type="button" class="btn btn-outline-secondary" disabled title="Chức năng Excel sẽ được bổ sung"><i class="bi bi-upload me-1"></i>Nhập Excel</button>
+            <button type="button" class="btn btn-outline-secondary" disabled title="Chức năng Excel sẽ được bổ sung"><i class="bi bi-file-earmark-arrow-down me-1"></i>Tải mẫu</button>
+            <button type="button" class="btn btn-outline-secondary" disabled title="Chức năng Excel sẽ được bổ sung"><i class="bi bi-file-earmark-excel me-1"></i>Xuất Excel</button>
+            <a asp-action="Them" asp-route-maLop="@Model.MaLop" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>Thêm sinh viên</a>
+        </div>
+    </div>
+
+    @if (Model.DanhSach.Count == 0)
+    {
+        <partial name="_TrangTrong" model='new TrangTrongViewModel("Không có sinh viên nào", coLoc ? "Không có sinh viên khớp bộ lọc." : null, "bi-person-x")' />
+    }
+    else
+    {
+        <div class="khung-bang table-responsive">
+            <table class="table bang-du-lieu">
+                <thead>
+                    <tr>
+                        <th>MSSV</th>
+                        <th>Họ tên</th>
+                        <th>Lớp</th>
+                        <th>Ngày sinh</th>
+                        <th>Trạng thái</th>
+                        <th class="text-center">GPA</th>
+                        <th>Xếp loại</th>
+                        <th class="text-end"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var dong in Model.DanhSach)
+                    {
+                        var sv = dong.SinhVien;
+                        var biKhoa = dong.TaiKhoan?.TrangThai == HangSo.TrangThaiTaiKhoan.Khoa;
+                        <tr>
+                            <td class="ma"><a asp-action="HoSo" asp-route-id="@sv.MaSV">@sv.MaSV</a></td>
+                            <td>
+                                @sv.HoTen
+                                @if (biKhoa)
+                                {
+                                    <span class="badge badge-trang-thai tt-khoa ms-1" title="Tài khoản đang bị khóa"><i class="bi bi-lock-fill"></i> Khóa</span>
+                                }
+                            </td>
+                            <td>@sv.MaLop</td>
+                            <td>@HienThi.Ngay(sv.NgaySinh)</td>
+                            <td><span class="badge badge-trang-thai @HienThi.LopBadgeTrangThai(sv.TrangThai)">@sv.TrangThai</span></td>
+                            <td class="text-center fw-semibold">@HienThi.Gpa(dong.HocLuc?.Gpa)</td>
+                            <td><xep-loai gia-tri="@dong.HocLuc?.XepLoai" /></td>
+                            <td class="text-end">
+                                <div class="dropdown">
+                                    <button class="btn nut-thao-tac" type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                                            data-bs-popper-config='{"strategy":"fixed"}' aria-label="Thao tác với sinh viên @sv.MaSV">
+                                        <i class="bi bi-three-dots-vertical"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                                        <li><a class="dropdown-item" asp-action="HoSo" asp-route-id="@sv.MaSV"><i class="bi bi-person-vcard"></i>Xem hồ sơ</a></li>
+                                        <li><a class="dropdown-item" asp-action="Sua" asp-route-id="@sv.MaSV"><i class="bi bi-pencil"></i>Sửa</a></li>
+                                        <li><hr class="dropdown-divider" /></li>
+                                        <li>
+                                            <button type="button" class="dropdown-item" data-xac-nhan-xoa
+                                                    data-url="@Url.Action("ResetMatKhau", new { id = sv.MaSV, quayLai = Model.UrlHienTai })"
+                                                    data-tieu-de="Đặt lại mật khẩu" data-nut="Đặt lại"
+                                                    data-noi-dung="Đặt lại mật khẩu của @sv.MaSV – @sv.HoTen về mặc định (ngày sinh ddMMyyyy)?"
+                                                    data-ghi-chu="Mật khẩu hiện tại của sinh viên sẽ không dùng được nữa.">
+                                                <i class="bi bi-key"></i>Reset mật khẩu
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button type="button" class="dropdown-item" data-xac-nhan-xoa
+                                                    data-url="@Url.Action("KhoaTaiKhoan", new { id = sv.MaSV, quayLai = Model.UrlHienTai })"
+                                                    data-tieu-de="@(biKhoa ? "Mở khóa tài khoản" : "Khóa tài khoản")" data-nut="@(biKhoa ? "Mở khóa" : "Khóa")"
+                                                    data-noi-dung="@(biKhoa ? "Mở khóa" : "Khóa") tài khoản của @sv.MaSV – @sv.HoTen?"
+                                                    data-ghi-chu="@(biKhoa ? "Sinh viên sẽ đăng nhập lại được." : "Sinh viên sẽ không đăng nhập được cho đến khi được mở khóa.")">
+                                                <i class="bi @(biKhoa ? "bi-unlock" : "bi-lock")"></i>@(biKhoa ? "Mở khóa tài khoản" : "Khóa tài khoản")
+                                            </button>
+                                        </li>
+                                        <li><hr class="dropdown-divider" /></li>
+                                        <li>
+                                            <button type="button" class="dropdown-item text-danger" data-xac-nhan-xoa
+                                                    data-url="@Url.Action("Xoa", new { id = sv.MaSV, quayLai = Model.UrlHienTai })"
+                                                    data-noi-dung="Xóa sinh viên @sv.MaSV – @sv.HoTen? Toàn bộ hồ sơ, điểm và tài khoản đăng nhập sẽ bị xóa.">
+                                                <i class="bi bi-trash"></i>Xóa
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    <partial name="_PhanTrang" model="Model.PhanTrang" />
+</div>

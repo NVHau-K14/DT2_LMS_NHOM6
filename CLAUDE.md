@@ -72,7 +72,7 @@ mongosh eduscore --quiet --eval "db.sinhvien.countDocuments()"
 | 1 | Nền móng: git, sln, package, models, khởi tạo DB, seeder | ✅ 100 SV, 640 lần học, 19 F, hè 12/8/5, 109 TK; validator + index OK |
 | 2 | Đăng nhập, phân quyền, layout, đổi mật khẩu, trang lỗi | ✅ Cookie auth 8h, 3 Area + base controller, layout sidebar/toast, 403/404/500 tiếng Việt |
 | 3 | Pipeline điểm & GPA + kiểm thử 5 ca | ✅ 7 pipeline + bộ quy đổi dùng chung; `--kiem-thu-gpa` 200/200 PASS; `--export-pipelines` 8 file |
-| 4 | CRUD Admin: lớp, sinh viên, giảng viên, môn học | ⬜ |
+| 4 | CRUD Admin: lớp, sinh viên, giảng viên, môn học | ✅ A-02→A-08 + A9; lan truyền tên môn/GV có toast lệnh; chặn xóa đúng; phân trang SV 20; `_BangDiem` dùng chung |
 | 5 | Ghi danh ($push/$pull) + nhập điểm ($set+arrayFilters) | ⬜ |
 | 6 | Báo cáo học lực, tổng quan, cổng sinh viên | ⬜ |
 | 7 | Nhập/Xuất Excel | ⬜ |
@@ -99,3 +99,10 @@ mongosh eduscore --quiet --eval "db.sinhvien.countDocuments()"
 - `BaoCaoHocLuc` dùng chung cho 2 phạm vi: `$filter` lần học theo phạm vi + `"@dieuKienTinhGpa"` (tích lũy: `dat=true`; học kỳ: `duDiem=true`, tính cả F). Phạm vi học kỳ: tinChiTichLuy = TC đạt trong kỳ, soMonNo = số F trong kỳ.
 - Service: `DiemService` (BangDiem, GpaHocKy, LopHocPhanCuaGV, DanhSachNhapDiem), `BaoCaoService` (BaoCaoHocLuc, ThongKeXepLoai, GpaTheoLop) trả `KetQuaPipeline<T>` (DuLieu, PipelineJson, ThoiGianMs). Tham số: `BoLocSinhVien.*`, `PhamViBaoCao.TichLuy()/TheoHocKy()`.
 - `--kiem-thu-gpa` / `--export-pipelines`: chạy sau `DbInitializer`, rồi thoát. Sửa pipeline → chạy lại cả hai, commit `docs/kiem-thu-gpa.md` + `database/pipelines/*.json`. Kiểm thử cần dữ liệu mẫu nguyên bản (đã sửa điểm TS → `--reset`).
+- GĐ4: service CRUD trả `KetQuaGhi` (ThanhCong, ThongBao, TruongLoi, MongoCommand); controller dùng `ThongBaoKetQua`/`GanLoi`/`QuayLai` ở `AdminControllerBase`. `quayLai` chỉ nhận URL nội bộ.
+- Modal thêm/sửa dùng chung: nút `data-mo-modal="#id" data-gia-tri='<JSON form>'`, ô `name="Form.X"`, ô khóa khi sửa `data-khoa-khi-sua`; POST lỗi → render lại Index với `MoModal=true` (`data-mo-san`). Hộp xác nhận nhận thêm `data-tieu-de/data-nut/data-ghi-chu` (dùng cho reset/khóa).
+- `MongoCommandFormatter` tự in cú pháp mongosh (ObjectId(), ISODate(), khóa trần) – không dùng `ToJson` của driver (driver 3.x bỏ chế độ Shell).
+- Sĩ số lớp, số lần học/môn: pipeline nhỏ `ThongKeDanhMuc` (`SiSoTheoLop`, `SoLanHocTheoMon`) – có bản JSON.
+- "GV đang được phân công dạy" = còn bất kỳ phần tử `monHoc` nào có `giangVien.maGV` (mọi học kỳ) – xóa sẽ làm lịch sử mất tham chiếu.
+- Ngày sinh SV hợp lệ: năm ≥ 1950 và đủ 15 tuổi. Mã lớp/GV/môn: 3–20 chữ/số, lưu chữ hoa.
+- Test bằng curl trong Git Bash làm hỏng tiếng Việt (tham số theo code page ANSI) → dùng script Python urllib khi POST dữ liệu có dấu.

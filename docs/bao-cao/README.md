@@ -7,7 +7,7 @@ Mỗi giai đoạn hoàn thành có một file `GD<N>.md` trong thư mục này 
 | 1 | Nền móng: git, sln, package, models, khởi tạo DB, seeder | [GD1](GD1.md) |
 | 2 | Đăng nhập, phân quyền, layout, đổi mật khẩu, trang lỗi | [GD2](GD2.md) |
 | 3 | Pipeline điểm & GPA + kiểm thử 5 ca | [GD3](GD3.md) |
-| 4 | CRUD Admin: lớp, sinh viên, giảng viên, môn học | _chưa có_ |
+| 4 | CRUD Admin: lớp, sinh viên, giảng viên, môn học | [GD4](GD4.md) |
 | 5 | Ghi danh + nhập điểm | _chưa có_ |
 | 6 | Báo cáo học lực, tổng quan, cổng sinh viên | _chưa có_ |
 | 7 | Nhập/Xuất Excel | _chưa có_ |

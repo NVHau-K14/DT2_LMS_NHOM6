@@ -1,0 +1,97 @@
+@model SinhVienFormViewModel
+@{
+    ViewData["Title"] = Model.LaSua ? $"Sửa sinh viên {Model.MaSV}" : "Thêm sinh viên";
+    ViewData["Breadcrumb"] = new[] { new MucBreadcrumb("Sinh viên", "/Admin/SinhVien") };
+    var action = Model.LaSua ? "Sua" : "Them";
+}
+
+<div class="row">
+    <div class="col-xl-9">
+        <div class="the-noi-dung">
+            <h2 class="h5 mb-1"><i class="bi bi-person-vcard me-2 text-primary"></i>@ViewData["Title"]</h2>
+            <p class="text-secondary small mb-4">
+                @if (Model.LaSua)
+                {
+                    <text>MSSV không được sửa. Đổi họ tên sẽ cập nhật luôn tên hiển thị của tài khoản đăng nhập.</text>
+                }
+                else
+                {
+                    <text>Hệ thống tự tạo tài khoản: tên đăng nhập = MSSV, mật khẩu = ngày sinh dạng ddMMyyyy. Môn học được thêm ở chức năng Ghi danh.</text>
+                }
+            </p>
+
+            <form asp-action="@action" asp-route-id="@(Model.LaSua ? Model.MaSV : null)" method="post" novalidate>
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 small" role="alert"></div>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label asp-for="MaSV" class="form-label"></label>
+                        <input asp-for="MaSV" class="form-control" readonly="@Model.LaSua" inputmode="numeric" maxlength="10" placeholder="2001250101" />
+                        <span asp-validation-for="MaSV" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-8">
+                        <label asp-for="HoTen" class="form-label"></label>
+                        <input asp-for="HoTen" class="form-control" placeholder="Nguyễn Thị Minh Anh" />
+                        <span asp-validation-for="HoTen" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="NgaySinh" class="form-label"></label>
+                        <input asp-for="NgaySinh" type="date" class="form-control" />
+                        <span asp-validation-for="NgaySinh" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="GioiTinh" class="form-label"></label>
+                        <select asp-for="GioiTinh" class="form-select" asp-items="@(new SelectList(SinhVienFormViewModel.DsGioiTinh))"></select>
+                        <span asp-validation-for="GioiTinh" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="TrangThai" class="form-label"></label>
+                        <select asp-for="TrangThai" class="form-select" asp-items="@(new SelectList(SinhVienFormViewModel.DsTrangThai))"></select>
+                        <span asp-validation-for="TrangThai" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="MaLop" class="form-label"></label>
+                        <select asp-for="MaLop" class="form-select">
+                            <option value="">– Chọn lớp –</option>
+                            @foreach (var lop in Model.DsLop)
+                            {
+                                <option value="@lop.MaLop">@lop.MaLop – @lop.TenLop</option>
+                            }
+                        </select>
+                        <span asp-validation-for="MaLop" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Email" class="form-label"></label>
+                        <input asp-for="Email" type="email" class="form-control" placeholder="2001250101@sv.eduscore.vn" />
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="SoDienThoai" class="form-label"></label>
+                        <input asp-for="SoDienThoai" class="form-control" inputmode="tel" maxlength="10" placeholder="0912345678" />
+                        <span asp-validation-for="SoDienThoai" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-8">
+                        <label asp-for="DiaChi" class="form-label"></label>
+                        <input asp-for="DiaChi" class="form-control" placeholder="Tân Phú, TP.HCM" />
+                        <span asp-validation-for="DiaChi" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-check2 me-1"></i>Lưu</button>
+                    @if (Model.LaSua)
+                    {
+                        <a asp-action="HoSo" asp-route-id="@Model.MaSV" class="btn btn-light">Hủy</a>
+                    }
+                    else
+                    {
+                        <a asp-action="Index" class="btn btn-light">Hủy</a>
+                    }
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

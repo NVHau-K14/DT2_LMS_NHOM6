@@ -1,0 +1,111 @@
+@model HoSoSinhVienViewModel
+@{
+    var sv = Model.SinhVien;
+    var tongKet = Model.BangDiem.TongKet;
+    var biKhoa = Model.TaiKhoan?.TrangThai == HangSo.TrangThaiTaiKhoan.Khoa;
+    var urlHoSo = $"/Admin/SinhVien/HoSo/{sv.MaSV}";
+    ViewData["Title"] = $"Hồ sơ {sv.MaSV}";
+    ViewData["Breadcrumb"] = new[] { new MucBreadcrumb("Sinh viên", "/Admin/SinhVien") };
+}
+
+@* ---------- Thẻ thông tin ---------- *@
+<div class="row g-3 mb-3">
+    <div class="col-xl-8">
+        <div class="the-noi-dung h-100">
+            <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+                <div>
+                    <h2 class="h5 mb-1">@sv.HoTen</h2>
+                    <span class="ma text-secondary">@sv.MaSV</span>
+                    <span class="badge badge-trang-thai @HienThi.LopBadgeTrangThai(sv.TrangThai) ms-2">@sv.TrangThai</span>
+                </div>
+                <div class="nhom-nut">
+                    <a asp-action="Sua" asp-route-id="@sv.MaSV" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil me-1"></i>Sửa</a>
+                    @* Ghi danh / hủy ghi danh / xuất bảng điểm làm ở giai đoạn 5 và 7 *@
+                    <button type="button" class="btn btn-sm btn-outline-secondary" disabled title="Chức năng ghi danh sẽ được bổ sung"><i class="bi bi-person-plus me-1"></i>Ghi danh môn</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" disabled title="Chức năng Excel sẽ được bổ sung"><i class="bi bi-file-earmark-excel me-1"></i>Xuất bảng điểm</button>
+                    <button type="button" class="btn btn-sm btn-outline-danger" data-xac-nhan-xoa
+                            data-url="@Url.Action("Xoa", new { id = sv.MaSV, quayLai = urlHoSo })"
+                            data-noi-dung="Xóa sinh viên @sv.MaSV – @sv.HoTen? Toàn bộ hồ sơ, điểm và tài khoản đăng nhập sẽ bị xóa.">
+                        <i class="bi bi-trash me-1"></i>Xóa
+                    </button>
+                </div>
+            </div>
+            <dl class="danh-sach-thong-tin">
+                <dt>Lớp</dt>
+                <dd><a asp-controller="LopHoc" asp-action="ChiTiet" asp-route-id="@sv.MaLop">@sv.MaLop</a>@(Model.TenLop != null ? $" – {Model.TenLop}" : "")</dd>
+                <dt>Ngày sinh</dt><dd>@HienThi.Ngay(sv.NgaySinh)</dd>
+                <dt>Giới tính</dt><dd>@sv.GioiTinh</dd>
+                <dt>Email</dt><dd>@(sv.Email ?? "–")</dd>
+                <dt>Số điện thoại</dt><dd>@(sv.SoDienThoai ?? "–")</dd>
+                <dt>Địa chỉ</dt><dd>@(sv.DiaChi ?? "–")</dd>
+            </dl>
+        </div>
+    </div>
+    <div class="col-xl-4">
+        <div class="the-noi-dung h-100">
+            <h2 class="h6 text-secondary mb-3">Tài khoản đăng nhập</h2>
+            @if (Model.TaiKhoan == null)
+            {
+                <p class="text-secondary mb-0">Sinh viên chưa có tài khoản.</p>
+            }
+            else
+            {
+                <dl class="danh-sach-thong-tin mb-3">
+                    <dt>Tên đăng nhập</dt><dd class="ma">@Model.TaiKhoan.TenDangNhap</dd>
+                    <dt>Trạng thái</dt><dd><span class="badge badge-trang-thai @HienThi.LopBadgeTrangThai(Model.TaiKhoan.TrangThai)">@Model.TaiKhoan.TrangThai</span></dd>
+                    <dt>Đăng nhập cuối</dt><dd>@(Model.TaiKhoan.LanDangNhapCuoi?.ToLocalTime().ToString("dd/MM/yyyy HH:mm") ?? "Chưa đăng nhập")</dd>
+                </dl>
+                <div class="nhom-nut">
+                    <button type="button" class="btn btn-sm btn-light" data-xac-nhan-xoa
+                            data-url="@Url.Action("ResetMatKhau", new { id = sv.MaSV, quayLai = urlHoSo })"
+                            data-tieu-de="Đặt lại mật khẩu" data-nut="Đặt lại"
+                            data-noi-dung="Đặt lại mật khẩu của @sv.MaSV về mặc định (ngày sinh ddMMyyyy)?"
+                            data-ghi-chu="Mật khẩu hiện tại của sinh viên sẽ không dùng được nữa.">
+                        <i class="bi bi-key me-1"></i>Reset mật khẩu
+                    </button>
+                    <button type="button" class="btn btn-sm btn-light" data-xac-nhan-xoa
+                            data-url="@Url.Action("KhoaTaiKhoan", new { id = sv.MaSV, quayLai = urlHoSo })"
+                            data-tieu-de="@(biKhoa ? "Mở khóa tài khoản" : "Khóa tài khoản")" data-nut="@(biKhoa ? "Mở khóa" : "Khóa")"
+                            data-noi-dung="@(biKhoa ? "Mở khóa" : "Khóa") tài khoản của @sv.MaSV?"
+                            data-ghi-chu="@(biKhoa ? "Sinh viên sẽ đăng nhập lại được." : "Sinh viên sẽ không đăng nhập được cho đến khi được mở khóa.")">
+                        <i class="bi @(biKhoa ? "bi-unlock" : "bi-lock") me-1"></i>@(biKhoa ? "Mở khóa" : "Khóa")
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@* ---------- Thẻ tóm tắt học lực tích lũy (pipeline BaoCaoHocLuc) ---------- *@
+<div class="row g-3 mb-3">
+    <div class="col-sm-6 col-xl-3">
+        <div class="the-so">
+            <span class="the-so-icon"><i class="bi bi-graph-up"></i></span>
+            <div><div class="the-so-nhan">GPA tích lũy</div><div class="the-so-gia-tri">@HienThi.Gpa(tongKet?.Gpa)</div></div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="the-so">
+            <span class="the-so-icon"><i class="bi bi-journal-check"></i></span>
+            <div><div class="the-so-nhan">Tín chỉ tích lũy</div><div class="the-so-gia-tri">@(tongKet?.TinChiTichLuy ?? 0)</div></div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="the-so">
+            <span class="the-so-icon"><i class="bi bi-award"></i></span>
+            <div><div class="the-so-nhan">Xếp loại</div><div class="mt-1"><xep-loai gia-tri="@tongKet?.XepLoai" /></div></div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="the-so">
+            <span class="the-so-icon"><i class="bi bi-exclamation-diamond"></i></span>
+            <div><div class="the-so-nhan">Số môn nợ</div><div class="the-so-gia-tri @((tongKet?.SoMonNo ?? 0) > 0 ? "text-danger" : "")">@(tongKet?.SoMonNo ?? 0)</div></div>
+        </div>
+    </div>
+</div>
+
+@* ---------- Bảng điểm theo học kỳ ---------- *@
+<div class="the-noi-dung">
+    <h2 class="h5 mb-3"><i class="bi bi-journal-text me-2 text-primary"></i>Bảng điểm theo học kỳ</h2>
+    <partial name="_BangDiem" model="Model.BangDiem" />
+</div>

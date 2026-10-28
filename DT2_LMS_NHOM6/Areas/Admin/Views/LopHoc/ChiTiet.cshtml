@@ -1,0 +1,75 @@
+@model LopHocChiTietViewModel
+@{
+    var lop = Model.Lop;
+    ViewData["Title"] = $"Lớp {lop.MaLop}";
+    ViewData["Breadcrumb"] = new[] { new MucBreadcrumb("Lớp học", "/Admin/LopHoc") };
+}
+
+<div class="row g-3 mb-3">
+    <div class="col-lg-8">
+        <div class="the-noi-dung h-100">
+            <h2 class="h5 mb-3"><i class="bi bi-people me-2 text-primary"></i>@lop.TenLop</h2>
+            <dl class="danh-sach-thong-tin">
+                <dt>Mã lớp</dt><dd class="ma">@lop.MaLop</dd>
+                <dt>Niên khóa</dt><dd>@lop.NienKhoa</dd>
+                <dt>Ngành</dt><dd>@lop.Nganh</dd>
+                <dt>Khoa</dt><dd>@lop.Khoa</dd>
+                <dt>Cố vấn học tập</dt><dd>@(lop.CoVanHocTap?.HoTen ?? "Chưa phân công")</dd>
+                <dt>Sĩ số</dt><dd>@Model.DanhSachSV.Count sinh viên</dd>
+            </dl>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="the-noi-dung h-100 d-flex flex-column gap-2">
+            <h2 class="h6 text-secondary mb-1">Thao tác</h2>
+            <a href="/Admin/GhiDanh?maLop=@Uri.EscapeDataString(lop.MaLop)" class="btn btn-primary"><i class="bi bi-person-plus me-1"></i>Ghi danh cả lớp</a>
+            <a asp-controller="SinhVien" asp-action="Them" asp-route-maLop="@lop.MaLop" class="btn btn-outline-primary"><i class="bi bi-plus-lg me-1"></i>Thêm sinh viên vào lớp</a>
+            <button type="button" class="btn btn-outline-secondary" disabled title="Chức năng xuất Excel sẽ được bổ sung"><i class="bi bi-file-earmark-excel me-1"></i>Xuất báo cáo lớp</button>
+        </div>
+    </div>
+</div>
+
+<div class="the-noi-dung">
+    <h2 class="h5 mb-3">Danh sách sinh viên <span class="small text-secondary fw-normal">– học lực tích lũy</span></h2>
+    @if (Model.DanhSachSV.Count == 0)
+    {
+        <partial name="_TrangTrong" model='new TrangTrongViewModel("Lớp chưa có sinh viên", null, "bi-person-x")' />
+    }
+    else
+    {
+        <div class="khung-bang table-responsive">
+            <table class="table bang-du-lieu">
+                <thead>
+                    <tr>
+                        <th class="text-center">STT</th>
+                        <th>MSSV</th>
+                        <th>Họ tên</th>
+                        <th class="text-center">TC tích lũy</th>
+                        <th class="text-center">GPA</th>
+                        <th>Xếp loại</th>
+                        <th class="text-center">Số môn nợ</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (var i = 0; i < Model.DanhSachSV.Count; i++)
+                    {
+                        var sv = Model.DanhSachSV[i];
+                        <tr>
+                            <td class="text-center">@(i + 1)</td>
+                            <td class="ma">@sv.MaSV</td>
+                            <td>@sv.HoTen</td>
+                            <td class="text-center">@sv.TinChiTichLuy</td>
+                            <td class="text-center fw-semibold">@HienThi.Gpa(sv.Gpa)</td>
+                            <td><xep-loai gia-tri="@sv.XepLoai" /></td>
+                            <td class="text-center @(sv.SoMonNo > 0 ? "text-danger fw-semibold" : "")">@sv.SoMonNo</td>
+                            <td class="text-end">
+                                <a asp-controller="SinhVien" asp-action="HoSo" asp-route-id="@sv.MaSV" class="btn btn-sm btn-light"><i class="bi bi-person-vcard me-1"></i>Hồ sơ</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

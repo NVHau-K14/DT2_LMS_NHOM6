@@ -36,6 +36,8 @@ public static class XuatPipeline
             ("GpaTheoLop", GpaTheoLopPipeline.Tao()),
             ("LopHocPhanCuaGV", LopHocPhanCuaGVPipeline.Tao(MaGVMau, NamHocMau, HocKyMau)),
             ("DanhSachNhapDiem", DanhSachNhapDiemPipeline.Tao(MaGVMau, MaMonMau, NamHocMau, HocKyMau)),
+            ("SiSoTheoLop", ThongKeDanhMucPipeline.SiSoTheoLop()),
+            ("SoLanHocTheoMon", ThongKeDanhMucPipeline.SoLanHocTheoMon()),
         };
 
         foreach (var (ten, pipeline) in danhSach)
