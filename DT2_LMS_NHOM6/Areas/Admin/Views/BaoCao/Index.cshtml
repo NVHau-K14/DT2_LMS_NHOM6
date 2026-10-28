@@ -1,0 +1,44 @@
+@model BaoCaoAdminViewModel
+@{
+    ViewData["Title"] = "Báo cáo học lực";
+}
+
+<div class="the-noi-dung mb-3">
+    <form method="get" class="thanh-loc">
+        <label class="small text-secondary" for="maLop">Lớp</label>
+        <select class="form-select" id="maLop" name="maLop" data-tu-gui>
+            <option value="">Tất cả lớp</option>
+            @foreach (var lop in Model.DsLop)
+            {
+                <option value="@lop.MaLop" selected="@(lop.MaLop == Model.MaLop)">@lop.MaLop</option>
+            }
+        </select>
+        <label class="small text-secondary ms-2" for="phamVi">Phạm vi</label>
+        <select class="form-select" id="phamVi" name="phamVi" data-tu-gui>
+            <option value="@BaoCaoAdminViewModel.PhamViTichLuy">Tích lũy (mọi học kỳ)</option>
+            @foreach (var k in Model.DsHocKy)
+            {
+                var ma = LopHocPhanViewModel.MaKy(k.NamHoc, k.HocKy);
+                <option value="@ma" selected="@(ma == Model.PhamVi)">@HienThi.HocKy(k.NamHoc, k.HocKy)</option>
+            }
+        </select>
+        <noscript><button type="submit" class="btn btn-primary">Lọc</button></noscript>
+    </form>
+    <p class="small text-secondary mb-0 mt-2">
+        @if (Model.BaoCao.LaTichLuy)
+        {
+            <text>Tích lũy: mỗi môn lấy lần học tốt nhất; GPA chỉ tính các môn đạt (A–D). Sinh viên chưa có môn nào đạt → "Chưa xếp loại".</text>
+        }
+        else
+        {
+            <text>Một học kỳ: GPA tính mọi môn đủ điểm trong kỳ, kể cả F (= 0). Học kỳ chưa có điểm cuối kỳ → "Chưa xếp loại".</text>
+        }
+    </p>
+</div>
+
+<partial name="_BaoCaoHocLuc" model="Model.BaoCao" />
+
+@section Scripts {
+    <script src="~/lib/chart.js/dist/chart.umd.js"></script>
+    <script src="~/js/bieu-do.js" asp-append-version="true"></script>
+}

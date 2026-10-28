@@ -1,0 +1,26 @@
+[
+  {
+    "$unwind": "$monHoc"
+  },
+  {
+    "$group": {
+      "_id": {
+        "namHoc": "$monHoc.namHoc",
+        "hocKy": "$monHoc.hocKy"
+      }
+    }
+  },
+  {
+    "$project": {
+      "_id": 0,
+      "namHoc": "$_id.namHoc",
+      "hocKy": "$_id.hocKy"
+    }
+  },
+  {
+    "$sort": {
+      "namHoc": -1,
+      "hocKy": -1
+    }
+  }
+]

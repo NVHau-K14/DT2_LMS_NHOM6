@@ -14,6 +14,12 @@ namespace DT2_LMS_NHOM6.Pipelines;
 ///   1. $unwind – mỗi lần học một document.          [barem: $unwind]
 ///   2. $group  – theo monHoc.maMon, đếm lần học và số SV khác nhau ($addToSet).
 ///   3. $project – maMon, soLanHoc, soSV.
+///
+/// HocKyCoDuLieu – các học kỳ đã có lần học (ô chọn phạm vi báo cáo A-10), mới nhất trước:
+///   1. $unwind – mỗi lần học một document.
+///   2. $group  – theo (namHoc, hocKy).
+///   3. $project – namHoc, hocKy.
+///   4. $sort   – namHoc ↓, hocKy ↓.
 /// </summary>
 public static class ThongKeDanhMucPipeline
 {
@@ -35,7 +41,18 @@ public static class ThongKeDanhMucPipeline
         ]
         """;
 
+    public const string HocKyCoDuLieuJson = """
+        [
+          { "$unwind": "$monHoc" },
+          { "$group": { "_id": { "namHoc": "$monHoc.namHoc", "hocKy": "$monHoc.hocKy" } } },
+          { "$project": { "_id": 0, "namHoc": "$_id.namHoc", "hocKy": "$_id.hocKy" } },
+          { "$sort": { "namHoc": -1, "hocKy": -1 } }
+        ]
+        """;
+
     public static BsonDocument[] SiSoTheoLop() => PipelineJson.Tao(SiSoTheoLopJson);
+
+    public static BsonDocument[] HocKyCoDuLieu() => PipelineJson.Tao(HocKyCoDuLieuJson);
 
     public static BsonDocument[] SoLanHocTheoMon() => PipelineJson.Tao(SoLanHocTheoMonJson);
 }

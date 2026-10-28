@@ -21,6 +21,7 @@ dotnet run --project DT2_LMS_NHOM6 -- --export-pipelines
 | `DanhSachNhapDiem.json` | SV của một lớp học phần kèm điểm đã quy đổi | GV `GV005`, môn `INT301`, HK1 2026-2027 |
 | `SiSoTheoLop.json` | Sĩ số mỗi lớp sinh hoạt (A-02) | – |
 | `SoLanHocTheoMon.json` | Số lần học, số SV của mỗi môn (cảnh báo đổi tên, chặn xóa môn – A-08) | – |
+| `HocKyCoDuLieu.json` | Các học kỳ đã có lần học, mới nhất trước (ô chọn phạm vi A-10) | – |
 
 Bốn stage `$addFields` đầu sau `$unwind` (duDiem → diemTK → diemChu → diemHe4 + dat) là **bộ quy đổi dùng chung**, giống hệt nhau ở mọi file. Bản có chú thích từng stage: `DT2_LMS_NHOM6/Pipelines/QuyDoiDiemStages.cs`.
 

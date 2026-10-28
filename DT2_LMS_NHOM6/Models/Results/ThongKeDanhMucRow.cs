@@ -10,6 +10,14 @@ public class SiSoLopRow
     [BsonElement("siSo")] public int SiSo { get; set; }
 }
 
+/// <summary>Một dòng của pipeline HocKyCoDuLieu.</summary>
+[BsonIgnoreExtraElements]
+public class HocKyRow
+{
+    [BsonElement("namHoc")] public string NamHoc { get; set; } = "";
+    [BsonElement("hocKy")] public int HocKy { get; set; }
+}
+
 /// <summary>Một dòng của pipeline SoLanHocTheoMon.</summary>
 [BsonIgnoreExtraElements]
 public class SoLanHocMonRow

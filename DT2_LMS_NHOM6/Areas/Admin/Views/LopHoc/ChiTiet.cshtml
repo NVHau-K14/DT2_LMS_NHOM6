@@ -29,6 +29,10 @@
     </div>
 </div>
 
+@* Thống kê xếp loại tích lũy của lớp (pipeline ThongKeXepLoai lọc theo lớp) *@
+<h2 class="h6 text-secondary mb-2">Thống kê xếp loại của lớp <span class="fw-normal">(tích lũy)</span></h2>
+<partial name="_TheXepLoai" model="Model.ThongKeXepLoai" />
+
 <div class="the-noi-dung">
     <h2 class="h5 mb-3">Danh sách sinh viên <span class="small text-secondary fw-normal">– học lực tích lũy</span></h2>
     @if (Model.DanhSachSV.Count == 0)

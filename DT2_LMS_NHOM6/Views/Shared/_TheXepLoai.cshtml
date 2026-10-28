@@ -1,0 +1,14 @@
+@model IEnumerable<SoLuongXepLoai>
+@*
+    Hàng thẻ số theo 7 mức xếp loại (Xuất sắc → Chưa xếp loại) – dùng ở A-10, G-04, A-03.
+    Số SV mỗi mức lấy từ pipeline ThongKeXepLoai.
+*@
+<div class="luoi-xep-loai">
+    @foreach (var muc in Model)
+    {
+        <div class="the-xep-loai" style="--mau-xl: @HienThi.MauXepLoai(muc.XepLoai)">
+            <div class="the-xep-loai-so">@muc.SoSV</div>
+            <div class="the-xep-loai-nhan">@muc.XepLoai</div>
+        </div>
+    }
+</div>

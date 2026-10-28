@@ -57,15 +57,25 @@ public class LopHocController : AdminControllerBase
         return RedirectToAction(nameof(Index));
     }
 
-    /// <summary>A-03: thông tin lớp + GPA tích lũy, xếp loại từng SV (pipeline BaoCaoHocLuc lọc theo lớp).</summary>
+    /// <summary>
+    /// A-03: thông tin lớp + GPA tích lũy, xếp loại từng SV (pipeline BaoCaoHocLuc lọc theo lớp)
+    /// + thẻ thống kê xếp loại của lớp (pipeline ThongKeXepLoai cùng bộ lọc).
+    /// </summary>
     [HttpGet]
     public async Task<IActionResult> ChiTiet(string id)
     {
         var lop = await _lopHoc.LayAsync(id);
         if (lop == null) return NotFound();
 
-        var baoCao = await _baoCao.BaoCaoHocLucAsync(BoLocSinhVien.TheoLop(id), PhamViBaoCao.TichLuy());
-        return View(new LopHocChiTietViewModel { Lop = lop, DanhSachSV = baoCao.DuLieu });
+        var boLoc = BoLocSinhVien.TheoLop(id);
+        var baoCao = await _baoCao.BaoCaoHocLucAsync(boLoc, PhamViBaoCao.TichLuy());
+        var thongKe = await _baoCao.ThongKeXepLoaiAsync(boLoc, PhamViBaoCao.TichLuy());
+        return View(new LopHocChiTietViewModel
+        {
+            Lop = lop,
+            DanhSachSV = baoCao.DuLieu,
+            ThongKeXepLoai = BaoCaoHocLucViewModel.DuBayMuc(thongKe.DuLieu)
+        });
     }
 
     private async Task<LopHocIndexViewModel> TaoIndexAsync(string? nganh, string? nienKhoa, string? q)

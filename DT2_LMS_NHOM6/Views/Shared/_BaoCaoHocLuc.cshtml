@@ -1,0 +1,132 @@
+@model BaoCaoHocLucViewModel
+@*
+    Báo cáo học lực dùng chung cho A-10 (Admin) và G-04 (Giảng viên):
+    thẻ số 7 mức xếp loại + biểu đồ cột, bảng SV sắp xếp được (phía trình duyệt), modal "Xem pipeline".
+    Mọi con số (GPA, xếp loại, TC, số môn nợ, số SV mỗi mức) lấy nguyên từ pipeline – view chỉ hiển thị.
+    Trang chứa partial cần nạp chart.js + bieu-do.js trong section Scripts.
+*@
+@{
+    var tongSV = Model.DanhSach.Count;
+}
+
+<partial name="_TheXepLoai" model="Model.ThongKe" />
+
+<div class="row g-3 mb-3">
+    <div class="col-12">
+        <div class="the-noi-dung">
+            <h2 class="h6 mb-3"><i class="bi bi-bar-chart-line me-2 text-primary"></i>Phân bố xếp loại – @Model.TenPhamVi <span class="text-secondary fw-normal">(@tongSV sinh viên)</span></h2>
+            <div class="khung-bieu-do khung-bieu-do-thap">
+                <canvas data-bieu-do="@Model.BieuDo.ToJson()" aria-label="Biểu đồ số sinh viên theo xếp loại" role="img"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="the-noi-dung">
+    <div class="thanh-cong-cu">
+        <h2 class="h6 mb-0">Danh sách sinh viên <span class="text-secondary fw-normal">– bấm tiêu đề cột để sắp xếp</span></h2>
+        <div class="nhom-nut">
+            <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modal-pipeline">
+                <i class="bi bi-code-slash me-1"></i>Xem pipeline
+            </button>
+            @* Xuất Excel làm ở giai đoạn 7 *@
+            <button type="button" class="btn btn-sm btn-outline-secondary" disabled title="Chức năng Excel sẽ được bổ sung"><i class="bi bi-file-earmark-excel me-1"></i>Xuất Excel</button>
+        </div>
+    </div>
+
+    @if (tongSV == 0)
+    {
+        <partial name="_TrangTrong" model='new TrangTrongViewModel("Không có sinh viên", "Bộ lọc hiện tại không có sinh viên nào.", "bi-people")' />
+    }
+    else
+    {
+        <div class="khung-bang table-responsive">
+            <table class="table bang-du-lieu" data-sap-xep-bang>
+                <thead>
+                    <tr>
+                        <th class="text-center">STT</th>
+                        <th data-sap-xep="chu">MSSV</th>
+                        <th data-sap-xep="chu">Họ tên</th>
+                        <th data-sap-xep="chu">Lớp</th>
+                        <th class="text-center" data-sap-xep="so" title="@(Model.LaTichLuy ? "Tổng tín chỉ các môn đạt (lần học tốt nhất)" : "Tín chỉ các môn đạt trong học kỳ")">@(Model.LaTichLuy ? "TC tích lũy" : "TC đạt")</th>
+                        <th class="text-center" data-sap-xep="so">GPA</th>
+                        <th data-sap-xep="so">Xếp loại</th>
+                        <th class="text-center" data-sap-xep="so" title="@(Model.LaTichLuy ? "Số môn đã có điểm nhưng chưa lần nào đạt" : "Số môn F trong học kỳ")">@(Model.LaTichLuy ? "Số môn nợ" : "Số môn F")</th>
+                        @if (Model.UrlHoSoSV != null)
+                        {
+                            <th></th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (var i = 0; i < tongSV; i++)
+                    {
+                        var sv = Model.DanhSach[i];
+                        <tr>
+                            <td class="text-center" data-stt>@(i + 1)</td>
+                            <td class="ma">@sv.MaSV</td>
+                            <td>@sv.HoTen</td>
+                            <td class="ma">@sv.MaLop</td>
+                            <td class="text-center">@sv.TinChiTichLuy</td>
+                            @* GPA null (Chưa xếp loại) sắp như -1 để nằm cuối khi giảm dần *@
+                            <td class="text-center fw-semibold" data-gia-tri="@(sv.Gpa?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "-1")">@HienThi.Gpa(sv.Gpa)</td>
+                            <td data-gia-tri="@BaoCaoHocLucViewModel.ThuTuXepLoai(sv.XepLoai)"><xep-loai gia-tri="@sv.XepLoai" /></td>
+                            <td class="text-center @(sv.SoMonNo > 0 ? "text-danger fw-semibold" : "")">@sv.SoMonNo</td>
+                            @if (Model.UrlHoSoSV != null)
+                            {
+                                <td class="text-end">
+                                    <a href="@(Model.UrlHoSoSV + Uri.EscapeDataString(sv.MaSV))" class="btn btn-sm btn-light text-nowrap"><i class="bi bi-person-vcard me-1"></i>Hồ sơ</a>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@* ---------- Modal "Xem pipeline": JSON pipeline vừa chạy (đúng tham số), thời gian, số dòng ---------- *@
+<div class="modal fade" id="modal-pipeline" tabindex="-1" aria-labelledby="modal-pipeline-tieu-de" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title h5" id="modal-pipeline-tieu-de"><i class="bi bi-code-slash me-2 text-primary"></i>Pipeline đã chạy</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+            </div>
+            <div class="modal-body">
+                <p class="small text-secondary">
+                    Chạy trên collection <code>sinhvien</code>: <code>db.sinhvien.aggregate([...])</code>.
+                    Sao chép và dán vào Compass (tab Aggregations → nút &lt;/&gt; Text) để thấy cùng kết quả.
+                </p>
+                <ul class="nav nav-tabs mb-3" role="tablist">
+                    @for (var i = 0; i < Model.Pipelines.Count; i++)
+                    {
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link @(i == 0 ? "active" : "")" id="tab-pipeline-@i" data-bs-toggle="tab" data-bs-target="#pipeline-@i"
+                                    type="button" role="tab" aria-controls="pipeline-@i" aria-selected="@(i == 0 ? "true" : "false")">
+                                @Model.Pipelines[i].Ten
+                            </button>
+                        </li>
+                    }
+                </ul>
+                <div class="tab-content">
+                    @for (var i = 0; i < Model.Pipelines.Count; i++)
+                    {
+                        var p = Model.Pipelines[i];
+                        <div class="tab-pane fade @(i == 0 ? "show active" : "")" id="pipeline-@i" role="tabpanel" aria-labelledby="tab-pipeline-@i">
+                            <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                                <span class="small text-secondary me-auto">@p.MoTa</span>
+                                <span class="badge text-bg-light"><i class="bi bi-stopwatch me-1"></i>@HienThi.ThoiGian(p.ThoiGianMs)</span>
+                                <span class="badge text-bg-light"><i class="bi bi-list-ol me-1"></i>@p.SoDong dòng</span>
+                                <span class="badge text-bg-light"><i class="bi bi-layers me-1"></i>@p.SoStage stage</span>
+                                <button type="button" class="btn btn-sm btn-primary" data-sao-chep="#json-pipeline-@i"><i class="bi bi-clipboard me-1"></i>Sao chép</button>
+                            </div>
+                            <pre class="khoi-pipeline" id="json-pipeline-@i">@p.Json</pre>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

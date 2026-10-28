@@ -4,6 +4,8 @@
 //   - hộp xác nhận xóa dùng chung          : nút có data-xac-nhan-xoa
 //   - modal thêm / sửa dùng chung          : nút có data-mo-modal + data-gia-tri (JSON)
 //   - thu gọn / mở sidebar
+//   - sắp xếp bảng phía trình duyệt        : table[data-sap-xep-bang] + th[data-sap-xep]
+//   - nút sao chép                         : nút có data-sao-chep="#id"
 // Không dựng HTML bằng chuỗi: toast nhân bản <template id="mau-toast"> trong _Toast.cshtml.
 // ===========================================================================
 (function () {
@@ -202,8 +204,65 @@
         });
     }
 
+    // ---------- Sắp xếp bảng phía trình duyệt (báo cáo học lực) ----------
+    // <table data-sap-xep-bang>, tiêu đề cột <th data-sap-xep="so|chu">; ô có data-gia-tri thì
+    // sắp theo giá trị đó (GPA, thứ tự xếp loại), không thì theo chữ hiển thị. Ô data-stt được đánh số lại.
+    // Chỉ đổi thứ tự các <tr> có sẵn – không dựng HTML.
+    function khoiTaoSapXepBang() {
+        document.querySelectorAll('table[data-sap-xep-bang]').forEach(function (bang) {
+            var tbody = bang.tBodies[0];
+            bang.querySelectorAll('th[data-sap-xep]').forEach(function (th) {
+                th.classList.add('cot-sap-xep');
+                th.tabIndex = 0;
+                function sapXep() {
+                    var cot = th.cellIndex;
+                    var laSo = th.dataset.sapXep === 'so';
+                    var tang = !th.classList.contains('sap-tang');
+                    bang.querySelectorAll('th[data-sap-xep]').forEach(function (o) { o.classList.remove('sap-tang', 'sap-giam'); });
+                    th.classList.add(tang ? 'sap-tang' : 'sap-giam');
+
+                    function khoa(tr) {
+                        var o = tr.cells[cot];
+                        var v = o.dataset.giaTri !== undefined ? o.dataset.giaTri : o.textContent.trim();
+                        return laSo ? parseFloat(v) || 0 : v;
+                    }
+                    var dong = Array.prototype.slice.call(tbody.rows);
+                    dong.sort(function (a, b) {
+                        var x = khoa(a), y = khoa(b);
+                        var kq = laSo ? x - y : String(x).localeCompare(String(y), 'vi');
+                        return tang ? kq : -kq;
+                    });
+                    dong.forEach(function (tr, i) {
+                        tbody.appendChild(tr);
+                        var stt = tr.querySelector('[data-stt]');
+                        if (stt) { stt.textContent = i + 1; }
+                    });
+                }
+                th.addEventListener('click', sapXep);
+                th.addEventListener('keydown', function (e) { if (e.key === 'Enter') { sapXep(); } });
+            });
+        });
+    }
+
+    // ---------- Nút sao chép: <button data-sao-chep="#id-khoi-van-ban"> ----------
+    function khoiTaoSaoChep() {
+        document.addEventListener('click', function (e) {
+            var nut = e.target.closest('[data-sao-chep]');
+            if (!nut) { return; }
+            var nguon = document.querySelector(nut.dataset.saoChep);
+            if (!nguon) { return; }
+            var nhanCu = nut.innerHTML;
+            saoChep(nguon.textContent).then(function () {
+                nut.textContent = 'Đã sao chép';
+                setTimeout(function () { nut.innerHTML = nhanCu; }, 2000);
+            });
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         khoiTaoTuGui();
+        khoiTaoSapXepBang();
+        khoiTaoSaoChep();
         khoiTaoSidebar();
         khoiTaoXacNhanXoa();
         khoiTaoModalForm();

@@ -1,13 +1,68 @@
+@model TongQuanAdminViewModel
 @{
     ViewData["Title"] = "Tổng quan";
+    (string Nhan, long GiaTri, string Icon, string Url)[] theSo =
+    [
+        ("Lớp học", Model.SoLop, "bi-people", "/Admin/LopHoc"),
+        ("Sinh viên", Model.SoSV, "bi-person-vcard", "/Admin/SinhVien"),
+        ("Giảng viên", Model.SoGV, "bi-person-workspace", "/Admin/GiangVien"),
+        ("Môn học", Model.SoMon, "bi-journal-bookmark", "/Admin/MonHoc")
+    ];
+    (string Nhan, string Icon, string Url)[] truyCapNhanh =
+    [
+        ("Sinh viên", "bi-person-vcard", "/Admin/SinhVien"),
+        ("Ghi danh", "bi-person-plus", "/Admin/GhiDanh"),
+        ("Báo cáo", "bi-bar-chart-line", "/Admin/BaoCao"),
+        ("Nhập/Xuất dữ liệu", "bi-file-earmark-spreadsheet", "/Admin/DuLieu"),
+        ("Lớp học", "bi-people", "/Admin/LopHoc")
+    ];
 }
 
-<div class="the-noi-dung chao-mung">
-    <div class="d-flex align-items-center gap-3">
-        <div class="chao-mung-icon"><i class="bi bi-emoji-smile"></i></div>
-        <div>
-            <h2 class="h4 mb-1">Xin chào, @User.HoTen()!</h2>
-            <p class="text-secondary mb-0">Đây là cổng quản trị của phòng đào tạo. Các chức năng quản lý lớp học, sinh viên, giảng viên, môn học, ghi danh và báo cáo sẽ có ở các giai đoạn sau.</p>
+<div class="row g-3 mb-3">
+    @foreach (var the in theSo)
+    {
+        <div class="col-sm-6 col-xl-3">
+            <a class="the-so the-so-link" href="@the.Url">
+                <span class="the-so-icon"><i class="bi @the.Icon"></i></span>
+                <div><div class="the-so-nhan">@the.Nhan</div><div class="the-so-gia-tri">@the.GiaTri</div></div>
+            </a>
+        </div>
+    }
+</div>
+
+<div class="row g-3 mb-3">
+    <div class="col-xl-5">
+        <div class="the-noi-dung h-100">
+            <h2 class="h6 mb-3"><i class="bi bi-pie-chart me-2 text-primary"></i>Phân bố xếp loại toàn trường <span class="text-secondary fw-normal">(tích lũy)</span></h2>
+            <div class="khung-bieu-do">
+                <canvas data-bieu-do="@Model.BieuDoXepLoai.ToJson()" aria-label="Biểu đồ phân bố xếp loại toàn trường" role="img"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-7">
+        <div class="the-noi-dung h-100">
+            <h2 class="h6 mb-3"><i class="bi bi-bar-chart me-2 text-primary"></i>GPA tích lũy trung bình theo lớp</h2>
+            <div class="khung-bieu-do">
+                <canvas data-bieu-do="@Model.BieuDoGpaLop.ToJson()" aria-label="Biểu đồ GPA trung bình theo lớp" role="img"></canvas>
+            </div>
         </div>
     </div>
 </div>
+
+<div class="the-noi-dung">
+    <h2 class="h6 mb-3"><i class="bi bi-lightning me-2 text-primary"></i>Truy cập nhanh</h2>
+    <div class="luoi-truy-cap">
+        @foreach (var muc in truyCapNhanh)
+        {
+            <a class="o-truy-cap" href="@muc.Url">
+                <span class="o-truy-cap-icon"><i class="bi @muc.Icon"></i></span>
+                <span>@muc.Nhan</span>
+            </a>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/chart.js/dist/chart.umd.js"></script>
+    <script src="~/js/bieu-do.js" asp-append-version="true"></script>
+}

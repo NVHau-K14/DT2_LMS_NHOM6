@@ -74,7 +74,7 @@ mongosh eduscore --quiet --eval "db.sinhvien.countDocuments()"
 | 3 | Pipeline điểm & GPA + kiểm thử 5 ca | ✅ 7 pipeline + bộ quy đổi dùng chung; `--kiem-thu-gpa` 200/200 PASS; `--export-pipelines` 8 file |
 | 4 | CRUD Admin: lớp, sinh viên, giảng viên, môn học | ✅ A-02→A-08 + A9; lan truyền tên môn/GV có toast lệnh; chặn xóa đúng; phân trang SV 20; `_BangDiem` dùng chung |
 | 5 | Ghi danh ($push/$pull) + nhập điểm ($set+arrayFilters) | ✅ A-09 (xem trước từ `BangDiem`, bulkWrite $push), hủy $pull ở A-06; G-01/02/03 lưu từng dòng + lưu tất cả, quyền trong arrayFilters; toast lệnh |
-| 6 | Báo cáo học lực, tổng quan, cổng sinh viên | ⬜ |
+| 6 | Báo cáo học lực, tổng quan, cổng sinh viên | ✅ A-10/G-04 dùng chung `_BaoCaoHocLuc` (7 thẻ, biểu đồ, sắp xếp, Xem pipeline); A-01 donut + cột; A-03 thẻ xếp loại; S-01/02/03 MSSV từ claim |
 | 7 | Nhập/Xuất Excel | ⬜ |
 | 8 | (Tùy chọn) Hiệu năng + API/Swagger | ⬜ |
 | 9 | Hoàn thiện, export DB, README, tài liệu | ⬜ |
@@ -112,3 +112,10 @@ mongosh eduscore --quiet --eval "db.sinhvien.countDocuments()"
 - `LenhUpdateOne` (record) dùng chung để chạy (`TaoModel()`) và in lệnh (`MongoCommandFormatter.BulkWriteUpdateOne`: lệnh đầu + "tổng cộng N lệnh").
 - JSON trả về JS gồm TK/chữ/hệ 4 đã định dạng + lớp badge (`DongDiemJson`) – JS chỉ đặt vào ô. `<select data-tu-gui>` tự gửi form GET. `_BangDiem` có `QuayLaiHuyGhiDanh` (null = không hiện cột hủy).
 - GV: `GiangVienControllerBase.MaGV` lấy từ claim. G-03 lớp học phần không dạy → `StatusCode(403)` (trang lỗi tiếng Việt).
+- GĐ6: partial `_BaoCaoHocLuc` (A-10, G-04) + `_TheXepLoai` (A-10, G-04, A-03). Thẻ số/biểu đồ lấy từ `ThongKeXepLoai` (cùng bộ lọc + phạm vi với bảng); `BaoCaoHocLucViewModel.DuBayMuc` chỉ xếp vào đủ 7 mức (`HangSo.CacXepLoai`), mức không có SV = 0.
+- Biểu đồ: server dựng `CauHinhBieuDo` → JSON trong `<canvas data-bieu-do>`; `wwwroot/js/bieu-do.js` chỉ vẽ. Trang có biểu đồ nạp `lib/chart.js/dist/chart.umd.js` + `bieu-do.js` ở section Scripts.
+- Modal "Xem pipeline": `PipelineDaChay` (Json, ThoiGianMs, SoDong, SoStage đếm bằng `JsonDocument`) – 2 tab BaoCaoHocLuc + ThongKeXepLoai; nút `data-sao-chep="#id"` (eduscore.js).
+- Sắp xếp bảng phía client: `table[data-sap-xep-bang]` + `th[data-sap-xep="so|chu"]`, ô có `data-gia-tri` sắp theo giá trị đó (GPA null = -1, xếp loại = thứ tự 1..7), ô `data-stt` đánh số lại.
+- A-10 phạm vi: `tichluy` hoặc `namHoc_hocKy`; chỉ nhận học kỳ có trong pipeline `HocKyCoDuLieu` và lớp có thật, giá trị lạ → mặc định. Phạm vi học kỳ: cột đổi tên "TC đạt", "Số môn F".
+- G-04 chỉ phạm vi tích lũy (G5). Bộ lọc luôn chứa maGV từ claim (`TheoGiangVien` / `TheoLopHocPhan`); `lhp` không thuộc GV → bỏ qua. Không có link hồ sơ SV (`UrlHoSoSV = null`).
+- Cổng SV: `SinhVienControllerBase.MaSV` từ claim; action không có tham số maSV. S-01 lọc môn học kỳ hiện tại từ kết quả `BangDiem`; biểu đồ GPA chỉ vẽ học kỳ đã có GPA. S-02 = `_BangDiem` (HienTongKetCuoi, không cột hủy).

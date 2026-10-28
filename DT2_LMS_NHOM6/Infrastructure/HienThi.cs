@@ -93,4 +93,19 @@ public static class HienThi
         "Kém" => "badge-xl-kem",
         _ => "badge-trong"
     };
+
+    /// <summary>Màu đậm của xếp loại – dùng cho cột / lát biểu đồ và viền thẻ số (cùng tông với badge).</summary>
+    public static string MauXepLoai(string? xepLoai) => xepLoai switch
+    {
+        "Xuất sắc" => "#16A34A",
+        "Giỏi" => "#2563EB",
+        "Khá" => "#0EA5E9",
+        "Trung bình" => "#EAB308",
+        "Yếu" => "#F97316",
+        "Kém" => "#DC2626",
+        _ => "#94A3B8"
+    };
+
+    /// <summary>Thời gian thực thi pipeline, ví dụ "12.4 ms".</summary>
+    public static string ThoiGian(double ms) => ms.ToString("0.0", CultureInfo.InvariantCulture) + " ms";
 }

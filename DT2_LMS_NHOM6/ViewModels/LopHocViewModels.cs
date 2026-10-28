@@ -66,4 +66,6 @@ public class LopHocChiTietViewModel
 {
     public LopHoc Lop { get; set; } = new();
     public List<BaoCaoHocLucRow> DanhSachSV { get; set; } = new();
+    /// <summary>Số SV của lớp theo 7 mức xếp loại tích lũy (pipeline ThongKeXepLoai).</summary>
+    public List<SoLuongXepLoai> ThongKeXepLoai { get; set; } = new();
 }

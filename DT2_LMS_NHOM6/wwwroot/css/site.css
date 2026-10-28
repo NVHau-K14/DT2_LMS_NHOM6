@@ -1058,3 +1058,133 @@ body.trang-auth {
 
 .dong-da-sua td { background: #FFFBEB !important; }
 .dong-da-sua .o-diem.da-doi { border-color: #F59E0B; }
+
+/* =========================================================================
+   GĐ6 – báo cáo học lực, tổng quan, cổng sinh viên
+   ========================================================================= */
+
+/* ---------- Hàng thẻ 7 mức xếp loại ---------- */
+.luoi-xep-loai {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: .75rem;
+    margin-bottom: 1rem;
+}
+
+.the-xep-loai {
+    background: var(--es-the);
+    border: 1px solid var(--es-vien);
+    border-top: 4px solid var(--mau-xl);
+    border-radius: var(--es-bo-goc);
+    box-shadow: var(--es-bong);
+    padding: .75rem 1rem;
+}
+
+.the-xep-loai-so {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--mau-xl);
+}
+
+.the-xep-loai-nhan {
+    font-size: .8rem;
+    color: var(--es-chu-phu);
+}
+
+/* ---------- Biểu đồ ---------- */
+.khung-bieu-do {
+    position: relative;
+    height: 300px;
+}
+
+.khung-bieu-do-thap {
+    height: 240px;
+}
+
+/* ---------- Bảng sắp xếp được ---------- */
+.bang-du-lieu th.cot-sap-xep {
+    cursor: pointer;
+    user-select: none;
+}
+
+    .bang-du-lieu th.cot-sap-xep::after {
+        content: "\2195";
+        margin-left: .3rem;
+        opacity: .35;
+    }
+
+    .bang-du-lieu th.cot-sap-xep.sap-tang::after { content: "\2191"; opacity: 1; }
+    .bang-du-lieu th.cot-sap-xep.sap-giam::after { content: "\2193"; opacity: 1; }
+
+/* ---------- Modal xem pipeline ---------- */
+.khoi-pipeline {
+    background: #0F172A;
+    color: #E2E8F0;
+    border-radius: 10px;
+    padding: 1rem;
+    font-size: .8rem;
+    max-height: 60vh;
+    overflow: auto;
+    margin: 0;
+}
+
+/* ---------- Tổng quan Admin ---------- */
+a.the-so-link {
+    color: inherit;
+    text-decoration: none;
+    transition: border-color .15s, box-shadow .15s;
+}
+
+    a.the-so-link:hover {
+        border-color: var(--es-xanh);
+        box-shadow: 0 4px 12px rgba(37, 99, 235, .12);
+    }
+
+.luoi-truy-cap {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: .75rem;
+}
+
+.o-truy-cap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .5rem;
+    padding: 1rem .5rem;
+    border: 1px solid var(--es-vien);
+    border-radius: var(--es-bo-goc);
+    color: var(--es-chu);
+    text-decoration: none;
+    font-weight: 500;
+    text-align: center;
+    transition: background .15s, border-color .15s;
+}
+
+    .o-truy-cap:hover {
+        background: var(--es-xanh-nhat);
+        border-color: var(--es-xanh);
+        color: var(--es-xanh-dam);
+    }
+
+.o-truy-cap-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    background: var(--es-xanh-nhat);
+    color: var(--es-xanh);
+}
+
+/* ---------- Kết quả học tập (S-02) ---------- */
+.chu-thich-quy-tac {
+    padding-left: 1.1rem;
+}
+
+    .chu-thich-quy-tac li + li {
+        margin-top: .25rem;
+    }

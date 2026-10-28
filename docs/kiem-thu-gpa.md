@@ -2,9 +2,9 @@
 
 > File sinh tự động bởi `dotnet run --project DT2_LMS_NHOM6 -- --kiem-thu-gpa`. Không sửa tay.
 
-- **Thời điểm chạy:** 28/10/2026 20:05:52
+- **Thời điểm chạy:** 28/10/2026 20:26:24
 - **Kết quả:** 200/200 tiêu chí PASS ✅
-- **Thời gian chạy:** 0.37 giây
+- **Thời gian chạy:** 0.27 giây
 - **Cách kiểm thử:** chạy các pipeline thật (`BangDiem`, `GpaHocKy`, `BaoCaoHocLuc`, `ThongKeXepLoai`, `GpaTheoLop`, `LopHocPhanCuaGV`, `DanhSachNhapDiem`) qua `DiemService`/`BaoCaoService` trên database `eduscore`, so với giá trị mong đợi viết cứng theo bảng tính tay ở `docs/thiet-ke.md` mục 7.5. Số thực so sánh bằng `==` tuyệt đối (không dung sai). Dòng ghi "suy ra từ 3.3" không có trong bảng 7.5 mà suy ra trực tiếp từ quy tắc: học kỳ chưa có lần học nào đủ điểm → GPA null, "Chưa xếp loại".
 - **Công thức (mục 3):** `diemTK = floor(tong/10 + 0.5000001)/10`; `GPA = floor(x*100 + 0.5000001)/100`; không dùng `$round` (làm tròn kiểu banker's, 84.5 → 84).
 

@@ -47,6 +47,12 @@ public static class HangSo
         public const string PhoGiaoSuTienSi = "PGS.TS.";
     }
 
+    /// <summary>
+    /// 7 mức xếp loại học lực theo thứ tự hiển thị (thiết kế 3.4). Chuỗi do pipeline trả về –
+    /// danh sách này chỉ dùng để XẾP THẺ / CỘT BIỂU ĐỒ đủ 7 mức (mức không có SV vẫn hiện số 0).
+    /// </summary>
+    public static readonly string[] CacXepLoai = ["Xuất sắc", "Giỏi", "Khá", "Trung bình", "Yếu", "Kém", "Chưa xếp loại"];
+
     /// <summary>Tên đăng nhập / mã tham chiếu của tài khoản quản trị.</summary>
     public const string MaAdmin = "admin";
 }

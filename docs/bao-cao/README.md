@@ -9,7 +9,7 @@ Mỗi giai đoạn hoàn thành có một file `GD<N>.md` trong thư mục này 
 | 3 | Pipeline điểm & GPA + kiểm thử 5 ca | [GD3](GD3.md) |
 | 4 | CRUD Admin: lớp, sinh viên, giảng viên, môn học | [GD4](GD4.md) |
 | 5 | Ghi danh + nhập điểm | [GD5](GD5.md) |
-| 6 | Báo cáo học lực, tổng quan, cổng sinh viên | _chưa có_ |
+| 6 | Báo cáo học lực, tổng quan, cổng sinh viên | [GD6](GD6.md) |
 | 7 | Nhập/Xuất Excel | _chưa có_ |
 | 8 | (Tùy chọn) Hiệu năng + API/Swagger | _chưa có_ |
 | 9 | Hoàn thiện, export DB, README, tài liệu | _chưa có_ |

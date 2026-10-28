@@ -1,13 +1,126 @@
+@model TongQuanSinhVienViewModel
 @{
     ViewData["Title"] = "Tổng quan";
+    var tongKet = Model.TongKet;
 }
 
-<div class="the-noi-dung chao-mung">
+<div class="the-noi-dung chao-mung mb-3">
     <div class="d-flex align-items-center gap-3">
         <div class="chao-mung-icon"><i class="bi bi-emoji-smile"></i></div>
         <div>
             <h2 class="h4 mb-1">Xin chào, @User.HoTen()!</h2>
-            <p class="text-secondary mb-0">Đây là cổng sinh viên. Chức năng xem kết quả học tập và hồ sơ cá nhân sẽ có ở các giai đoạn sau.</p>
+            <p class="text-secondary mb-0">MSSV <span class="ma">@User.MaThamChieu()</span> · Học kỳ hiện tại: @Model.TenHocKyHienTai</p>
         </div>
     </div>
 </div>
+
+@* ---------- 4 thẻ học lực tích lũy (pipeline BaoCaoHocLuc) ---------- *@
+<div class="row g-3 mb-3">
+    <div class="col-sm-6 col-xl-3">
+        <div class="the-so">
+            <span class="the-so-icon"><i class="bi bi-graph-up"></i></span>
+            <div><div class="the-so-nhan">GPA tích lũy</div><div class="the-so-gia-tri">@HienThi.Gpa(tongKet?.Gpa)</div></div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="the-so">
+            <span class="the-so-icon"><i class="bi bi-journal-check"></i></span>
+            <div><div class="the-so-nhan">Tín chỉ tích lũy</div><div class="the-so-gia-tri">@(tongKet?.TinChiTichLuy ?? 0)</div></div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="the-so">
+            <span class="the-so-icon"><i class="bi bi-award"></i></span>
+            <div><div class="the-so-nhan">Xếp loại</div><div class="mt-1"><xep-loai gia-tri="@tongKet?.XepLoai" /></div></div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="the-so">
+            <span class="the-so-icon"><i class="bi bi-exclamation-diamond"></i></span>
+            <div><div class="the-so-nhan">Số môn nợ</div><div class="the-so-gia-tri @((tongKet?.SoMonNo ?? 0) > 0 ? "text-danger" : "")">@(tongKet?.SoMonNo ?? 0)</div></div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    @* ---------- Biểu đồ GPA theo học kỳ (pipeline GpaHocKy) ---------- *@
+    <div class="col-xl-5">
+        <div class="the-noi-dung h-100">
+            <h2 class="h6 mb-3"><i class="bi bi-graph-up-arrow me-2 text-primary"></i>GPA theo học kỳ</h2>
+            @if (Model.BieuDoGpa.Nhan.Count == 0)
+            {
+                <partial name="_TrangTrong" model='new TrangTrongViewModel("Chưa có GPA học kỳ", "Chưa có học kỳ nào có môn đủ điểm.", "bi-graph-up")' />
+            }
+            else
+            {
+                <div class="khung-bieu-do">
+                    <canvas data-bieu-do="@Model.BieuDoGpa.ToJson()" aria-label="Biểu đồ GPA theo học kỳ" role="img"></canvas>
+                </div>
+            }
+        </div>
+    </div>
+
+    @* ---------- Môn học kỳ hiện tại (lấy từ pipeline BangDiem) ---------- *@
+    <div class="col-xl-7">
+        <div class="the-noi-dung h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="h6 mb-0"><i class="bi bi-calendar3 me-2 text-primary"></i>Môn học @Model.TenHocKyHienTai</h2>
+                <a asp-controller="KetQua" asp-action="Index" class="small">Xem toàn bộ kết quả <i class="bi bi-arrow-right"></i></a>
+            </div>
+            @if (Model.MonHocKyHienTai.Count == 0)
+            {
+                <partial name="_TrangTrong" model='new TrangTrongViewModel("Chưa có môn học", "Bạn chưa được ghi danh môn nào trong học kỳ này.", "bi-journal-x")' />
+            }
+            else
+            {
+                <div class="khung-bang table-responsive">
+                    <table class="table bang-du-lieu">
+                        <thead>
+                            <tr>
+                                <th>Môn học</th>
+                                <th class="text-center">TC</th>
+                                <th class="text-center">CC</th>
+                                <th class="text-center">GK</th>
+                                <th class="text-center">CK</th>
+                                <th class="text-center">TK</th>
+                                <th>Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var mon in Model.MonHocKyHienTai)
+                            {
+                                <tr>
+                                    <td>
+                                        <span class="ma">@mon.MaMon</span> – @mon.TenMon
+                                        <div class="small text-secondary">@mon.GiangVien.HoTen</div>
+                                    </td>
+                                    <td class="text-center">@mon.SoTinChi</td>
+                                    <td class="text-center">@HienThi.Diem(mon.Diem.Cc)</td>
+                                    <td class="text-center">@HienThi.Diem(mon.Diem.Gk)</td>
+                                    <td class="text-center">@HienThi.Diem(mon.Diem.Ck)</td>
+                                    <td class="text-center fw-semibold">@HienThi.Diem(mon.DiemTK)</td>
+                                    <td class="text-nowrap">
+                                        @if (mon.DuDiem)
+                                        {
+                                            <diem-chu gia-tri="@mon.DiemChu" />
+                                            <span class="@(mon.Dat == true ? "ket-qua-dat" : "ket-qua-truot") ms-1">@HienThi.KetQua(mon.Dat)</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="ket-qua-chua">Chưa có điểm</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/chart.js/dist/chart.umd.js"></script>
+    <script src="~/js/bieu-do.js" asp-append-version="true"></script>
+}
