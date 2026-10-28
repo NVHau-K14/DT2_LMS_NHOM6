@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using DT2_LMS_NHOM6.Models;
 using DT2_LMS_NHOM6.Models.Documents;
 using DT2_LMS_NHOM6.Models.Results;
@@ -9,7 +10,8 @@ namespace DT2_LMS_NHOM6.ViewModels;
 /// <summary>Form thêm / sửa sinh viên (A-05). MSSV khóa khi sửa.</summary>
 public class SinhVienFormViewModel : IValidatableObject
 {
-    public bool LaSua { get; set; }
+    /// <summary>Do server đặt (không bind từ JSON của API).</summary>
+    [JsonIgnore] public bool LaSua { get; set; }
 
     [Display(Name = "MSSV")]
     [Required(ErrorMessage = "Vui lòng nhập MSSV.")]
@@ -52,7 +54,7 @@ public class SinhVienFormViewModel : IValidatableObject
     public string TrangThai { get; set; } = HangSo.TrangThaiSinhVien.DangHoc;
 
     /// <summary>Danh sách lớp cho ô chọn – không bind từ form.</summary>
-    [ValidateNever] public List<LopHoc> DsLop { get; set; } = new();
+    [ValidateNever, JsonIgnore] public List<LopHoc> DsLop { get; set; } = new();
 
     public static readonly string[] DsGioiTinh = [HangSo.GioiTinh.Nam, HangSo.GioiTinh.Nu];
     public static readonly string[] DsTrangThai =

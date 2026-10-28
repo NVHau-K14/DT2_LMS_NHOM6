@@ -1,0 +1,169 @@
+@model HieuNangViewModel
+@{
+    ViewData["Title"] = "Hiệu năng";
+    var ts = Model.ThamSo;
+    var kyChon = LopHocPhanViewModel.MaKy(ts.NamHoc, ts.HocKy);
+
+    // Badge stage: quét bằng index màu xanh lá, quét toàn bộ màu đỏ
+    string LopBadgeStage(KetQuaExplain e) => e.DungIndex ? "text-bg-success" : "text-bg-danger";
+}
+
+@* ---------- Tham số + nút Chạy đo ---------- *@
+<div class="the-noi-dung mb-3">
+    <h2 class="h6 mb-3"><i class="bi bi-lightning-charge me-2 text-primary"></i>So sánh truy vấn có / không index</h2>
+    <form method="get" class="thanh-loc">
+        <input type="hidden" name="chay" value="true" />
+        <label class="small text-secondary" for="maSV">MSSV</label>
+        <input class="form-control" id="maSV" name="maSV" value="@ts.MaSV" maxlength="10" />
+        <label class="small text-secondary ms-2" for="maGV">Giảng viên</label>
+        <input class="form-control" id="maGV" name="maGV" value="@ts.MaGV" maxlength="20" />
+        <label class="small text-secondary ms-2" for="ky">Học kỳ</label>
+        <select class="form-select" id="ky" name="ky">
+            @foreach (var k in Model.DsHocKy)
+            {
+                var ma = LopHocPhanViewModel.MaKy(k.NamHoc, k.HocKy);
+                <option value="@ma" selected="@(ma == kyChon)">@HienThi.HocKy(k.NamHoc, k.HocKy)</option>
+            }
+        </select>
+        <label class="small text-secondary ms-2" for="maMon">Mã môn</label>
+        <input class="form-control" id="maMon" name="maMon" value="@ts.MaMon" maxlength="20" />
+        <button type="submit" class="btn btn-primary ms-2"><i class="bi bi-play-fill me-1"></i>Chạy đo</button>
+    </form>
+    <p class="small text-secondary mb-0 mt-2">
+        Mỗi truy vấn chạy <code>explain("executionStats")</code> hai lần trên collection <code>sinhvien</code> (@Model.SoSinhVien document):
+        để MongoDB tự chọn index, và ép quét toàn bộ bằng <code>hint({ $natural: 1 })</code>.
+        Sau đó chạy pipeline <code>BaoCaoHocLuc</code> toàn trường @DT2_LMS_NHOM6.Services.HieuNangService.SoLanChayPipeline lần. Trang chỉ đọc, không ghi dữ liệu.
+    </p>
+</div>
+
+@if (Model.Loi != null)
+{
+    <div class="alert alert-warning">@Model.Loi</div>
+}
+
+@if (!Model.DaChay)
+{
+    <div class="the-noi-dung text-center text-secondary py-5">
+        <i class="bi bi-speedometer fs-1 d-block mb-2"></i>
+        Giá trị đã được điền sẵn từ dữ liệu thật. Bấm <strong>Chạy đo</strong> để xem kết quả.
+    </div>
+}
+else
+{
+    @foreach (var tv in Model.TruyVan)
+    {
+        <div class="the-noi-dung mb-3">
+            <h2 class="h6 mb-1">@tv.Ten</h2>
+            <p class="small mb-3">Bộ lọc: <code>@tv.Filter</code></p>
+            <div class="khung-bang table-responsive">
+                <table class="table bang-du-lieu">
+                    <thead>
+                        <tr>
+                            <th>Chỉ số</th>
+                            <th class="text-center">Có index</th>
+                            <th class="text-center">Không index (<code>$natural</code>)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Stage thắng</td>
+                            <td class="text-center"><span class="badge @LopBadgeStage(tv.CoIndex)">@tv.CoIndex.StageThang</span></td>
+                            <td class="text-center"><span class="badge @LopBadgeStage(tv.KhongIndex)">@tv.KhongIndex.StageThang</span></td>
+                        </tr>
+                        <tr>
+                            <td>Cây stage</td>
+                            <td class="text-center ma">@tv.CoIndex.ChuoiStage</td>
+                            <td class="text-center ma">@tv.KhongIndex.ChuoiStage</td>
+                        </tr>
+                        <tr>
+                            <td>Index dùng</td>
+                            <td class="text-center ma">
+                                @(tv.CoIndex.TenIndex ?? "–")
+                                @if (tv.CoIndex.LaMultikey)
+                                {
+                                    <span class="badge text-bg-info ms-1">multikey</span>
+                                }
+                            </td>
+                            <td class="text-center ma">@(tv.KhongIndex.TenIndex ?? "–")</td>
+                        </tr>
+                        <tr>
+                            <td>keysExamined <span class="text-secondary small">(số khóa index đã đọc)</span></td>
+                            <td class="text-center fw-semibold">@tv.CoIndex.KeysExamined</td>
+                            <td class="text-center fw-semibold">@tv.KhongIndex.KeysExamined</td>
+                        </tr>
+                        <tr>
+                            <td>docsExamined <span class="text-secondary small">(số document đã đọc)</span></td>
+                            <td class="text-center fw-semibold text-success">@tv.CoIndex.DocsExamined</td>
+                            <td class="text-center fw-semibold text-danger">@tv.KhongIndex.DocsExamined</td>
+                        </tr>
+                        <tr>
+                            <td>nReturned <span class="text-secondary small">(số document trả về)</span></td>
+                            <td class="text-center">@tv.CoIndex.NReturned</td>
+                            <td class="text-center">@tv.KhongIndex.NReturned</td>
+                        </tr>
+                        <tr>
+                            <td>executionTimeMillis</td>
+                            <td class="text-center">@tv.CoIndex.ExecutionTimeMillis ms</td>
+                            <td class="text-center">@tv.KhongIndex.ExecutionTimeMillis ms</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="small mt-3 mb-2"><i class="bi bi-info-circle me-1 text-primary"></i>@tv.GiaiThich</p>
+            <details class="small">
+                <summary class="text-primary">Lệnh mongosh tương đương</summary>
+                <pre class="khoi-pipeline mt-2">@tv.CoIndex.LenhMongosh
+@tv.KhongIndex.LenhMongosh</pre>
+            </details>
+        </div>
+    }
+
+    <div class="the-noi-dung mb-3">
+        <p class="small text-secondary mb-0">
+            <i class="bi bi-lightbulb me-1"></i>Dữ liệu mẫu chỉ có @Model.SoSinhVien sinh viên nên <code>executionTimeMillis</code> thường 0–1 ms ở cả hai cách;
+            khác biệt thật nằm ở <strong>docsExamined</strong>: có index chỉ đọc đúng các document cần, không index phải đọc cả collection.
+            Khi số sinh viên tăng lên hàng trăm nghìn, số document phải đọc khi COLLSCAN (và thời gian) tăng theo, còn IXSCAN gần như không đổi.
+        </p>
+    </div>
+
+    var p = Model.Pipeline!;
+    <div class="the-noi-dung mb-3">
+        <h2 class="h6 mb-3"><i class="bi bi-diagram-3 me-2 text-primary"></i>Pipeline BaoCaoHocLuc toàn trường – @p.SoLan lần</h2>
+        <div class="row g-3 mb-3">
+            <div class="col-sm-6 col-xl-3">
+                <div class="the-so">
+                    <span class="the-so-icon"><i class="bi bi-arrow-down-circle"></i></span>
+                    <div><div class="the-so-nhan">Nhanh nhất</div><div class="the-so-gia-tri">@p.MinMs.ToString("0.00") ms</div></div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xl-3">
+                <div class="the-so">
+                    <span class="the-so-icon"><i class="bi bi-dash-circle"></i></span>
+                    <div><div class="the-so-nhan">Trung bình</div><div class="the-so-gia-tri">@p.TrungBinhMs.ToString("0.00") ms</div></div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xl-3">
+                <div class="the-so">
+                    <span class="the-so-icon"><i class="bi bi-arrow-up-circle"></i></span>
+                    <div><div class="the-so-nhan">Chậm nhất</div><div class="the-so-gia-tri">@p.MaxMs.ToString("0.00") ms</div></div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xl-3">
+                <div class="the-so">
+                    <span class="the-so-icon"><i class="bi bi-people"></i></span>
+                    <div><div class="the-so-nhan">Số dòng kết quả</div><div class="the-so-gia-tri">@p.SoDong</div></div>
+                </div>
+            </div>
+        </div>
+        <p class="small mb-2">
+            Từng lần (ms):
+            <span class="ma">@string.Join(" · ", p.CacLanMs.Select(ms => ms.ToString("0.00")))</span>
+        </p>
+        <p class="small mb-0">
+            <i class="bi bi-info-circle me-1 text-primary"></i>Thời gian đo bằng Stopwatch từ lúc gửi <code>aggregate</code> đến lúc nhận đủ kết quả
+            (gồm cả mạng nội bộ và chuyển đổi kết quả). Pipeline <code>$unwind</code> mảng <code>monHoc</code>, chọn lần học tốt nhất mỗi môn,
+            <code>$group</code> tính GPA có trọng số tín chỉ rồi <code>$switch</code> xếp loại – toàn bộ trên server MongoDB.
+            Các lần chạy dao động vài ms do bộ nhớ đệm, lập lịch của hệ điều hành và bộ thu gom rác .NET – vì vậy xem cả min / trung bình / max.
+        </p>
+    </div>
+}

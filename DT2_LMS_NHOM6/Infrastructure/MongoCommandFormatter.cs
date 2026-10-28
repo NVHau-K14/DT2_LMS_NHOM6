@@ -37,6 +37,14 @@ public static class MongoCommandFormatter
         IEnumerable<BsonDocument>? arrayFilters = null, UpdateResult? ketQua = null)
         => LenhUpdate(collection, "updateMany", filter, update, arrayFilters, ketQua);
 
+    /// <summary>db.&lt;collection&gt;.insertOne({...}) – in đúng document đã chèn.</summary>
+    public static string InsertOne(string collection, BsonDocument document)
+        => $"db.{collection}.insertOne(\n  {DinhDang(document)}\n)\n// insertedId: {DinhDang(document.GetValue("_id", BsonNull.Value))}";
+
+    /// <summary>db.&lt;collection&gt;.deleteOne(filter) + deletedCount.</summary>
+    public static string DeleteOne(string collection, BsonDocument filter, long deletedCount)
+        => $"db.{collection}.deleteOne(\n  {DinhDang(filter)}\n)\n// deletedCount: {deletedCount}";
+
     /// <summary>Ghép nhiều lệnh (ví dụ lan truyền tên GV sang 3 collection) thành một chuỗi, cách nhau một dòng trống.</summary>
     public static string GhepLenh(IEnumerable<string> cacLenh) => string.Join("\n\n", cacLenh);
 

@@ -1,13 +1,19 @@
 using System.Globalization;
 using System.Text.Encodings.Web;
+using System.Text.Json;
 using System.Text.Unicode;
 using DT2_LMS_NHOM6.Data;
 using DT2_LMS_NHOM6.Infrastructure;
 using DT2_LMS_NHOM6.Services;
+using DT2_LMS_NHOM6.ViewModels;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.WebEncoders;
+using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Models;
+using MongoDB.Bson;
 
 // Cờ dòng lệnh (tách khỏi args trước khi đưa vào builder để không bị hiểu nhầm là tham số cấu hình):
 //   --reset            xóa database rồi tạo lại validator, index, dữ liệu mẫu
@@ -45,6 +51,7 @@ builder.Services.AddScoped<MonHocService>();
 builder.Services.AddScoped<GhiDanhService>();
 builder.Services.AddScoped<XuatExcelService>();
 builder.Services.AddScoped<NhapExcelService>();
+builder.Services.AddScoped<HieuNangService>();
 
 // Kết quả kiểm tra file Excel giữ tạm trong bộ nhớ giữa bước xem trước và bước xác nhận (thiết kế mục 6)
 builder.Services.AddMemoryCache();
@@ -62,6 +69,12 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.Cookie.Name = "EduScore.Auth";
         options.Cookie.HttpOnly = true;
         options.Cookie.SameSite = SameSiteMode.Lax;
+
+        // API (/api/...): không chuyển hướng sang trang đăng nhập mà trả 401 / 403 dạng JSON
+        options.Events.OnRedirectToLogin = context => TraLoiApiHoacChuyenHuong(context,
+            StatusCodes.Status401Unauthorized, "Chưa đăng nhập. Hãy đăng nhập ở /Account/Login rồi gọi lại API.");
+        options.Events.OnRedirectToAccessDenied = context => TraLoiApiHoacChuyenHuong(context,
+            StatusCodes.Status403Forbidden, "Vai trò của bạn không được phép gọi API này.");
     });
 builder.Services.AddAuthorization();
 
@@ -71,8 +84,48 @@ builder.Services.Configure<WebEncoderOptions>(options =>
 
 builder.Services.AddControllersWithViews(options =>
 {
-    // Mọi request POST/PUT/DELETE đều phải có antiforgery token hợp lệ
+    // Mọi request POST/PUT/DELETE đều phải có antiforgery token hợp lệ (API bỏ qua – xem ApiControllerBase)
     options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+})
+.AddJsonOptions(options =>
+{
+    // JSON trả về (API + fetch): ObjectId → chuỗi hex; giữ nguyên chữ tiếng Việt và dấu " trong mongoCommand
+    // thay vì \uXXXX (JSON này chỉ trả qua HTTP, không nhúng vào HTML nên không cần mã hóa < > ")
+    options.JsonSerializerOptions.Converters.Add(new ObjectIdJsonConverter());
+    options.JsonSerializerOptions.Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
+})
+.ConfigureApiBehaviorOptions(options =>
+{
+    // API: dữ liệu gửi lên sai → 400 với thông báo tiếng Việt theo khung KetQuaApi
+    options.InvalidModelStateResponseFactory = context =>
+        new BadRequestObjectResult(new KetQuaApi
+        {
+            ThanhCong = false,
+            ThongBao = "Dữ liệu gửi lên không hợp lệ.",
+            Loi = context.ModelState
+                .Where(m => m.Value!.Errors.Count > 0)
+                .ToDictionary(m => JsonNamingPolicy.CamelCase.ConvertName(m.Key),
+                              m => m.Value!.Errors.Select(e => string.IsNullOrEmpty(e.ErrorMessage)
+                                  ? "Giá trị không hợp lệ." : e.ErrorMessage).ToArray())
+        });
+});
+
+// Swagger (GĐ8): mô tả API lấy từ comment /// tiếng Việt; chỉ mở giao diện ở môi trường Development
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "EduScore API",
+        Version = "v1",
+        Description = "API REST của Cổng Quản lý Học tập – EduScore. Xác thực bằng cookie: đăng nhập ở /Account/Login "
+                    + "(cùng trình duyệt) rồi bấm \"Try it out\". Các API ghi trả kèm trường mongoCommand (lệnh MongoDB đã chạy)."
+    });
+    // Chỉ đưa các controller /api vào tài liệu (màn hình MVC không phải API)
+    options.DocInclusionPredicate((_, api) => api.RelativePath?.StartsWith("api/") == true);
+    options.MapType<ObjectId>(() => new OpenApiSchema { Type = "string", Example = new OpenApiString("6720f1a2b3c4d5e6f7a8b9c0") });
+    var fileXml = Path.Combine(AppContext.BaseDirectory, $"{typeof(Program).Assembly.GetName().Name}.xml");
+    options.IncludeXmlComments(fileXml);
 });
 
 var app = builder.Build();
@@ -100,8 +153,20 @@ if (kiemThuGpa)
 
 // Lỗi chưa bắt → trang lỗi thân thiện (không lộ stack trace), kể cả môi trường Development
 app.UseExceptionHandler("/Home/StatusCode/500");
-// 404, 403... không có nội dung → hiển thị lại trang lỗi tiếng Việt, giữ nguyên mã trạng thái
-app.UseStatusCodePagesWithReExecute("/Home/StatusCode/{0}");
+// 404, 403... không có nội dung → hiển thị lại trang lỗi tiếng Việt, giữ nguyên mã trạng thái.
+// Không áp dụng cho /api (API luôn trả JSON).
+app.UseWhen(context => !context.Request.Path.StartsWithSegments("/api"),
+    nhanh => nhanh.UseStatusCodePagesWithReExecute("/Home/StatusCode/{0}"));
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "EduScore API v1");
+        options.DocumentTitle = "EduScore API";
+    });
+}
 
 app.UseRequestLocalization(new RequestLocalizationOptions
 {
@@ -130,3 +195,15 @@ app.MapControllerRoute(
     .WithStaticAssets();
 
 app.Run();
+
+// Request tới /api → trả mã lỗi + JSON; trang web → chuyển hướng như mặc định (Login / AccessDenied)
+static Task TraLoiApiHoacChuyenHuong(RedirectContext<CookieAuthenticationOptions> context, int maTrangThai, string thongBao)
+{
+    if (!context.Request.Path.StartsWithSegments("/api"))
+    {
+        context.Response.Redirect(context.RedirectUri);
+        return Task.CompletedTask;
+    }
+    context.Response.StatusCode = maTrangThai;
+    return context.Response.WriteAsJsonAsync(new KetQuaApi { ThanhCong = false, ThongBao = thongBao });
+}

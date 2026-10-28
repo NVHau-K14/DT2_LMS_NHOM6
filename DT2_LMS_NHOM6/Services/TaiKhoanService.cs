@@ -42,10 +42,13 @@ public class TaiKhoanService
     public Task<TaiKhoan?> LayAsync(string vaiTro, string ma)
         => _db.TaiKhoan.Find(tk => tk.VaiTro == vaiTro && tk.MaThamChieu == ma).FirstOrDefaultAsync()!;
 
-    /// <summary>db.taikhoan.insertOne({ tenDangNhap: ma, vaiTro, maThamChieu: ma, matKhauHash, trangThai: "Hoạt động", ... })</summary>
-    public async Task TaoAsync(string vaiTro, string ma, string hoTen, string matKhau)
+    /// <summary>
+    /// db.taikhoan.insertOne({ tenDangNhap: ma, vaiTro, maThamChieu: ma, matKhauHash, trangThai: "Hoạt động", ... })
+    /// Trả về document đã chèn (để in lệnh).
+    /// </summary>
+    public async Task<TaiKhoan> TaoAsync(string vaiTro, string ma, string hoTen, string matKhau)
     {
-        await _db.TaiKhoan.InsertOneAsync(new TaiKhoan
+        var taiKhoan = new TaiKhoan
         {
             TenDangNhap = ma,
             MatKhauHash = BCrypt.Net.BCrypt.HashPassword(matKhau),
@@ -55,7 +58,9 @@ public class TaiKhoanService
             TrangThai = HangSo.TrangThaiTaiKhoan.HoatDong,
             LanDangNhapCuoi = null,
             NgayTao = DateTime.UtcNow
-        });
+        };
+        await _db.TaiKhoan.InsertOneAsync(taiKhoan);
+        return taiKhoan;
     }
 
     /// <summary>Có tài khoản nào dùng một trong các tên đăng nhập này không: { tenDangNhap: { $in: [...] } }</summary>

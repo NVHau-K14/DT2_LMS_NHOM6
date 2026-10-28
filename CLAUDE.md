@@ -77,12 +77,12 @@ mongosh eduscore --quiet --eval "db.sinhvien.countDocuments()"
 | 5 | Ghi danh ($push/$pull) + nhập điểm ($set+arrayFilters) | ✅ A-09 (xem trước từ `BangDiem`, bulkWrite $push), hủy $pull ở A-06; G-01/02/03 lưu từng dòng + lưu tất cả, quyền trong arrayFilters; toast lệnh |
 | 6 | Báo cáo học lực, tổng quan, cổng sinh viên | ✅ A-10/G-04 dùng chung `_BaoCaoHocLuc` (7 thẻ, biểu đồ, sắp xếp, Xem pipeline); A-01 donut + cột; A-03 thẻ xếp loại; S-01/02/03 MSSV từ claim |
 | 7 | Nhập/Xuất Excel | ✅ A-11 + nút ở A-03/04/06/10, G-03/04, S-02; nhập SV (insertMany + TK, hoàn tác) và điểm (bulkWrite $set+arrayFilters, ô trống giữ nguyên) qua xem trước; `--tao-file-demo` 4 file |
-| 8 | (Tùy chọn) Hiệu năng + API/Swagger | ⬜ |
+| 8 | (Tùy chọn) Hiệu năng + API/Swagger | ✅ A-12 explain có/không index (IXSCAN·EXPRESS_IXSCAN vs COLLSCAN) + BaoCaoHocLuc 20 lần; 9 endpoint `/api` dùng chung service, API ghi trả `mongoCommand`; Swagger `/swagger` (Development) |
 | 9 | Hoàn thiện, export DB, README, tài liệu | ⬜ |
 
 ## Ghi chú kỹ thuật
 (Claude Code bổ sung các quyết định phát sinh ở đây, ngắn gọn.)
-- Package: MongoDB.Driver 3.13.0, BCrypt.Net-Next 4.2.0, ClosedXML 0.105.1.
+- Package: MongoDB.Driver 3.13.0, BCrypt.Net-Next 4.2.0, ClosedXML 0.105.1, Swashbuckle.AspNetCore 9.0.6 (GĐ8).
 - `Program.cs` tách cờ `--reset` khỏi `args` trước `CreateBuilder`; `DbInitializer.KhoiTaoAsync` chạy trước `app.Run`. Đã bỏ `UseHttpsRedirection`/`UseHsts`.
 - Validator: lệnh `create` (chưa có) / `collMod` (đã có) với cùng JSON; validator để dạng raw string trong `DbInitializer`. Index đặt tên `ux_*` (unique) / `ix_*`.
 - Seeder: kế hoạch môn mỗi lớp giữ tổng ≤ 7 để SV còn chỗ 1 môn hè (tối đa 8). Bước điều chỉnh F bảo đảm ≥ 13 SV ngẫu nhiên có F và tổng F 16–19. Seeder có hàm `DiemTKMau` (cùng công thức floor) **chỉ** để chọn SV học lại/cải thiện và in số F; ứng dụng không dùng hàm này.
@@ -127,3 +127,8 @@ mongosh eduscore --quiet --eval "db.sinhvien.countDocuments()"
 - Nhập SV: kiểm tra lại trùng MSSV/tên đăng nhập lúc xác nhận; insertMany sinhvien → `TaiKhoanService.TaoNhieuAsync` (insertMany taikhoan); lỗi → xóa theo `_id` vừa sinh. Toast in `MongoCommandFormatter.InsertMany` (document đầu + tổng).
 - Pipeline nhỏ `LopHocPhanToanTruong` (ô chọn xuất bảng điểm A-11, mã `INT301_2026-2027_1_GV005`). Tên file bảng điểm lớp học phần thêm mã GV: `BangDiem_INT301_2026-2027_HK1_GV005.xlsx`.
 - `--tao-file-demo`: chạy sau DbInitializer, cần dữ liệu nguyên bản (`--reset --tao-file-demo`). File có "Ngày xuất" nên mỗi lần tạo khác nhị phân.
+- GĐ8 API: `Controllers/Api/` (`ApiControllerBase`: `[ApiController] [Authorize] [IgnoreAntiforgeryToken]`, `KetQua(KetQuaGhi)` → JSON `KetQuaApi {thanhCong, thongBao, mongoCommand, duLieu, loi}`). Bỏ antiforgery vì body JSON + cookie SameSite=Lax. Cookie events: `/api` → 401/403 JSON thay vì redirect; `UseStatusCodePagesWithReExecute` chỉ áp dụng ngoài `/api` (`UseWhen`). Lỗi model → `InvalidModelStateResponseFactory` tiếng Việt.
+- Quyền API: Admin đọc/ghi; GV đọc SV có học mình (`SinhVienService.CoLanHocCuaGiangVienAsync`), nhập điểm qua `DiemService.CapNhatDiemAsync(maGV từ claim)`, báo cáo `TheoGiangVien(maGV).VaLop(maLop)`; SV chỉ đọc chính mình. PUT điểm: số → chuỗi invariant → `DiemNhap` (giống G-03); modifiedCount 0 → 404. Ghi danh API = `XemTruocAsync` (lấy lý do chặn) + `XacNhanAsync` (chế độ từng SV), trả lần học mới từ `BangDiem`.
+- JSON MVC: `ObjectIdJsonConverter` (ObjectId ↔ chuỗi hex) + `UnsafeRelaxedJsonEscaping`. `SinhVienFormViewModel.LaSua/DsLop` có `[JsonIgnore]` để API dùng lại form. Thêm/sửa/xóa SV giờ trả `MongoCommand` (insertOne/updateOne/deleteOne sinhvien + taikhoan) → toast web cũng hiện lệnh; `TaiKhoanService.TaoAsync` trả document đã chèn.
+- Swagger: `GenerateDocumentationFile` (NoWarn 1591;1573), mô tả từ `///` summary/remarks/response; `DocInclusionPredicate` chỉ `api/`; `MapType<ObjectId>` = string. Chỉ `UseSwagger` khi Development; link "API" ở sidebar Admin cũng chỉ hiện khi Development.
+- A-12: `HieuNangService` chạy `db.runCommand({explain: {find, filter, [hint: {$natural: 1}]}, verbosity: "executionStats"})`, duyệt cây `winningPlan` (`queryPlan`/`inputStage(s)`) lấy stage, indexName, isMultiKey. Truy vấn (b) dùng `$elemMatch` từ `DieuKienLanHoc`. Tham số mặc định = SV đầu tiên có lần học trong học kỳ hiện tại. Form GET `chay=true`. Truy vấn (a) trên MongoDB 8 ra `EXPRESS_IXSCAN`.

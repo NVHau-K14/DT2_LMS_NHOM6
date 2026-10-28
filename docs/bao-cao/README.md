@@ -11,7 +11,7 @@ Mỗi giai đoạn hoàn thành có một file `GD<N>.md` trong thư mục này 
 | 5 | Ghi danh + nhập điểm | [GD5](GD5.md) |
 | 6 | Báo cáo học lực, tổng quan, cổng sinh viên | [GD6](GD6.md) |
 | 7 | Nhập/Xuất Excel | [GD7](GD7.md) |
-| 8 | (Tùy chọn) Hiệu năng + API/Swagger | _chưa có_ |
+| 8 | (Tùy chọn) Hiệu năng + API/Swagger | [GD8](GD8.md) |
 | 9 | Hoàn thiện, export DB, README, tài liệu | _chưa có_ |
 
 Khi một báo cáo được tạo, thay `_chưa có_` bằng liên kết, ví dụ `[GD1](GD1.md)`.

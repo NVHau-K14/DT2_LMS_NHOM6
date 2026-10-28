@@ -2,7 +2,9 @@
     Sidebar trái: logo + menu theo vai trò (thiết kế mục 5.2–5.4).
     Mục chưa làm vẫn trỏ tới route tương lai (tạm thời 404).
     Mục đang mở được đánh dấu active theo area + controller hiện tại.
+    Admin có thêm link "API" tới Swagger (chỉ ở môi trường Development – Swagger chỉ bật ở đó).
 *@
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment MoiTruong
 @{
     var vaiTro = User.VaiTro();
     var areaHienTai = ViewContext.RouteData.Values["area"] as string ?? "";
@@ -56,6 +58,12 @@
                          && string.Equals(controllerHienTai, muc.Controller, StringComparison.OrdinalIgnoreCase);
             <a class="sidebar-muc @(active ? "active" : "")" href="@Url.Content("~" + url)" title="@muc.Ten">
                 <i class="bi @muc.Icon"></i><span>@muc.Ten</span>
+            </a>
+        }
+        @if (vaiTro == HangSo.VaiTro.Admin && MoiTruong.IsDevelopment())
+        {
+            <a class="sidebar-muc" href="@Url.Content("~/swagger")" target="_blank" rel="noopener" title="API (Swagger)">
+                <i class="bi bi-braces"></i><span>API</span>
             </a>
         }
     </nav>

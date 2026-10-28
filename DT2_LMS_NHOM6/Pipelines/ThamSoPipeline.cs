@@ -28,6 +28,10 @@ public class BoLocSinhVien
     /// <summary>SV có ít nhất một lần học do giảng viên này dạy: { "monHoc.giangVien.maGV": "GV005" }</summary>
     public static BoLocSinhVien TheoGiangVien(string maGV) => new(new BsonDocument("monHoc.giangVien.maGV", maGV));
 
+    /// <summary>Thêm điều kiện lớp sinh hoạt vào bộ lọc hiện có, ví dụ { "monHoc.giangVien.maGV": "GV005", maLop: "16DHTH01" }.</summary>
+    public BoLocSinhVien VaLop(string maLop)
+        => new(new BsonDocument(DieuKien) { { "maLop", maLop } });
+
     /// <summary>SV thuộc một lớp học phần: { monHoc: { $elemMatch: { maMon, namHoc, hocKy, giangVien.maGV } } }</summary>
     public static BoLocSinhVien TheoLopHocPhan(string maGV, string maMon, string namHoc, int hocKy)
         => new(new BsonDocument("monHoc", new BsonDocument("$elemMatch",

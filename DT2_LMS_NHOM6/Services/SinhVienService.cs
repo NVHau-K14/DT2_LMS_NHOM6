@@ -27,6 +27,14 @@ public class SinhVienService
     public Task<SinhVien?> LayAsync(string maSV)
         => _db.SinhVien.Find(sv => sv.MaSV == maSV).FirstOrDefaultAsync()!;
 
+    /// <summary>
+    /// SV có ít nhất một lần học do giảng viên này dạy không (quyền đọc của GV ở API):
+    /// db.sinhvien.countDocuments({ maSV, "monHoc.giangVien.maGV": maGV }, { limit: 1 })
+    /// </summary>
+    public Task<bool> CoLanHocCuaGiangVienAsync(string maSV, string maGV)
+        => _db.SinhVien.Find(Builders<SinhVien>.Filter.Eq(sv => sv.MaSV, maSV)
+                             & Builders<SinhVien>.Filter.Eq("monHoc.giangVien.maGV", maGV)).AnyAsync();
+
     /// <summary>Mọi SV, không kèm mảng monHoc (ô chọn SV ở A-09). db.sinhvien.find({}, { monHoc: 0 }).sort({ maSV: 1 })</summary>
     public Task<List<SinhVien>> TatCaRutGonAsync()
         => _db.SinhVien.Find(FilterDefinition<SinhVien>.Empty)
@@ -90,9 +98,10 @@ public class SinhVienService
 
         // Bước 2: db.taikhoan.insertOne({...}); lỗi → hoàn tác bước 1
         var matKhau = TaiKhoanService.MatKhauMacDinhSinhVien(sinhVien.NgaySinh);
+        TaiKhoan taiKhoan;
         try
         {
-            await _taiKhoan.TaoAsync(HangSo.VaiTro.SinhVien, maSV, sinhVien.HoTen, matKhau);
+            taiKhoan = await _taiKhoan.TaoAsync(HangSo.VaiTro.SinhVien, maSV, sinhVien.HoTen, matKhau);
         }
         catch (MongoException)
         {
@@ -100,7 +109,12 @@ public class SinhVienService
             return KetQuaGhi.Loi("Không tạo được tài khoản cho sinh viên nên đã hủy thao tác thêm. Vui lòng thử lại.");
         }
 
-        return KetQuaGhi.Thanh($"Đã thêm sinh viên {maSV} – {sinhVien.HoTen}. Tài khoản: {maSV} / mật khẩu {matKhau}.");
+        var lenh = MongoCommandFormatter.GhepLenh(
+        [
+            MongoCommandFormatter.InsertOne(MongoContext.TenSinhVien, sinhVien.ToBsonDocument()),
+            MongoCommandFormatter.InsertOne(MongoContext.TenTaiKhoan, taiKhoan.ToBsonDocument())
+        ]);
+        return KetQuaGhi.Thanh($"Đã thêm sinh viên {maSV} – {sinhVien.HoTen}. Tài khoản: {maSV} / mật khẩu {matKhau}.", lenh);
     }
 
     /// <summary>
@@ -183,25 +197,30 @@ public class SinhVienService
 
         // db.sinhvien.updateOne({ maSV }, { $set: { hoTen, ngaySinh, gioiTinh, email, soDienThoai, diaChi, maLop, trangThai, ngayCapNhat } })
         // Chỉ $set các trường hồ sơ – KHÔNG ghi đè mảng monHoc.
-        await _db.SinhVien.UpdateOneAsync(
-            sv => sv.MaSV == maSV,
-            Builders<SinhVien>.Update
-                .Set(sv => sv.HoTen, moi.HoTen)
-                .Set(sv => sv.NgaySinh, moi.NgaySinh)
-                .Set(sv => sv.GioiTinh, moi.GioiTinh)
-                .Set(sv => sv.Email, moi.Email)
-                .Set(sv => sv.SoDienThoai, moi.SoDienThoai)
-                .Set(sv => sv.DiaChi, moi.DiaChi)
-                .Set(sv => sv.MaLop, moi.MaLop)
-                .Set(sv => sv.TrangThai, moi.TrangThai)
-                .Set(sv => sv.NgayCapNhat, DateTime.UtcNow));
+        static BsonValue ChuoiHoacNull(string? s) => s == null ? BsonNull.Value : new BsonString(s);
+        var filter = new BsonDocument("maSV", maSV);
+        var update = new BsonDocument("$set", new BsonDocument
+        {
+            { "hoTen", moi.HoTen },
+            { "ngaySinh", moi.NgaySinh },
+            { "gioiTinh", moi.GioiTinh },
+            { "email", ChuoiHoacNull(moi.Email) },
+            { "soDienThoai", ChuoiHoacNull(moi.SoDienThoai) },
+            { "diaChi", ChuoiHoacNull(moi.DiaChi) },
+            { "maLop", moi.MaLop },
+            { "trangThai", moi.TrangThai },
+            { "ngayCapNhat", DateTime.UtcNow }
+        });
+        var kq = await _db.Database.GetCollection<BsonDocument>(MongoContext.TenSinhVien).UpdateOneAsync(filter, update);
+        var lenhSinhVien = MongoCommandFormatter.UpdateOne(MongoContext.TenSinhVien, filter, update, ketQua: kq);
 
         if (moi.HoTen != cu.HoTen)
         {
-            var lenh = await _taiKhoan.CapNhatHoTenAsync(HangSo.VaiTro.SinhVien, maSV, moi.HoTen);
-            return KetQuaGhi.Thanh($"Đã cập nhật sinh viên {maSV}. Họ tên tài khoản đăng nhập cũng được đổi theo.", lenh);
+            var lenhTaiKhoan = await _taiKhoan.CapNhatHoTenAsync(HangSo.VaiTro.SinhVien, maSV, moi.HoTen);
+            return KetQuaGhi.Thanh($"Đã cập nhật sinh viên {maSV}. Họ tên tài khoản đăng nhập cũng được đổi theo.",
+                MongoCommandFormatter.GhepLenh([lenhSinhVien, lenhTaiKhoan]));
         }
-        return KetQuaGhi.Thanh($"Đã cập nhật sinh viên {maSV}.");
+        return KetQuaGhi.Thanh($"Đã cập nhật sinh viên {maSV}.", lenhSinhVien);
     }
 
     /// <summary>Xóa SV rồi xóa tài khoản. Xóa tài khoản lỗi → chèn lại hồ sơ SV vừa xóa.</summary>
@@ -211,19 +230,26 @@ public class SinhVienService
         if (sinhVien == null) return KetQuaGhi.Loi($"Không tìm thấy sinh viên {maSV}.");
 
         // Bước 1: db.sinhvien.deleteOne({ maSV })
-        await _db.SinhVien.DeleteOneAsync(sv => sv.MaSV == maSV);
+        var kqXoaSV = await _db.SinhVien.DeleteOneAsync(sv => sv.MaSV == maSV);
 
         // Bước 2: db.taikhoan.deleteOne({ vaiTro: "SinhVien", maThamChieu: maSV }); lỗi → hoàn tác bước 1
+        long soTaiKhoanXoa;
         try
         {
-            await _taiKhoan.XoaAsync(HangSo.VaiTro.SinhVien, maSV);
+            soTaiKhoanXoa = await _taiKhoan.XoaAsync(HangSo.VaiTro.SinhVien, maSV);
         }
         catch (MongoException)
         {
             await _db.SinhVien.InsertOneAsync(sinhVien);
             return KetQuaGhi.Loi("Không xóa được tài khoản của sinh viên nên đã khôi phục hồ sơ. Vui lòng thử lại.");
         }
-        return KetQuaGhi.Thanh($"Đã xóa sinh viên {maSV} – {sinhVien.HoTen} và tài khoản đăng nhập.");
+        var lenh = MongoCommandFormatter.GhepLenh(
+        [
+            MongoCommandFormatter.DeleteOne(MongoContext.TenSinhVien, new BsonDocument("maSV", maSV), kqXoaSV.DeletedCount),
+            MongoCommandFormatter.DeleteOne(MongoContext.TenTaiKhoan,
+                new BsonDocument { { "vaiTro", HangSo.VaiTro.SinhVien }, { "maThamChieu", maSV } }, soTaiKhoanXoa)
+        ]);
+        return KetQuaGhi.Thanh($"Đã xóa sinh viên {maSV} – {sinhVien.HoTen} và tài khoản đăng nhập.", lenh);
     }
 
     /// <summary>Reset mật khẩu về ngày sinh ddMMyyyy (A9).</summary>
