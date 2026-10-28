@@ -1,0 +1,184 @@
+[
+{
+  "_id" : { "$oid" : "6ae235f4a6594dfebc9c1eff" },
+  "maMon" : "INT101",
+  "tenMon" : "Nhập môn lập trình",
+  "soTinChi" : 3,
+  "trongSoMacDinh" : {
+    "cc" : 10,
+    "gk" : 30,
+    "ck" : 60
+  },
+  "khoa" : "Khoa Công nghệ thông tin",
+  "ngayTao" : { "$date" : "2026-10-28T17:50:36.61Z" }
+},
+{
+  "_id" : { "$oid" : "6ae235f4a6594dfebc9c1f00" },
+  "maMon" : "MAT101",
+  "tenMon" : "Toán cao cấp A1",
+  "soTinChi" : 3,
+  "trongSoMacDinh" : {
+    "cc" : 10,
+    "gk" : 30,
+    "ck" : 60
+  },
+  "khoa" : "Khoa Công nghệ thông tin",
+  "ngayTao" : { "$date" : "2026-10-28T17:50:36.61Z" }
+},
+{
+  "_id" : { "$oid" : "6ae235f4a6594dfebc9c1f01" },
+  "maMon" : "POL101",
+  "tenMon" : "Triết học Mác - Lênin",
+  "soTinChi" : 3,
+  "trongSoMacDinh" : {
+    "cc" : 10,
+    "gk" : 30,
+    "ck" : 60
+  },
+  "khoa" : "Khoa Công nghệ thông tin",
+  "ngayTao" : { "$date" : "2026-10-28T17:50:36.61Z" }
+},
+{
+  "_id" : { "$oid" : "6ae235f4a6594dfebc9c1f02" },
+  "maMon" : "ENG101",
+  "tenMon" : "Tiếng Anh 1",
+  "soTinChi" : 2,
+  "trongSoMacDinh" : {
+    "cc" : 20,
+    "gk" : 30,
+    "ck" : 50
+  },
+  "khoa" : "Khoa Công nghệ thông tin",
+  "ngayTao" : { "$date" : "2026-10-28T17:50:36.61Z" }
+},
+{
+  "_id" : { "$oid" : "6ae235f4a6594dfebc9c1f03" },
+  "maMon" : "INT102",
+  "tenMon" : "Kỹ thuật lập trình",
+  "soTinChi" : 3,
+  "trongSoMacDinh" : {
+    "cc" : 10,
+    "gk" : 30,
+    "ck" : 60
+  },
+  "khoa" : "Khoa Công nghệ thông tin",
+  "ngayTao" : { "$date" : "2026-10-28T17:50:36.61Z" }
+},
+{
+  "_id" : { "$oid" : "6ae235f4a6594dfebc9c1f04" },
+  "maMon" : "MAT102",
+  "tenMon" : "Toán rời rạc",
+  "soTinChi" : 3,
+  "trongSoMacDinh" : {
+    "cc" : 10,
+    "gk" : 30,
+    "ck" : 60
+  },
+  "khoa" : "Khoa Công nghệ thông tin",
+  "ngayTao" : { "$date" : "2026-10-28T17:50:36.61Z" }
+},
+{
+  "_id" : { "$oid" : "6ae235f4a6594dfebc9c1f05" },
+  "maMon" : "POL102",
+  "tenMon" : "Kinh tế chính trị Mác - Lênin",
+  "soTinChi" : 2,
+  "trongSoMacDinh" : {
+    "cc" : 10,
+    "gk" : 30,
+    "ck" : 60
+  },
+  "khoa" : "Khoa Công nghệ thông tin",
+  "ngayTao" : { "$date" : "2026-10-28T17:50:36.61Z" }
+},
+{
+  "_id" : { "$oid" : "6ae235f4a6594dfebc9c1f06" },
+  "maMon" : "ENG102",
+  "tenMon" : "Tiếng Anh 2",
+  "soTinChi" : 2,
+  "trongSoMacDinh" : {
+    "cc" : 20,
+    "gk" : 30,
+    "ck" : 50
+  },
+  "khoa" : "Khoa Công nghệ thông tin",
+  "ngayTao" : { "$date" : "2026-10-28T17:50:36.61Z" }
+},
+{
+  "_id" : { "$oid" : "6ae235f4a6594dfebc9c1f07" },
+  "maMon" : "LAW101",
+  "tenMon" : "Pháp luật đại cương",
+  "soTinChi" : 2,
+  "trongSoMacDinh" : {
+    "cc" : 10,
+    "gk" : 30,
+    "ck" : 60
+  },
+  "khoa" : "Khoa Công nghệ thông tin",
+  "ngayTao" : { "$date" : "2026-10-28T17:50:36.61Z" }
+},
+{
+  "_id" : { "$oid" : "6ae235f4a6594dfebc9c1f08" },
+  "maMon" : "SKL101",
+  "tenMon" : "Kỹ năng mềm",
+  "soTinChi" : 2,
+  "trongSoMacDinh" : {
+    "cc" : 20,
+    "gk" : 30,
+    "ck" : 50
+  },
+  "khoa" : "Khoa Công nghệ thông tin",
+  "ngayTao" : { "$date" : "2026-10-28T17:50:36.61Z" }
+},
+{
+  "_id" : { "$oid" : "6ae235f4a6594dfebc9c1f09" },
+  "maMon" : "INT201",
+  "tenMon" : "Cấu trúc dữ liệu và giải thuật",
+  "soTinChi" : 4,
+  "trongSoMacDinh" : {
+    "cc" : 10,
+    "gk" : 30,
+    "ck" : 60
+  },
+  "khoa" : "Khoa Công nghệ thông tin",
+  "ngayTao" : { "$date" : "2026-10-28T17:50:36.61Z" }
+},
+{
+  "_id" : { "$oid" : "6ae235f4a6594dfebc9c1f0a" },
+  "maMon" : "INT202",
+  "tenMon" : "Cơ sở dữ liệu",
+  "soTinChi" : 3,
+  "trongSoMacDinh" : {
+    "cc" : 10,
+    "gk" : 40,
+    "ck" : 50
+  },
+  "khoa" : "Khoa Công nghệ thông tin",
+  "ngayTao" : { "$date" : "2026-10-28T17:50:36.61Z" }
+},
+{
+  "_id" : { "$oid" : "6ae235f4a6594dfebc9c1f0b" },
+  "maMon" : "INT203",
+  "tenMon" : "Mạng máy tính",
+  "soTinChi" : 3,
+  "trongSoMacDinh" : {
+    "cc" : 10,
+    "gk" : 30,
+    "ck" : 60
+  },
+  "khoa" : "Khoa Công nghệ thông tin",
+  "ngayTao" : { "$date" : "2026-10-28T17:50:36.61Z" }
+},
+{
+  "_id" : { "$oid" : "6ae235f4a6594dfebc9c1f0c" },
+  "maMon" : "INT301",
+  "tenMon" : "Cơ sở dữ liệu NoSQL",
+  "soTinChi" : 3,
+  "trongSoMacDinh" : {
+    "cc" : 10,
+    "gk" : 30,
+    "ck" : 60
+  },
+  "khoa" : "Khoa Công nghệ thông tin",
+  "ngayTao" : { "$date" : "2026-10-28T17:50:36.61Z" }
+}
+]

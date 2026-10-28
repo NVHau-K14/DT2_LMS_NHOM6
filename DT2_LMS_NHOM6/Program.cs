@@ -20,12 +20,17 @@ using MongoDB.Bson;
 //   --kiem-thu-gpa     chạy pipeline cho 5 SV kiểm thử, so với bảng 7.5, ghi docs/kiem-thu-gpa.md rồi thoát
 //   --export-pipelines ghi mọi pipeline ra database/pipelines/*.json rồi thoát
 //   --tao-file-demo    ghi các file Excel demo nhập/xuất vào docs/demo/ rồi thoát
-string[] coDongLenh = ["--reset", "--kiem-thu-gpa", "--export-pipelines", "--tao-file-demo"];
+//   --export           ghi 5 collection ra database/export/*.json (+ database/dump/ nếu có mongodump) rồi thoát
+string[] coDongLenh = ["--reset", "--kiem-thu-gpa", "--export-pipelines", "--tao-file-demo", "--export"];
 var reset = args.Contains("--reset");
 var kiemThuGpa = args.Contains("--kiem-thu-gpa");
 var xuatPipeline = args.Contains("--export-pipelines");
 var taoFileDemo = args.Contains("--tao-file-demo");
+var xuatDuLieu = args.Contains("--export");
 var builder = WebApplication.CreateBuilder(args.Where(a => !coDongLenh.Contains(a)).ToArray());
+
+// Console in tiếng Việt có dấu (thông báo lỗi kết nối, kết quả các lệnh công cụ)
+Console.OutputEncoding = System.Text.Encoding.UTF8;
 
 // Culture vi-VN nhưng dấu thập phân là dấu chấm – áp dụng cho thread mặc định và mọi request
 var cultureViVn = CultureConfig.TaoCultureViVn();
@@ -130,6 +135,21 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
+// Kiểm tra kết nối MongoDB trước: không kết nối được → báo rõ trên console rồi thoát (mã 1)
+var mongo = app.Services.GetRequiredService<MongoContext>();
+var loiKetNoi = await mongo.KiemTraKetNoiAsync();
+if (loiKetNoi != null)
+{
+    Console.ForegroundColor = ConsoleColor.Red;
+    Console.Error.WriteLine($"Không kết nối được MongoDB tại {mongo.DiaChiMayChu} (database \"{mongo.Database.DatabaseNamespace.DatabaseName}\").");
+    Console.ResetColor();
+    Console.Error.WriteLine("  → Kiểm tra dịch vụ MongoDB đã chạy chưa (Windows: services.msc → MongoDB Server, hoặc lệnh: net start MongoDB).");
+    Console.Error.WriteLine("  → Kiểm tra mục \"MongoDB:ConnectionString\" trong appsettings.json.");
+    Console.Error.WriteLine($"  Chi tiết: {loiKetNoi}");
+    Environment.ExitCode = 1;
+    return;
+}
+
 // Khởi tạo database (validator, index, seed) trước khi nhận request
 await DbInitializer.KhoiTaoAsync(app.Services, reset);
 
@@ -139,6 +159,11 @@ if (xuatPipeline)
 {
     await XuatPipeline.ChayAsync(thuMucGoc);
     if (!kiemThuGpa) return;
+}
+if (xuatDuLieu)
+{
+    Environment.ExitCode = await XuatDuLieu.ChayAsync(mongo, thuMucGoc);
+    return;
 }
 if (taoFileDemo)
 {

@@ -13,8 +13,7 @@
             </div>
             <div class="modal-body">
                 <label class="form-label" for="@(Model.Id)-tep">Chọn file Excel (.xlsx, tối đa 5 MB)</label>
-                <input class="form-control" type="file" name="tep" id="@(Model.Id)-tep" required
-                       accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+                <partial name="_ChonFile" model='new ChonFileViewModel(Model.Id + "-tep", Model.TieuDe)' />
                 <p class="small text-secondary mt-2 mb-0">@Model.GhiChu</p>
                 @if (Model.UrlTaiMau != null)
                 {

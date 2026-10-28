@@ -2,7 +2,7 @@
 
 - **Ngày hoàn thành:** 28/10/2026
 - **Trạng thái:** ✅ Hoàn thành
-- **Commit:** `<mã commit>` (điền sau khi người dùng nghiệm thu và commit)
+- **Commit:** `5e007dc` (điền sau khi người dùng nghiệm thu và commit)
 
 ## 1. Đã làm gì
 - **A-12 `/Admin/HieuNang`**: trang đo hiệu năng.

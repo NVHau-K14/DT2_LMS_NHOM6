@@ -13,6 +13,8 @@
                 "Trang này không thuộc phạm vi tài khoản của bạn. Hãy quay về cổng của mình."),
         404 => ("bi-signpost-split", "Không tìm thấy trang",
                 "Đường dẫn không tồn tại hoặc chức năng chưa được triển khai."),
+        _ when ViewData["LoiKetNoiCsdl"] is true => ("bi-database-x", "Không kết nối được cơ sở dữ liệu",
+                "Máy chủ MongoDB không phản hồi. Hãy kiểm tra dịch vụ MongoDB đã chạy rồi tải lại trang."),
         _ => ("bi-exclamation-octagon", "Đã có lỗi xảy ra",
                 "Hệ thống gặp sự cố khi xử lý yêu cầu. Vui lòng thử lại sau ít phút.")
     };

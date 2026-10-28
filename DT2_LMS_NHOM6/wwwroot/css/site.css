@@ -1223,3 +1223,9 @@ a.the-so-link {
 
     .o-chu-thich.dong-thay-doi { background: #FEFCE8; }
     .o-chu-thich.dong-bi-chan { background: #FEF2F2; }
+
+/* Ô chọn file (partial _ChonFile): nhãn tiếng Việt thay nút gốc của trình duyệt */
+.chon-file { cursor: pointer; flex-wrap: nowrap; margin-bottom: 0; }
+.chon-file .form-control { min-width: 0; background: #fff; }
+.chon-file:hover .input-group-text { background: #E2E8F0; }
+[data-chon-file]:focus-visible + .chon-file { outline: 2px solid #2563EB; outline-offset: 2px; border-radius: .375rem; }

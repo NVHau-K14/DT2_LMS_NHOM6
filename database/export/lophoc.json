@@ -1,0 +1,67 @@
+[
+{
+  "_id" : { "$oid" : "6ae235f4a6594dfebc9c1f0d" },
+  "maLop" : "16DHTH01",
+  "tenLop" : "Đại học Công nghệ thông tin 16 - Lớp 01",
+  "nienKhoa" : "2025-2029",
+  "nganh" : "Công nghệ thông tin",
+  "khoa" : "Khoa Công nghệ thông tin",
+  "coVanHocTap" : {
+    "maGV" : "GV001",
+    "hoTen" : "ThS. Nguyễn Văn An"
+  },
+  "ngayTao" : { "$date" : "2026-10-28T17:50:36.61Z" }
+},
+{
+  "_id" : { "$oid" : "6ae235f4a6594dfebc9c1f0e" },
+  "maLop" : "16DHTH02",
+  "tenLop" : "Đại học Công nghệ thông tin 16 - Lớp 02",
+  "nienKhoa" : "2025-2029",
+  "nganh" : "Công nghệ thông tin",
+  "khoa" : "Khoa Công nghệ thông tin",
+  "coVanHocTap" : {
+    "maGV" : "GV002",
+    "hoTen" : "TS. Lê Quốc Cường"
+  },
+  "ngayTao" : { "$date" : "2026-10-28T17:50:36.61Z" }
+},
+{
+  "_id" : { "$oid" : "6ae235f4a6594dfebc9c1f0f" },
+  "maLop" : "16DHATTT01",
+  "tenLop" : "Đại học An toàn thông tin 16 - Lớp 01",
+  "nienKhoa" : "2025-2029",
+  "nganh" : "An toàn thông tin",
+  "khoa" : "Khoa Công nghệ thông tin",
+  "coVanHocTap" : {
+    "maGV" : "GV005",
+    "hoTen" : "ThS. Trần Văn Bình"
+  },
+  "ngayTao" : { "$date" : "2026-10-28T17:50:36.61Z" }
+},
+{
+  "_id" : { "$oid" : "6ae235f4a6594dfebc9c1f10" },
+  "maLop" : "16DHHTTT01",
+  "tenLop" : "Đại học Hệ thống thông tin 16 - Lớp 01",
+  "nienKhoa" : "2025-2029",
+  "nganh" : "Hệ thống thông tin",
+  "khoa" : "Khoa Công nghệ thông tin",
+  "coVanHocTap" : {
+    "maGV" : "GV007",
+    "hoTen" : "ThS. Huỳnh Gia Bảo"
+  },
+  "ngayTao" : { "$date" : "2026-10-28T17:50:36.61Z" }
+},
+{
+  "_id" : { "$oid" : "6ae235f4a6594dfebc9c1f11" },
+  "maLop" : "16DHKHDL01",
+  "tenLop" : "Đại học Khoa học dữ liệu 16 - Lớp 01",
+  "nienKhoa" : "2025-2029",
+  "nganh" : "Khoa học dữ liệu",
+  "khoa" : "Khoa Công nghệ thông tin",
+  "coVanHocTap" : {
+    "maGV" : "GV003",
+    "hoTen" : "TS. Phạm Thị Hồng"
+  },
+  "ngayTao" : { "$date" : "2026-10-28T17:50:36.61Z" }
+}
+]

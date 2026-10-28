@@ -1,0 +1,12 @@
+@model ChonFileViewModel
+@*
+    Ô chọn file Excel (.xlsx) dùng chung: A-11, modal Nhập Excel (A-04, G-03).
+    Nút gốc của <input type="file"> hiện chữ theo ngôn ngữ trình duyệt ("Choose File / No file chosen")
+    → ẩn input (vẫn bấm Tab tới được), thay bằng nhãn tiếng Việt; eduscore.js ghi tên file đã chọn vào nhãn.
+*@
+<input type="file" name="tep" id="@Model.Id" class="visually-hidden" required data-chon-file aria-label="@Model.MoTa"
+       accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+<label for="@Model.Id" class="input-group chon-file">
+    <span class="input-group-text"><i class="bi bi-folder2-open me-1"></i>Chọn file</span>
+    <span class="form-control text-truncate text-secondary" data-ten-file>Chưa chọn file</span>
+</label>

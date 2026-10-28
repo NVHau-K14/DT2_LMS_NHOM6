@@ -19,8 +19,9 @@
                 Mỗi sinh viên được tạo kèm tài khoản (MSSV / ngày sinh ddMMyyyy) – ghi bằng <code>insertMany</code>.
             </p>
             <form method="post" asp-action="NhapSinhVien" enctype="multipart/form-data" class="d-flex flex-wrap gap-2">
-                <input type="file" name="tep" class="form-control flex-grow-1 w-auto" required aria-label="File danh sách sinh viên"
-                       accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+                <div class="flex-grow-1" style="flex-basis: 14rem;">
+                    <partial name="_ChonFile" model='new ChonFileViewModel("tep-sinh-vien", "File danh sách sinh viên")' />
+                </div>
                 <button type="submit" class="btn btn-primary"><i class="bi bi-search me-1"></i>Kiểm tra file</button>
             </form>
             <a asp-action="MauSinhVien" class="d-inline-block small mt-2"><i class="bi bi-file-earmark-arrow-down me-1"></i>Tải file mẫu</a>
@@ -37,8 +38,9 @@
                 Ghi bằng <code>bulkWrite</code> + <code>$set</code> + <code>arrayFilters</code>, <code>capNhatBoi: "admin"</code>.
             </p>
             <form method="post" asp-action="NhapDiem" enctype="multipart/form-data" class="d-flex flex-wrap gap-2">
-                <input type="file" name="tep" class="form-control flex-grow-1 w-auto" required aria-label="File bảng điểm"
-                       accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+                <div class="flex-grow-1" style="flex-basis: 14rem;">
+                    <partial name="_ChonFile" model='new ChonFileViewModel("tep-bang-diem", "File bảng điểm")' />
+                </div>
                 <button type="submit" class="btn btn-primary"><i class="bi bi-search me-1"></i>Kiểm tra file</button>
             </form>
         </div>
@@ -56,7 +58,7 @@
             else
             {
                 <form method="get" asp-action="XuatBangDiem" class="d-flex flex-wrap gap-2">
-                    <select name="lhp" class="form-select flex-grow-1 w-auto" aria-label="Lớp học phần" required>
+                    <select name="lhp" class="form-select" style="flex: 1 1 16rem; min-width: 0;" aria-label="Lớp học phần" required>
                         @foreach (var nhom in Model.DsLopHocPhan.GroupBy(l => (l.NamHoc, l.HocKy)))
                         {
                             <optgroup label="@HienThi.HocKy(nhom.Key.NamHoc, nhom.Key.HocKy)">

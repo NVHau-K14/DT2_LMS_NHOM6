@@ -6,6 +6,7 @@
 //   - thu gọn / mở sidebar
 //   - sắp xếp bảng phía trình duyệt        : table[data-sap-xep-bang] + th[data-sap-xep]
 //   - nút sao chép                         : nút có data-sao-chep="#id"
+//   - ô chọn file nhãn tiếng Việt          : input[data-chon-file] + label[for] (partial _ChonFile)
 // Không dựng HTML bằng chuỗi: toast nhân bản <template id="mau-toast"> trong _Toast.cshtml.
 // ===========================================================================
 (function () {
@@ -76,7 +77,7 @@
         return Promise.resolve();
     }
 
-    /** Lấy antiforgery token của trang (dùng cho fetch POST ở các giai đoạn sau). */
+    /** Lấy antiforgery token của trang (dùng cho fetch POST). */
     function layAntiforgeryToken() {
         var o = document.querySelector('input[name="__RequestVerificationToken"]');
         return o ? o.value : '';
@@ -259,8 +260,22 @@
         });
     }
 
+    // ---------- Ô chọn file: ghi tên file đã chọn vào nhãn [data-ten-file] của label[for=id] ----------
+    function khoiTaoChonFile() {
+        document.addEventListener('change', function (e) {
+            var o = e.target;
+            if (!o.matches || !o.matches('input[type="file"][data-chon-file]')) { return; }
+            var nhan = document.querySelector('label[for="' + o.id + '"] [data-ten-file]');
+            if (!nhan) { return; }
+            var coFile = o.files && o.files.length > 0;
+            nhan.textContent = coFile ? o.files[0].name : 'Chưa chọn file';
+            nhan.classList.toggle('text-secondary', !coFile);
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         khoiTaoTuGui();
+        khoiTaoChonFile();
         khoiTaoSapXepBang();
         khoiTaoSaoChep();
         khoiTaoSidebar();

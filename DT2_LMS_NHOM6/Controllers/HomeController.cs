@@ -1,6 +1,8 @@
 using DT2_LMS_NHOM6.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
 
 namespace DT2_LMS_NHOM6.Controllers;
 
@@ -17,6 +19,8 @@ public class HomeController : Controller
     /// Trang lỗi thân thiện cho 404, 403, 500... Được gọi lại (re-execute) bởi
     /// UseStatusCodePagesWithReExecute và UseExceptionHandler, kể cả khi request gốc là POST
     /// nên không giới hạn phương thức và bỏ qua kiểm tra antiforgery.
+    /// Exception đã được ExceptionHandlerMiddleware ghi log (mức Error); ở đây chỉ nhận diện
+    /// lỗi mất kết nối MongoDB để thông báo cụ thể hơn.
     /// </summary>
     [AllowAnonymous]
     [IgnoreAntiforgeryToken]
@@ -26,6 +30,9 @@ public class HomeController : Controller
     {
         if (code < 400 || code > 599) code = StatusCodes.Status404NotFound;
         Response.StatusCode = code;
+
+        var loi = HttpContext.Features.Get<IExceptionHandlerFeature>()?.Error;
+        ViewData["LoiKetNoiCsdl"] = loi is TimeoutException or MongoConnectionException;
         return View("StatusCode", code);
     }
 }
