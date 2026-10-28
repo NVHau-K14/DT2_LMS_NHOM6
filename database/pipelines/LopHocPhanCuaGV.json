@@ -1,0 +1,301 @@
+[
+  {
+    "$match": {
+      "monHoc": {
+        "$elemMatch": {
+          "giangVien.maGV": "GV005",
+          "namHoc": "2026-2027",
+          "hocKy": 1
+        }
+      }
+    }
+  },
+  {
+    "$unwind": "$monHoc"
+  },
+  {
+    "$match": {
+      "monHoc.giangVien.maGV": "GV005",
+      "monHoc.namHoc": "2026-2027",
+      "monHoc.hocKy": 1
+    }
+  },
+  {
+    "$addFields": {
+      "monHoc.duDiem": {
+        "$and": [
+          {
+            "$ne": [
+              {
+                "$ifNull": [
+                  "$monHoc.diem.cc",
+                  null
+                ]
+              },
+              null
+            ]
+          },
+          {
+            "$ne": [
+              {
+                "$ifNull": [
+                  "$monHoc.diem.gk",
+                  null
+                ]
+              },
+              null
+            ]
+          },
+          {
+            "$ne": [
+              {
+                "$ifNull": [
+                  "$monHoc.diem.ck",
+                  null
+                ]
+              },
+              null
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "$addFields": {
+      "monHoc.diemTK": {
+        "$cond": [
+          "$monHoc.duDiem",
+          {
+            "$divide": [
+              {
+                "$floor": {
+                  "$add": [
+                    {
+                      "$divide": [
+                        {
+                          "$add": [
+                            {
+                              "$multiply": [
+                                "$monHoc.diem.cc",
+                                "$monHoc.trongSo.cc"
+                              ]
+                            },
+                            {
+                              "$multiply": [
+                                "$monHoc.diem.gk",
+                                "$monHoc.trongSo.gk"
+                              ]
+                            },
+                            {
+                              "$multiply": [
+                                "$monHoc.diem.ck",
+                                "$monHoc.trongSo.ck"
+                              ]
+                            }
+                          ]
+                        },
+                        10
+                      ]
+                    },
+                    0.5000001
+                  ]
+                }
+              },
+              10
+            ]
+          },
+          null
+        ]
+      }
+    }
+  },
+  {
+    "$addFields": {
+      "monHoc.diemChu": {
+        "$switch": {
+          "branches": [
+            {
+              "case": {
+                "$eq": [
+                  "$monHoc.diemTK",
+                  null
+                ]
+              },
+              "then": null
+            },
+            {
+              "case": {
+                "$gte": [
+                  "$monHoc.diemTK",
+                  8.5
+                ]
+              },
+              "then": "A"
+            },
+            {
+              "case": {
+                "$gte": [
+                  "$monHoc.diemTK",
+                  7.0
+                ]
+              },
+              "then": "B"
+            },
+            {
+              "case": {
+                "$gte": [
+                  "$monHoc.diemTK",
+                  5.5
+                ]
+              },
+              "then": "C"
+            },
+            {
+              "case": {
+                "$gte": [
+                  "$monHoc.diemTK",
+                  4.0
+                ]
+              },
+              "then": "D"
+            }
+          ],
+          "default": "F"
+        }
+      }
+    }
+  },
+  {
+    "$addFields": {
+      "monHoc.diemHe4": {
+        "$switch": {
+          "branches": [
+            {
+              "case": {
+                "$eq": [
+                  "$monHoc.diemChu",
+                  "A"
+                ]
+              },
+              "then": 4
+            },
+            {
+              "case": {
+                "$eq": [
+                  "$monHoc.diemChu",
+                  "B"
+                ]
+              },
+              "then": 3
+            },
+            {
+              "case": {
+                "$eq": [
+                  "$monHoc.diemChu",
+                  "C"
+                ]
+              },
+              "then": 2
+            },
+            {
+              "case": {
+                "$eq": [
+                  "$monHoc.diemChu",
+                  "D"
+                ]
+              },
+              "then": 1
+            },
+            {
+              "case": {
+                "$eq": [
+                  "$monHoc.diemChu",
+                  "F"
+                ]
+              },
+              "then": 0
+            }
+          ],
+          "default": null
+        }
+      },
+      "monHoc.dat": {
+        "$cond": [
+          {
+            "$eq": [
+              "$monHoc.diemTK",
+              null
+            ]
+          },
+          null,
+          {
+            "$gte": [
+              "$monHoc.diemTK",
+              4.0
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "$group": {
+      "_id": {
+        "maMon": "$monHoc.maMon",
+        "namHoc": "$monHoc.namHoc",
+        "hocKy": "$monHoc.hocKy"
+      },
+      "tenMon": {
+        "$first": "$monHoc.tenMon"
+      },
+      "soTinChi": {
+        "$first": "$monHoc.soTinChi"
+      },
+      "trongSo": {
+        "$first": "$monHoc.trongSo"
+      },
+      "siSo": {
+        "$sum": 1
+      },
+      "soDuDiem": {
+        "$sum": {
+          "$cond": [
+            "$monHoc.duDiem",
+            1,
+            0
+          ]
+        }
+      },
+      "cacLop": {
+        "$addToSet": "$maLop"
+      }
+    }
+  },
+  {
+    "$project": {
+      "_id": 0,
+      "maMon": "$_id.maMon",
+      "namHoc": "$_id.namHoc",
+      "hocKy": "$_id.hocKy",
+      "tenMon": 1,
+      "soTinChi": 1,
+      "trongSo": 1,
+      "siSo": 1,
+      "soDuDiem": 1,
+      "cacLop": {
+        "$sortArray": {
+          "input": "$cacLop",
+          "sortBy": 1
+        }
+      }
+    }
+  },
+  {
+    "$sort": {
+      "namHoc": -1,
+      "hocKy": -1,
+      "maMon": 1
+    }
+  }
+]

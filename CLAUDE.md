@@ -71,7 +71,7 @@ mongosh eduscore --quiet --eval "db.sinhvien.countDocuments()"
 |---|---|---|
 | 1 | Nền móng: git, sln, package, models, khởi tạo DB, seeder | ✅ 100 SV, 640 lần học, 19 F, hè 12/8/5, 109 TK; validator + index OK |
 | 2 | Đăng nhập, phân quyền, layout, đổi mật khẩu, trang lỗi | ✅ Cookie auth 8h, 3 Area + base controller, layout sidebar/toast, 403/404/500 tiếng Việt |
-| 3 | Pipeline điểm & GPA + kiểm thử 5 ca | ⬜ |
+| 3 | Pipeline điểm & GPA + kiểm thử 5 ca | ✅ 7 pipeline + bộ quy đổi dùng chung; `--kiem-thu-gpa` 200/200 PASS; `--export-pipelines` 8 file |
 | 4 | CRUD Admin: lớp, sinh viên, giảng viên, môn học | ⬜ |
 | 5 | Ghi danh ($push/$pull) + nhập điểm ($set+arrayFilters) | ⬜ |
 | 6 | Báo cáo học lực, tổng quan, cổng sinh viên | ⬜ |
@@ -94,3 +94,8 @@ mongosh eduscore --quiet --eval "db.sinhvien.countDocuments()"
 - Hiển thị: `HienThi.Diem/Gpa/HocKy/Ngay/TenVaiTro`; TagHelper `<diem-chu gia-tri="" />`, `<xep-loai gia-tri="" />`; partial `_TrangTrong` (TrangTrongViewModel); breadcrumb `ViewData["Breadcrumb"] = MucBreadcrumb[]`.
 - Menu sidebar dùng URL cứng (`/Admin/LopHoc`...) vì anchor tag helper không sinh link tới controller chưa tồn tại.
 - Trạng thái "Khóa" chỉ báo khi mật khẩu đúng; khóa tài khoản đang đăng nhập không đá phiên hiện tại (cookie còn hạn).
+- Pipeline: chuỗi JSON có chỗ giữ `"@ten"` → `PipelineJson.Tao(json, thamSo)` thay bằng BsonValue; `"@ten"` làm phần tử mảng pipeline = chèn cả cụm stage. `"@quyDoi"`/`"@gpaXepLoai"` luôn có sẵn (định nghĩa duy nhất ở `QuyDoiDiemStages`). Cụm GPA cần trường `tongDiemTC`, `tongTinChiGpa` từ `$group`.
+- `BangDiem.tinhTichLuy`: `$setWindowFields` + `$first` maDK (window unbounded) thay `$documentNumber` – server không cho `$documentNumber` với sortBy nhiều khóa.
+- `BaoCaoHocLuc` dùng chung cho 2 phạm vi: `$filter` lần học theo phạm vi + `"@dieuKienTinhGpa"` (tích lũy: `dat=true`; học kỳ: `duDiem=true`, tính cả F). Phạm vi học kỳ: tinChiTichLuy = TC đạt trong kỳ, soMonNo = số F trong kỳ.
+- Service: `DiemService` (BangDiem, GpaHocKy, LopHocPhanCuaGV, DanhSachNhapDiem), `BaoCaoService` (BaoCaoHocLuc, ThongKeXepLoai, GpaTheoLop) trả `KetQuaPipeline<T>` (DuLieu, PipelineJson, ThoiGianMs). Tham số: `BoLocSinhVien.*`, `PhamViBaoCao.TichLuy()/TheoHocKy()`.
+- `--kiem-thu-gpa` / `--export-pipelines`: chạy sau `DbInitializer`, rồi thoát. Sửa pipeline → chạy lại cả hai, commit `docs/kiem-thu-gpa.md` + `database/pipelines/*.json`. Kiểm thử cần dữ liệu mẫu nguyên bản (đã sửa điểm TS → `--reset`).

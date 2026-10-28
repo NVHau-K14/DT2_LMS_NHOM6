@@ -1,0 +1,400 @@
+[
+  {
+    "$match": {
+      "maSV": "2001250001"
+    }
+  },
+  {
+    "$unwind": "$monHoc"
+  },
+  {
+    "$addFields": {
+      "monHoc.duDiem": {
+        "$and": [
+          {
+            "$ne": [
+              {
+                "$ifNull": [
+                  "$monHoc.diem.cc",
+                  null
+                ]
+              },
+              null
+            ]
+          },
+          {
+            "$ne": [
+              {
+                "$ifNull": [
+                  "$monHoc.diem.gk",
+                  null
+                ]
+              },
+              null
+            ]
+          },
+          {
+            "$ne": [
+              {
+                "$ifNull": [
+                  "$monHoc.diem.ck",
+                  null
+                ]
+              },
+              null
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "$addFields": {
+      "monHoc.diemTK": {
+        "$cond": [
+          "$monHoc.duDiem",
+          {
+            "$divide": [
+              {
+                "$floor": {
+                  "$add": [
+                    {
+                      "$divide": [
+                        {
+                          "$add": [
+                            {
+                              "$multiply": [
+                                "$monHoc.diem.cc",
+                                "$monHoc.trongSo.cc"
+                              ]
+                            },
+                            {
+                              "$multiply": [
+                                "$monHoc.diem.gk",
+                                "$monHoc.trongSo.gk"
+                              ]
+                            },
+                            {
+                              "$multiply": [
+                                "$monHoc.diem.ck",
+                                "$monHoc.trongSo.ck"
+                              ]
+                            }
+                          ]
+                        },
+                        10
+                      ]
+                    },
+                    0.5000001
+                  ]
+                }
+              },
+              10
+            ]
+          },
+          null
+        ]
+      }
+    }
+  },
+  {
+    "$addFields": {
+      "monHoc.diemChu": {
+        "$switch": {
+          "branches": [
+            {
+              "case": {
+                "$eq": [
+                  "$monHoc.diemTK",
+                  null
+                ]
+              },
+              "then": null
+            },
+            {
+              "case": {
+                "$gte": [
+                  "$monHoc.diemTK",
+                  8.5
+                ]
+              },
+              "then": "A"
+            },
+            {
+              "case": {
+                "$gte": [
+                  "$monHoc.diemTK",
+                  7.0
+                ]
+              },
+              "then": "B"
+            },
+            {
+              "case": {
+                "$gte": [
+                  "$monHoc.diemTK",
+                  5.5
+                ]
+              },
+              "then": "C"
+            },
+            {
+              "case": {
+                "$gte": [
+                  "$monHoc.diemTK",
+                  4.0
+                ]
+              },
+              "then": "D"
+            }
+          ],
+          "default": "F"
+        }
+      }
+    }
+  },
+  {
+    "$addFields": {
+      "monHoc.diemHe4": {
+        "$switch": {
+          "branches": [
+            {
+              "case": {
+                "$eq": [
+                  "$monHoc.diemChu",
+                  "A"
+                ]
+              },
+              "then": 4
+            },
+            {
+              "case": {
+                "$eq": [
+                  "$monHoc.diemChu",
+                  "B"
+                ]
+              },
+              "then": 3
+            },
+            {
+              "case": {
+                "$eq": [
+                  "$monHoc.diemChu",
+                  "C"
+                ]
+              },
+              "then": 2
+            },
+            {
+              "case": {
+                "$eq": [
+                  "$monHoc.diemChu",
+                  "D"
+                ]
+              },
+              "then": 1
+            },
+            {
+              "case": {
+                "$eq": [
+                  "$monHoc.diemChu",
+                  "F"
+                ]
+              },
+              "then": 0
+            }
+          ],
+          "default": null
+        }
+      },
+      "monHoc.dat": {
+        "$cond": [
+          {
+            "$eq": [
+              "$monHoc.diemTK",
+              null
+            ]
+          },
+          null,
+          {
+            "$gte": [
+              "$monHoc.diemTK",
+              4.0
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "$group": {
+      "_id": {
+        "maSV": "$maSV",
+        "namHoc": "$monHoc.namHoc",
+        "hocKy": "$monHoc.hocKy"
+      },
+      "tinChiDangKy": {
+        "$sum": "$monHoc.soTinChi"
+      },
+      "tinChiDat": {
+        "$sum": {
+          "$cond": [
+            {
+              "$eq": [
+                "$monHoc.dat",
+                true
+              ]
+            },
+            "$monHoc.soTinChi",
+            0
+          ]
+        }
+      },
+      "tongDiemTC": {
+        "$sum": {
+          "$cond": [
+            "$monHoc.duDiem",
+            {
+              "$multiply": [
+                "$monHoc.diemHe4",
+                "$monHoc.soTinChi"
+              ]
+            },
+            0
+          ]
+        }
+      },
+      "tongTinChiGpa": {
+        "$sum": {
+          "$cond": [
+            "$monHoc.duDiem",
+            "$monHoc.soTinChi",
+            0
+          ]
+        }
+      }
+    }
+  },
+  {
+    "$addFields": {
+      "gpa": {
+        "$cond": [
+          {
+            "$gt": [
+              "$tongTinChiGpa",
+              0
+            ]
+          },
+          {
+            "$divide": [
+              {
+                "$floor": {
+                  "$add": [
+                    {
+                      "$multiply": [
+                        {
+                          "$divide": [
+                            "$tongDiemTC",
+                            "$tongTinChiGpa"
+                          ]
+                        },
+                        100
+                      ]
+                    },
+                    0.5000001
+                  ]
+                }
+              },
+              100
+            ]
+          },
+          null
+        ]
+      }
+    }
+  },
+  {
+    "$addFields": {
+      "xepLoai": {
+        "$switch": {
+          "branches": [
+            {
+              "case": {
+                "$eq": [
+                  "$gpa",
+                  null
+                ]
+              },
+              "then": "Chưa xếp loại"
+            },
+            {
+              "case": {
+                "$gte": [
+                  "$gpa",
+                  3.6
+                ]
+              },
+              "then": "Xuất sắc"
+            },
+            {
+              "case": {
+                "$gte": [
+                  "$gpa",
+                  3.2
+                ]
+              },
+              "then": "Giỏi"
+            },
+            {
+              "case": {
+                "$gte": [
+                  "$gpa",
+                  2.5
+                ]
+              },
+              "then": "Khá"
+            },
+            {
+              "case": {
+                "$gte": [
+                  "$gpa",
+                  2.0
+                ]
+              },
+              "then": "Trung bình"
+            },
+            {
+              "case": {
+                "$gte": [
+                  "$gpa",
+                  1.0
+                ]
+              },
+              "then": "Yếu"
+            }
+          ],
+          "default": "Kém"
+        }
+      }
+    }
+  },
+  {
+    "$project": {
+      "_id": 0,
+      "maSV": "$_id.maSV",
+      "namHoc": "$_id.namHoc",
+      "hocKy": "$_id.hocKy",
+      "tinChiDangKy": 1,
+      "tinChiDat": 1,
+      "gpa": 1,
+      "xepLoai": 1
+    }
+  },
+  {
+    "$sort": {
+      "maSV": 1,
+      "namHoc": 1,
+      "hocKy": 1
+    }
+  }
+]

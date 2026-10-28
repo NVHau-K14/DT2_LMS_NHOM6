@@ -9,10 +9,15 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.WebEncoders;
 
-// Cờ --reset: xóa database rồi tạo lại validator, index, dữ liệu mẫu.
-// Tách khỏi args trước khi đưa vào builder để không bị hiểu nhầm là tham số cấu hình.
+// Cờ dòng lệnh (tách khỏi args trước khi đưa vào builder để không bị hiểu nhầm là tham số cấu hình):
+//   --reset            xóa database rồi tạo lại validator, index, dữ liệu mẫu
+//   --kiem-thu-gpa     chạy pipeline cho 5 SV kiểm thử, so với bảng 7.5, ghi docs/kiem-thu-gpa.md rồi thoát
+//   --export-pipelines ghi mọi pipeline ra database/pipelines/*.json rồi thoát
+string[] coDongLenh = ["--reset", "--kiem-thu-gpa", "--export-pipelines"];
 var reset = args.Contains("--reset");
-var builder = WebApplication.CreateBuilder(args.Where(a => a != "--reset").ToArray());
+var kiemThuGpa = args.Contains("--kiem-thu-gpa");
+var xuatPipeline = args.Contains("--export-pipelines");
+var builder = WebApplication.CreateBuilder(args.Where(a => !coDongLenh.Contains(a)).ToArray());
 
 // Culture vi-VN nhưng dấu thập phân là dấu chấm – áp dụng cho thread mặc định và mọi request
 var cultureViVn = CultureConfig.TaoCultureViVn();
@@ -28,6 +33,8 @@ builder.Services.AddSingleton<MongoContext>();
 
 // Nghiệp vụ
 builder.Services.AddScoped<AccountService>();
+builder.Services.AddScoped<DiemService>();
+builder.Services.AddScoped<BaoCaoService>();
 
 // Xác thực bằng cookie: hết hạn 8 giờ, gia hạn trượt khi còn hoạt động
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -58,6 +65,19 @@ var app = builder.Build();
 
 // Khởi tạo database (validator, index, seed) trước khi nhận request
 await DbInitializer.KhoiTaoAsync(app.Services, reset);
+
+// Lệnh công cụ: chạy xong thì thoát, không khởi động web. Thư mục gốc repo = thư mục cha của project.
+var thuMucGoc = Path.GetFullPath(Path.Combine(app.Environment.ContentRootPath, ".."));
+if (xuatPipeline)
+{
+    await XuatPipeline.ChayAsync(thuMucGoc);
+    if (!kiemThuGpa) return;
+}
+if (kiemThuGpa)
+{
+    Environment.ExitCode = await KiemThuGpa.ChayAsync(app.Services, thuMucGoc);
+    return;
+}
 
 // Lỗi chưa bắt → trang lỗi thân thiện (không lộ stack trace), kể cả môi trường Development
 app.UseExceptionHandler("/Home/StatusCode/500");

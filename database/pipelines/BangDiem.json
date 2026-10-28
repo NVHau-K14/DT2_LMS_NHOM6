@@ -1,0 +1,301 @@
+[
+  {
+    "$match": {
+      "maSV": "2001250001"
+    }
+  },
+  {
+    "$unwind": "$monHoc"
+  },
+  {
+    "$addFields": {
+      "monHoc.duDiem": {
+        "$and": [
+          {
+            "$ne": [
+              {
+                "$ifNull": [
+                  "$monHoc.diem.cc",
+                  null
+                ]
+              },
+              null
+            ]
+          },
+          {
+            "$ne": [
+              {
+                "$ifNull": [
+                  "$monHoc.diem.gk",
+                  null
+                ]
+              },
+              null
+            ]
+          },
+          {
+            "$ne": [
+              {
+                "$ifNull": [
+                  "$monHoc.diem.ck",
+                  null
+                ]
+              },
+              null
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "$addFields": {
+      "monHoc.diemTK": {
+        "$cond": [
+          "$monHoc.duDiem",
+          {
+            "$divide": [
+              {
+                "$floor": {
+                  "$add": [
+                    {
+                      "$divide": [
+                        {
+                          "$add": [
+                            {
+                              "$multiply": [
+                                "$monHoc.diem.cc",
+                                "$monHoc.trongSo.cc"
+                              ]
+                            },
+                            {
+                              "$multiply": [
+                                "$monHoc.diem.gk",
+                                "$monHoc.trongSo.gk"
+                              ]
+                            },
+                            {
+                              "$multiply": [
+                                "$monHoc.diem.ck",
+                                "$monHoc.trongSo.ck"
+                              ]
+                            }
+                          ]
+                        },
+                        10
+                      ]
+                    },
+                    0.5000001
+                  ]
+                }
+              },
+              10
+            ]
+          },
+          null
+        ]
+      }
+    }
+  },
+  {
+    "$addFields": {
+      "monHoc.diemChu": {
+        "$switch": {
+          "branches": [
+            {
+              "case": {
+                "$eq": [
+                  "$monHoc.diemTK",
+                  null
+                ]
+              },
+              "then": null
+            },
+            {
+              "case": {
+                "$gte": [
+                  "$monHoc.diemTK",
+                  8.5
+                ]
+              },
+              "then": "A"
+            },
+            {
+              "case": {
+                "$gte": [
+                  "$monHoc.diemTK",
+                  7.0
+                ]
+              },
+              "then": "B"
+            },
+            {
+              "case": {
+                "$gte": [
+                  "$monHoc.diemTK",
+                  5.5
+                ]
+              },
+              "then": "C"
+            },
+            {
+              "case": {
+                "$gte": [
+                  "$monHoc.diemTK",
+                  4.0
+                ]
+              },
+              "then": "D"
+            }
+          ],
+          "default": "F"
+        }
+      }
+    }
+  },
+  {
+    "$addFields": {
+      "monHoc.diemHe4": {
+        "$switch": {
+          "branches": [
+            {
+              "case": {
+                "$eq": [
+                  "$monHoc.diemChu",
+                  "A"
+                ]
+              },
+              "then": 4
+            },
+            {
+              "case": {
+                "$eq": [
+                  "$monHoc.diemChu",
+                  "B"
+                ]
+              },
+              "then": 3
+            },
+            {
+              "case": {
+                "$eq": [
+                  "$monHoc.diemChu",
+                  "C"
+                ]
+              },
+              "then": 2
+            },
+            {
+              "case": {
+                "$eq": [
+                  "$monHoc.diemChu",
+                  "D"
+                ]
+              },
+              "then": 1
+            },
+            {
+              "case": {
+                "$eq": [
+                  "$monHoc.diemChu",
+                  "F"
+                ]
+              },
+              "then": 0
+            }
+          ],
+          "default": null
+        }
+      },
+      "monHoc.dat": {
+        "$cond": [
+          {
+            "$eq": [
+              "$monHoc.diemTK",
+              null
+            ]
+          },
+          null,
+          {
+            "$gte": [
+              "$monHoc.diemTK",
+              4.0
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "$setWindowFields": {
+      "partitionBy": {
+        "maSV": "$maSV",
+        "maMon": "$monHoc.maMon"
+      },
+      "sortBy": {
+        "monHoc.diemHe4": -1,
+        "monHoc.diemTK": -1,
+        "monHoc.namHoc": -1,
+        "monHoc.hocKy": -1
+      },
+      "output": {
+        "maDKTotNhat": {
+          "$first": "$monHoc.maDK",
+          "window": {
+            "documents": [
+              "unbounded",
+              "unbounded"
+            ]
+          }
+        }
+      }
+    }
+  },
+  {
+    "$project": {
+      "_id": 0,
+      "maSV": 1,
+      "maDK": "$monHoc.maDK",
+      "maMon": "$monHoc.maMon",
+      "tenMon": "$monHoc.tenMon",
+      "soTinChi": "$monHoc.soTinChi",
+      "namHoc": "$monHoc.namHoc",
+      "hocKy": "$monHoc.hocKy",
+      "lanHoc": "$monHoc.lanHoc",
+      "hinhThuc": "$monHoc.hinhThuc",
+      "giangVien": "$monHoc.giangVien",
+      "trongSo": "$monHoc.trongSo",
+      "diem": "$monHoc.diem",
+      "capNhatLuc": "$monHoc.capNhatLuc",
+      "capNhatBoi": "$monHoc.capNhatBoi",
+      "duDiem": "$monHoc.duDiem",
+      "diemTK": "$monHoc.diemTK",
+      "diemChu": "$monHoc.diemChu",
+      "diemHe4": "$monHoc.diemHe4",
+      "dat": "$monHoc.dat",
+      "tinhTichLuy": {
+        "$and": [
+          {
+            "$eq": [
+              "$monHoc.maDK",
+              "$maDKTotNhat"
+            ]
+          },
+          {
+            "$eq": [
+              "$monHoc.dat",
+              true
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "$sort": {
+      "namHoc": 1,
+      "hocKy": 1,
+      "maMon": 1
+    }
+  }
+]
