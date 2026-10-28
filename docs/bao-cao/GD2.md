@@ -2,7 +2,7 @@
 
 - **Ngày hoàn thành:** 28/10/2026
 - **Trạng thái:** ✅ Hoàn thành
-- **Commit:** `<mã commit>` (điền sau khi người dùng nghiệm thu và commit)
+- **Commit:** `5946d74` (điền sau khi người dùng nghiệm thu và commit)
 
 ## 1. Đã làm gì
 - **Thư viện cục bộ:** Bootstrap Icons 1.11.3 (css + fonts woff/woff2) và Chart.js 4.4.7 (`chart.umd.js`) tải từ npm registry vào `wwwroot/lib/`, kèm LICENSE. Không có URL ngoài trong Views/Areas.

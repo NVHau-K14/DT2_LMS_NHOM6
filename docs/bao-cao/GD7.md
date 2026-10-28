@@ -2,7 +2,7 @@
 
 - **Ngày hoàn thành:** 28/10/2026
 - **Trạng thái:** ✅ Hoàn thành
-- **Commit:** `<mã commit>` (điền sau khi người dùng nghiệm thu và commit)
+- **Commit:** `0acf8e8` (điền sau khi người dùng nghiệm thu và commit)
 
 ## 1. Đã làm gì
 - **ExcelService (ClosedXML)** đọc và ghi file theo thiết kế mục 6. Mọi file xuất có cùng bố cục:
