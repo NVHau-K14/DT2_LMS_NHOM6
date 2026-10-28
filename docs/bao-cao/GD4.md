@@ -2,7 +2,7 @@
 
 - **Ngày hoàn thành:** 28/10/2026
 - **Trạng thái:** ✅ Hoàn thành
-- **Commit:** `<mã commit>` (điền sau khi người dùng nghiệm thu và commit)
+- **Commit:** `7c0c1ba` (điền sau khi người dùng nghiệm thu và commit)
 
 ## 1. Đã làm gì
 - **Lớp học (A-02, A-03):** bảng gồm mã, tên, niên khóa, ngành, CVHT và sĩ số. Sĩ số đếm từ `sinhvien` bằng pipeline `SiSoTheoLop`. Có lọc theo ngành, niên khóa và tìm theo mã/tên. Thêm và sửa bằng modal (CVHT chọn từ danh sách GV, mã lớp bị khóa khi sửa). Xóa lớp còn SV sẽ bị chặn kèm số SV. Trang chi tiết lớp hiển thị GPA tích lũy, xếp loại, TC tích lũy và số môn nợ của từng SV, lấy từ `BaoCaoHocLuc` lọc theo lớp. Đã đặt sẵn nút "Ghi danh cả lớp" (`/Admin/GhiDanh?maLop=`, trang làm ở GĐ5) và "Xuất báo cáo lớp" (đang tắt, làm ở GĐ7).

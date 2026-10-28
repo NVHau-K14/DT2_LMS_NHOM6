@@ -40,6 +40,38 @@ public static class MongoCommandFormatter
     /// <summary>Ghép nhiều lệnh (ví dụ lan truyền tên GV sang 3 collection) thành một chuỗi, cách nhau một dòng trống.</summary>
     public static string GhepLenh(IEnumerable<string> cacLenh) => string.Join("\n\n", cacLenh);
 
+    /// <summary>
+    /// db.&lt;collection&gt;.bulkWrite([ { updateOne: {...} }, ... ]) – chỉ in lệnh ĐẦU TIÊN + tổng số lệnh (thiết kế 4.9).
+    /// Ví dụ:
+    ///   db.sinhvien.bulkWrite([
+    ///     { updateOne: { filter: {...}, update: {...} } },
+    ///     // ... cùng dạng, tổng cộng 20 lệnh updateOne
+    ///   ], { ordered: false })
+    ///   // matchedCount: 20, modifiedCount: 20
+    /// </summary>
+    public static string BulkWriteUpdateOne(string collection, IReadOnlyList<LenhUpdateOne> cacLenh, bool ordered,
+        BulkWriteResult? ketQua = null)
+    {
+        var sb = new StringBuilder();
+        sb.Append("db.").Append(collection).Append(".bulkWrite([\n");
+        if (cacLenh.Count > 0)
+        {
+            var dau = cacLenh[0];
+            var lenh = new BsonDocument { { "filter", dau.Filter }, { "update", dau.Update } };
+            if (dau.ArrayFilters is { Count: > 0 })
+                lenh.Add("arrayFilters", new BsonArray(dau.ArrayFilters));
+            sb.Append("  ").Append(DinhDang(new BsonDocument("updateOne", lenh)));
+            if (cacLenh.Count > 1)
+                sb.Append(",\n  // ... cùng dạng, tổng cộng ").Append(cacLenh.Count).Append(" lệnh updateOne");
+        }
+        sb.Append("\n], { ordered: ").Append(ordered ? "true" : "false").Append(" })");
+
+        if (ketQua != null && ketQua.IsAcknowledged)
+            sb.Append("\n// matchedCount: ").Append(ketQua.MatchedCount)
+              .Append(", modifiedCount: ").Append(ketQua.ModifiedCount);
+        return sb.ToString();
+    }
+
     private static string LenhUpdate(string collection, string phuongThuc, BsonDocument filter, BsonDocument update,
         IEnumerable<BsonDocument>? arrayFilters, UpdateResult? ketQua)
     {
@@ -101,4 +133,16 @@ public static class MongoCommandFormatter
 
     private static string TenKhoa(string ten)
         => KhoaTran.IsMatch(ten) ? ten : JsonSerializer.Serialize(ten, CaiDatChuoi);
+}
+
+/// <summary>Một lệnh updateOne trong bulkWrite: dùng chung để CHẠY (UpdateOneModel) và để IN chuỗi lệnh.</summary>
+public record LenhUpdateOne(BsonDocument Filter, BsonDocument Update, List<BsonDocument>? ArrayFilters = null)
+{
+    public UpdateOneModel<BsonDocument> TaoModel()
+    {
+        var model = new UpdateOneModel<BsonDocument>(Filter, Update);
+        if (ArrayFilters is { Count: > 0 })
+            model.ArrayFilters = ArrayFilters.Select(f => (ArrayFilterDefinition)new BsonDocumentArrayFilterDefinition<BsonDocument>(f)).ToList();
+        return model;
+    }
 }

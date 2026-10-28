@@ -194,7 +194,16 @@
         if (o) { toast(o.dataset.noiDung, o.dataset.loai, o.dataset.mongo); }
     }
 
+    // ---------- Ô chọn tự gửi form khi đổi giá trị (lọc học kỳ...) ----------
+    // <select data-tu-gui> nằm trong form GET
+    function khoiTaoTuGui() {
+        document.querySelectorAll('select[data-tu-gui]').forEach(function (o) {
+            o.addEventListener('change', function () { o.form.submit(); });
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
+        khoiTaoTuGui();
         khoiTaoSidebar();
         khoiTaoXacNhanXoa();
         khoiTaoModalForm();

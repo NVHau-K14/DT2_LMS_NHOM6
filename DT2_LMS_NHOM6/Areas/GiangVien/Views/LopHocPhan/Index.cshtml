@@ -1,0 +1,76 @@
+@model LopHocPhanViewModel
+@{
+    ViewData["Title"] = "Lớp học phần";
+}
+
+<div class="the-noi-dung">
+    <div class="thanh-cong-cu">
+        <p class="text-secondary small mb-0">
+            Lớp học phần = nhóm (môn, năm học, học kỳ) do bạn dạy; có thể gồm sinh viên nhiều lớp sinh hoạt.
+        </p>
+        <form method="get" class="thanh-loc">
+            <label class="small text-secondary" for="ky">Học kỳ</label>
+            <select class="form-select" id="ky" name="ky" data-tu-gui>
+                <option value="">Tất cả học kỳ</option>
+                @foreach (var (nam, ky) in Model.DsHocKy)
+                {
+                    var ma = LopHocPhanViewModel.MaKy(nam, ky);
+                    <option value="@ma" selected="@(ma == Model.KyChon)">@HienThi.HocKy(nam, ky)</option>
+                }
+            </select>
+        </form>
+    </div>
+
+    @if (Model.DanhSach.Count == 0)
+    {
+        <partial name="_TrangTrong" model='new TrangTrongViewModel("Không có lớp học phần", null, "bi-collection")' />
+    }
+    else
+    {
+        <div class="khung-bang table-responsive">
+            <table class="table bang-du-lieu">
+                <thead>
+                    <tr>
+                        <th>Học kỳ</th>
+                        <th>Mã môn</th>
+                        <th>Tên môn</th>
+                        <th class="text-center">TC</th>
+                        <th class="text-center" title="Chuyên cần / Giữa kỳ / Cuối kỳ (%)">Trọng số</th>
+                        <th>Các lớp</th>
+                        <th class="text-center">Sĩ số</th>
+                        <th style="min-width: 160px">Đã đủ điểm</th>
+                        <th class="text-end"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var l in Model.DanhSach)
+                    {
+                        var phanTram = LopHocPhanViewModel.PhanTramTienDo(l);
+                        <tr>
+                            <td class="text-nowrap">@HienThi.HocKy(l.NamHoc, l.HocKy)</td>
+                            <td class="ma">@l.MaMon</td>
+                            <td>@l.TenMon</td>
+                            <td class="text-center">@l.SoTinChi</td>
+                            <td class="text-center">@l.TrongSo.Cc/@l.TrongSo.Gk/@l.TrongSo.Ck</td>
+                            <td>@string.Join(", ", l.CacLop)</td>
+                            <td class="text-center">@l.SiSo</td>
+                            <td>
+                                <div class="small mb-1">@l.SoDuDiem/@l.SiSo (@phanTram%)</div>
+                                <div class="progress tien-do @(phanTram == 100 ? "xong" : "")" role="progressbar" aria-valuenow="@phanTram" aria-valuemin="0" aria-valuemax="100" aria-label="Tiến độ nhập điểm">
+                                    <div class="progress-bar" style="width: @phanTram%"></div>
+                                </div>
+                            </td>
+                            <td class="text-end">
+                                <a class="btn btn-sm btn-primary text-nowrap"
+                                   href="/GiangVien/NhapDiem?maMon=@Uri.EscapeDataString(l.MaMon)&namHoc=@Uri.EscapeDataString(l.NamHoc)&hocKy=@l.HocKy">
+                                    <i class="bi bi-pencil-square me-1"></i>Nhập điểm
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="phan-trang"><div>Tổng cộng <strong>@Model.DanhSach.Count</strong> lớp học phần</div></div>
+    }
+</div>

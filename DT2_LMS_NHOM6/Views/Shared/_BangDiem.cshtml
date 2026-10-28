@@ -44,6 +44,10 @@ else
                                         <th class="text-center">Hệ 4</th>
                                         <th>Kết quả</th>
                                         <th class="text-center" title="Lần học được chọn để tính GPA tích lũy">Tính tích lũy</th>
+                                        @if (Model.QuayLaiHuyGhiDanh != null)
+                                        {
+                                            <th></th>
+                                        }
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -72,6 +76,22 @@ else
                                                     <i class="bi bi-check-circle-fill dau-tich" title="Tính vào GPA tích lũy" aria-label="Có"></i>
                                                 }
                                             </td>
+                                            @if (Model.QuayLaiHuyGhiDanh != null)
+                                            {
+                                                <td class="text-end">
+                                                    @* Chỉ lần học chưa có điểm nào mới hủy được; server kiểm tra lại bằng $elemMatch trong filter *@
+                                                    @if (mon.Diem.Cc == null && mon.Diem.Gk == null && mon.Diem.Ck == null)
+                                                    {
+                                                        <button type="button" class="btn btn-sm btn-outline-danger text-nowrap" data-xac-nhan-xoa
+                                                                data-url="@($"/Admin/GhiDanh/Huy?maSV={Uri.EscapeDataString(mon.MaSV)}&maDK={mon.MaDK}&quayLai={Uri.EscapeDataString(Model.QuayLaiHuyGhiDanh)}")"
+                                                                data-tieu-de="Hủy ghi danh" data-nut="Hủy ghi danh"
+                                                                data-noi-dung="Hủy ghi danh môn @mon.MaMon – @mon.TenMon (@HienThi.HocKy(mon.NamHoc, mon.HocKy)) của sinh viên @mon.MaSV?"
+                                                                data-ghi-chu="Lần học bị xóa khỏi mảng monHoc bằng $pull (chỉ khi chưa có điểm nào).">
+                                                            <i class="bi bi-x-circle me-1"></i>Hủy ghi danh
+                                                        </button>
+                                                    }
+                                                </td>
+                                            }
                                         </tr>
                                     }
                                 </tbody>

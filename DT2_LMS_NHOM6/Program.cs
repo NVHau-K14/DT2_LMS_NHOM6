@@ -40,6 +40,7 @@ builder.Services.AddScoped<LopHocService>();
 builder.Services.AddScoped<SinhVienService>();
 builder.Services.AddScoped<GiangVienService>();
 builder.Services.AddScoped<MonHocService>();
+builder.Services.AddScoped<GhiDanhService>();
 
 // Xác thực bằng cookie: hết hạn 8 giờ, gia hạn trượt khi còn hoạt động
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

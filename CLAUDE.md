@@ -73,7 +73,7 @@ mongosh eduscore --quiet --eval "db.sinhvien.countDocuments()"
 | 2 | Đăng nhập, phân quyền, layout, đổi mật khẩu, trang lỗi | ✅ Cookie auth 8h, 3 Area + base controller, layout sidebar/toast, 403/404/500 tiếng Việt |
 | 3 | Pipeline điểm & GPA + kiểm thử 5 ca | ✅ 7 pipeline + bộ quy đổi dùng chung; `--kiem-thu-gpa` 200/200 PASS; `--export-pipelines` 8 file |
 | 4 | CRUD Admin: lớp, sinh viên, giảng viên, môn học | ✅ A-02→A-08 + A9; lan truyền tên môn/GV có toast lệnh; chặn xóa đúng; phân trang SV 20; `_BangDiem` dùng chung |
-| 5 | Ghi danh ($push/$pull) + nhập điểm ($set+arrayFilters) | ⬜ |
+| 5 | Ghi danh ($push/$pull) + nhập điểm ($set+arrayFilters) | ✅ A-09 (xem trước từ `BangDiem`, bulkWrite $push), hủy $pull ở A-06; G-01/02/03 lưu từng dòng + lưu tất cả, quyền trong arrayFilters; toast lệnh |
 | 6 | Báo cáo học lực, tổng quan, cổng sinh viên | ⬜ |
 | 7 | Nhập/Xuất Excel | ⬜ |
 | 8 | (Tùy chọn) Hiệu năng + API/Swagger | ⬜ |
@@ -106,3 +106,9 @@ mongosh eduscore --quiet --eval "db.sinhvien.countDocuments()"
 - "GV đang được phân công dạy" = còn bất kỳ phần tử `monHoc` nào có `giangVien.maGV` (mọi học kỳ) – xóa sẽ làm lịch sử mất tham chiếu.
 - Ngày sinh SV hợp lệ: năm ≥ 1950 và đủ 15 tuổi. Mã lớp/GV/môn: 3–20 chữ/số, lưu chữ hoa.
 - Test bằng curl trong Git Bash làm hỏng tiếng Việt (tham số theo code page ANSI) → dùng script Python urllib khi POST dữ liệu có dấu.
+- GĐ5 ghi danh: xem trước là GET (`/Admin/GhiDanh?...&xemTruoc=true`), xác nhận POST rồi redirect về xem trước (PRG). `XacNhanAsync` chạy lại xem trước ở server. Filter `$push` có thêm `monHoc: {$not: {$elemMatch: {maMon, namHoc, hocKy}}}` chống ghi trùng khi bấm đồng thời. bulkWrite `ordered: false`. Hình thức/lanHoc từ `BangDiem` (chạy mỗi SV một lần).
+- Nhập điểm: filter có `monHoc: {$elemMatch: {maDK, "giangVien.maGV"}}` lặp lại điều kiện arrayFilters – nếu chỉ có arrayFilters, lệnh không quyền vẫn ghi `ngayCapNhat` (modifiedCount = 1). `capNhatLuc` luôn đổi nên modifiedCount = 0 ⇔ không quyền. `maGV = null` = Admin (GĐ7).
+- Điểm gửi lên dạng chuỗi; `Infrastructure/DiemNhap.TryParse` chuẩn hóa "," → ".", regex `^\d{1,2}(\.\d)?$`, ≤ 10, trống = null. Lưu tất cả: một dòng sai → không ghi dòng nào.
+- `LenhUpdateOne` (record) dùng chung để chạy (`TaoModel()`) và in lệnh (`MongoCommandFormatter.BulkWriteUpdateOne`: lệnh đầu + "tổng cộng N lệnh").
+- JSON trả về JS gồm TK/chữ/hệ 4 đã định dạng + lớp badge (`DongDiemJson`) – JS chỉ đặt vào ô. `<select data-tu-gui>` tự gửi form GET. `_BangDiem` có `QuayLaiHuyGhiDanh` (null = không hiện cột hủy).
+- GV: `GiangVienControllerBase.MaGV` lấy từ claim. G-03 lớp học phần không dạy → `StatusCode(403)` (trang lỗi tiếng Việt).

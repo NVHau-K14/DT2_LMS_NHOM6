@@ -17,6 +17,12 @@ public class BangDiemViewModel
     /// <summary>Hiện dòng tổng kết tích lũy ở cuối bảng (S-02). A-06 tắt vì đã có thẻ tóm tắt đầu trang.</summary>
     public bool HienTongKetCuoi { get; set; } = true;
 
+    /// <summary>
+    /// A-06: URL hồ sơ SV để nút "Hủy ghi danh" quay lại; null = không hiện cột hủy ghi danh (S-02).
+    /// Nút chỉ hiện ở lần học chưa có điểm nào (3 thành phần đều null).
+    /// </summary>
+    public string? QuayLaiHuyGhiDanh { get; set; }
+
     public static BangDiemViewModel Tao(IEnumerable<KetQuaMon> bangDiem, IEnumerable<GpaHocKyResult> gpaHocKy, BaoCaoHocLucRow? tongKet)
     {
         var gpaTheoKy = gpaHocKy.ToDictionary(g => (g.NamHoc, g.HocKy));

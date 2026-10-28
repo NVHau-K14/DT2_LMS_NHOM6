@@ -1,13 +1,89 @@
+@model LopHocPhanViewModel
 @{
     ViewData["Title"] = "Tổng quan";
+    LopHocPhanViewModel.TryParseKy(Model.KyChon, out var namHoc, out var hocKy);
 }
 
-<div class="the-noi-dung chao-mung">
-    <div class="d-flex align-items-center gap-3">
+<div class="the-noi-dung chao-mung mb-3">
+    <div class="d-flex flex-wrap align-items-center gap-3">
         <div class="chao-mung-icon"><i class="bi bi-emoji-smile"></i></div>
-        <div>
+        <div class="flex-grow-1">
             <h2 class="h4 mb-1">Xin chào, @User.HoTen()!</h2>
-            <p class="text-secondary mb-0">Đây là cổng giảng viên. Chức năng xem lớp học phần, nhập điểm và báo cáo học lực sẽ có ở các giai đoạn sau.</p>
+            <p class="text-secondary mb-0">Các lớp học phần bạn phụ trách trong @HienThi.HocKy(namHoc, hocKy).</p>
+        </div>
+        <form method="get" class="thanh-loc">
+            <label class="small text-secondary" for="ky">Học kỳ</label>
+            <select class="form-select" id="ky" name="ky" data-tu-gui>
+                @foreach (var (nam, ky) in Model.DsHocKy)
+                {
+                    var ma = LopHocPhanViewModel.MaKy(nam, ky);
+                    <option value="@ma" selected="@(ma == Model.KyChon)">@HienThi.HocKy(nam, ky)</option>
+                }
+            </select>
+        </form>
+    </div>
+</div>
+
+@* ---------- Thẻ số (từ pipeline LopHocPhanCuaGV) ---------- *@
+<div class="row g-3 mb-3">
+    <div class="col-md-4">
+        <div class="the-so">
+            <span class="the-so-icon"><i class="bi bi-collection"></i></span>
+            <div><div class="the-so-nhan">Lớp học phần</div><div class="the-so-gia-tri">@Model.DanhSach.Count</div></div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="the-so">
+            <span class="the-so-icon"><i class="bi bi-people"></i></span>
+            <div><div class="the-so-nhan">Sinh viên (tổng sĩ số)</div><div class="the-so-gia-tri">@Model.TongSiSo</div></div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="the-so">
+            <span class="the-so-icon"><i class="bi bi-hourglass-split"></i></span>
+            <div><div class="the-so-nhan">Sinh viên chưa đủ điểm</div><div class="the-so-gia-tri @(Model.SoChuaDuDiem > 0 ? "text-warning" : "")">@Model.SoChuaDuDiem</div></div>
         </div>
     </div>
 </div>
+
+@* ---------- Thẻ từng lớp học phần ---------- *@
+@if (Model.DanhSach.Count == 0)
+{
+    <div class="the-noi-dung">
+        <partial name="_TrangTrong" model='new TrangTrongViewModel("Không có lớp học phần", "Bạn không được phân công lớp học phần nào trong học kỳ này.", "bi-collection")' />
+    </div>
+}
+else
+{
+    <div class="row g-3">
+        @foreach (var l in Model.DanhSach)
+        {
+            var phanTram = LopHocPhanViewModel.PhanTramTienDo(l);
+            <div class="col-md-6 col-xl-4">
+                <div class="the-lhp">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <span class="the-lhp-ma">@l.MaMon</span>
+                        <span class="small text-secondary">@HienThi.HocKy(l.NamHoc, l.HocKy)</span>
+                    </div>
+                    <h3 class="h6 mb-0">@l.TenMon</h3>
+                    <div class="small text-secondary">
+                        @l.SoTinChi TC · trọng số @l.TrongSo.Cc/@l.TrongSo.Gk/@l.TrongSo.Ck<br />
+                        Lớp: @string.Join(", ", l.CacLop) · Sĩ số <strong class="text-body">@l.SiSo</strong>
+                    </div>
+                    <div class="mt-auto">
+                        <div class="d-flex justify-content-between small mb-1">
+                            <span>Đã đủ điểm</span><span><strong>@l.SoDuDiem</strong>/@l.SiSo (@phanTram%)</span>
+                        </div>
+                        <div class="progress tien-do @(phanTram == 100 ? "xong" : "")" role="progressbar" aria-valuenow="@phanTram" aria-valuemin="0" aria-valuemax="100" aria-label="Tiến độ nhập điểm">
+                            <div class="progress-bar" style="width: @phanTram%"></div>
+                        </div>
+                    </div>
+                    <a class="btn btn-primary btn-sm align-self-start mt-2"
+                       href="/GiangVien/NhapDiem?maMon=@Uri.EscapeDataString(l.MaMon)&namHoc=@Uri.EscapeDataString(l.NamHoc)&hocKy=@l.HocKy">
+                        <i class="bi bi-pencil-square me-1"></i>Nhập điểm
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+}

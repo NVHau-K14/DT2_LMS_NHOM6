@@ -26,6 +26,13 @@ public class SinhVienService
     public Task<SinhVien?> LayAsync(string maSV)
         => _db.SinhVien.Find(sv => sv.MaSV == maSV).FirstOrDefaultAsync()!;
 
+    /// <summary>Mọi SV, không kèm mảng monHoc (ô chọn SV ở A-09). db.sinhvien.find({}, { monHoc: 0 }).sort({ maSV: 1 })</summary>
+    public Task<List<SinhVien>> TatCaRutGonAsync()
+        => _db.SinhVien.Find(FilterDefinition<SinhVien>.Empty)
+            .Project<SinhVien>(Builders<SinhVien>.Projection.Exclude(sv => sv.MonHoc))
+            .SortBy(sv => sv.MaSV)
+            .ToListAsync();
+
     /// <summary>
     /// Một trang danh sách SV + tổng số dòng khớp bộ lọc (phân trang phía server).
     /// Tương đương:

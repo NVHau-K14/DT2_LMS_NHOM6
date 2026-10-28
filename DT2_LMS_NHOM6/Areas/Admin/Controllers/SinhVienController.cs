@@ -157,6 +157,7 @@ public class SinhVienController : AdminControllerBase
 
         var vmBangDiem = BangDiemViewModel.Tao(bangDiem.DuLieu, gpaHocKy.DuLieu, tongKet);
         vmBangDiem.HienTongKetCuoi = false; // A-06 đã có thẻ tóm tắt ở đầu trang
+        vmBangDiem.QuayLaiHuyGhiDanh = $"/Admin/SinhVien/HoSo/{id}"; // hiện nút "Hủy ghi danh" ở dòng chưa có điểm
         return View(new HoSoSinhVienViewModel
         {
             SinhVien = sv,

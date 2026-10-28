@@ -1,0 +1,127 @@
+@model NhapDiemViewModel
+@{
+    var l = Model.LopHocPhan;
+    var phanTram = LopHocPhanViewModel.PhanTramTienDo(l);
+    ViewData["Title"] = $"Nhập điểm {l.MaMon}";
+    ViewData["Breadcrumb"] = new[] { new MucBreadcrumb("Lớp học phần", "/GiangVien/LopHocPhan") };
+}
+
+@* ---------- Đầu trang: thông tin lớp học phần ---------- *@
+<div class="the-noi-dung mb-3">
+    <div class="row g-3 align-items-center">
+        <div class="col-lg-7">
+            <span class="ma text-primary fw-semibold">@l.MaMon</span>
+            <h2 class="h5 mb-1">@l.TenMon</h2>
+            <div class="text-secondary small">
+                @HienThi.HocKy(l.NamHoc, l.HocKy) · @l.SoTinChi tín chỉ ·
+                trọng số CC/GK/CK <strong class="text-body">@l.TrongSo.Cc/@l.TrongSo.Gk/@l.TrongSo.Ck</strong> ·
+                lớp @string.Join(", ", l.CacLop) · sĩ số <strong class="text-body">@l.SiSo</strong>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="d-flex justify-content-between small mb-1">
+                <span>Tiến độ nhập điểm (đủ 3 thành phần)</span>
+                <span><strong id="so-du-diem">@l.SoDuDiem</strong>/<span id="si-so">@l.SiSo</span> (<span id="phan-tram">@phanTram</span>%)</span>
+            </div>
+            <div class="progress tien-do @(phanTram == 100 ? "xong" : "")" id="thanh-tien-do" role="progressbar" aria-label="Tiến độ nhập điểm">
+                <div class="progress-bar" style="width: @phanTram%"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="the-noi-dung">
+    <div class="thanh-cong-cu">
+        <div class="thanh-loc">
+            <select class="form-select" id="loc-lop" aria-label="Lọc theo lớp">
+                <option value="">Tất cả lớp</option>
+                @foreach (var maLop in l.CacLop)
+                {
+                    <option value="@maLop" selected="@(maLop == Model.LocLop)">@maLop</option>
+                }
+            </select>
+            <div class="form-check ms-2">
+                <input class="form-check-input" type="checkbox" id="loc-chua-du" />
+                <label class="form-check-label" for="loc-chua-du">Chỉ hiện chưa đủ điểm</label>
+            </div>
+            <span class="small text-secondary ms-2" id="so-dong-hien"></span>
+        </div>
+        <div class="nhom-nut">
+            @* Excel làm ở giai đoạn 7 *@
+            <button type="button" class="btn btn-outline-secondary btn-sm" disabled title="Chức năng Excel sẽ được bổ sung"><i class="bi bi-download me-1"></i>Tải mẫu</button>
+            <button type="button" class="btn btn-outline-secondary btn-sm" disabled title="Chức năng Excel sẽ được bổ sung"><i class="bi bi-file-earmark-excel me-1"></i>Xuất Excel</button>
+            <button type="button" class="btn btn-outline-secondary btn-sm" disabled title="Chức năng Excel sẽ được bổ sung"><i class="bi bi-upload me-1"></i>Nhập Excel</button>
+            <button type="button" class="btn btn-primary btn-sm" id="nut-luu-tat-ca" disabled>
+                <i class="bi bi-save me-1"></i>Lưu tất cả (<span id="so-dong-sua">0</span>)
+            </button>
+        </div>
+    </div>
+
+    <p class="small text-secondary">
+        Nhập điểm thang 10, tối đa 1 chữ số thập phân (chấp nhận <code>8,5</code> hoặc <code>8.5</code>); để trống = chưa có / xóa điểm.
+        TK, Chữ, Hệ 4 do Aggregation Pipeline tính lại sau khi lưu.
+    </p>
+
+    @if (Model.DanhSach.Count == 0)
+    {
+        <partial name="_TrangTrong" model='new TrangTrongViewModel("Lớp học phần chưa có sinh viên", null, "bi-person-x")' />
+    }
+    else
+    {
+        <div class="khung-bang table-responsive">
+            <table class="table bang-du-lieu bang-nhap-diem" id="bang-nhap-diem"
+                   data-ma-mon="@l.MaMon" data-nam-hoc="@l.NamHoc" data-hoc-ky="@l.HocKy">
+                <thead>
+                    <tr>
+                        <th class="text-center">STT</th>
+                        <th>MSSV</th>
+                        <th>Họ tên</th>
+                        <th>Lớp</th>
+                        <th>Hình thức</th>
+                        <th class="text-center">CC (@l.TrongSo.Cc%)</th>
+                        <th class="text-center">GK (@l.TrongSo.Gk%)</th>
+                        <th class="text-center">CK (@l.TrongSo.Ck%)</th>
+                        <th class="text-center">TK</th>
+                        <th class="text-center">Chữ</th>
+                        <th class="text-center">Hệ 4</th>
+                        <th class="text-end"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (var i = 0; i < Model.DanhSach.Count; i++)
+                    {
+                        var d = Model.DanhSach[i];
+                        <tr data-ma-sv="@d.MaSV" data-ma-dk="@d.MaDK" data-lop="@d.MaLop" data-du-diem="@(d.DuDiem ? "true" : "false")">
+                            <td class="text-center">@(i + 1)</td>
+                            <td class="ma">@d.MaSV</td>
+                            <td>@d.HoTen</td>
+                            <td>@d.MaLop</td>
+                            <td><span class="badge badge-hinh-thuc @HienThi.LopBadgeHinhThuc(d.HinhThuc)">@d.HinhThuc</span></td>
+                            @foreach (var (ten, giaTri) in new[] { ("cc", d.Diem.Cc), ("gk", d.Diem.Gk), ("ck", d.Diem.Ck) })
+                            {
+                                <td class="text-center">
+                                    <input type="text" inputmode="decimal" maxlength="4" autocomplete="off"
+                                           class="form-control form-control-sm o-diem d-inline-block" data-thanh-phan="@ten"
+                                           value="@HienThi.DiemNhap(giaTri)" data-goc="@HienThi.DiemNhap(giaTri)"
+                                           aria-label="Điểm @ten.ToUpperInvariant() của @d.MaSV" />
+                                </td>
+                            }
+                            <td class="text-center fw-semibold" data-cot="tk">@HienThi.Diem(d.DiemTK)</td>
+                            <td class="text-center" data-cot="chu"><diem-chu gia-tri="@d.DiemChu" /></td>
+                            <td class="text-center" data-cot="he4">@(d.DiemHe4?.ToString() ?? "–")</td>
+                            <td class="text-end">
+                                <button type="button" class="btn btn-sm btn-outline-primary text-nowrap" data-luu-dong disabled>
+                                    <i class="bi bi-check2 me-1"></i>Lưu
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script src="~/js/nhap-diem.js" asp-append-version="true"></script>
+}

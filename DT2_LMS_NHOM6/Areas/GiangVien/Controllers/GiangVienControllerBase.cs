@@ -1,3 +1,4 @@
+using DT2_LMS_NHOM6.Infrastructure;
 using DT2_LMS_NHOM6.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,4 +13,6 @@ namespace DT2_LMS_NHOM6.Areas.GiangVien.Controllers;
 [Authorize(Roles = HangSo.VaiTro.GiangVien)]
 public abstract class GiangVienControllerBase : Controller
 {
+    /// <summary>Mã GV đang đăng nhập – lấy từ claim, KHÔNG BAO GIỜ lấy từ request.</summary>
+    protected string MaGV => User.MaThamChieu();
 }

@@ -15,6 +15,10 @@ public static class HienThi
     public static string Diem(double? diem)
         => diem.HasValue ? diem.Value.ToString("0.0", CultureInfo.InvariantCulture) : KhongCo;
 
+    /// <summary>Giá trị đặt sẵn trong ô nhập điểm: "8.5", "9" (không thêm ".0"); null → "" (ô trống).</summary>
+    public static string DiemNhap(double? diem)
+        => diem.HasValue ? diem.Value.ToString("0.#", CultureInfo.InvariantCulture) : "";
+
     /// <summary>GPA với 2 chữ số thập phân, ví dụ "3.25"; null → "–".</summary>
     public static string Gpa(double? gpa)
         => gpa.HasValue ? gpa.Value.ToString("0.00", CultureInfo.InvariantCulture) : KhongCo;
@@ -58,6 +62,15 @@ public static class HienThi
         HangSo.TrangThaiSinhVien.ThoiHoc => "tt-thoi-hoc",
         HangSo.TrangThaiTaiKhoan.HoatDong => "tt-hoat-dong",
         HangSo.TrangThaiTaiKhoan.Khoa => "tt-khoa",
+        _ => "badge-trong"
+    };
+
+    /// <summary>Lớp CSS badge cho hình thức học: Học mới xanh dương, Học lại cam, Cải thiện tím.</summary>
+    public static string LopBadgeHinhThuc(string? hinhThuc) => hinhThuc switch
+    {
+        HangSo.HinhThuc.HocMoi => "badge-ht-moi",
+        HangSo.HinhThuc.HocLai => "badge-ht-lai",
+        HangSo.HinhThuc.CaiThien => "badge-ht-cai-thien",
         _ => "badge-trong"
     };
 

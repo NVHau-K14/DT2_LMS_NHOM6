@@ -1,0 +1,243 @@
+@model GhiDanhViewModel
+@{
+    ViewData["Title"] = "Ghi danh";
+    var yc = Model.YeuCau;
+    var xt = Model.XemTruoc;
+    var laCaLop = yc.CheDo != YeuCauGhiDanh.CheDoTungSV;
+    var daChon = yc.DsMaSV.ToHashSet();
+}
+
+@* ---------- B1 + B2: form GET → /Admin/GhiDanh?...&xemTruoc=true (chỉ đọc, không ghi DB) ---------- *@
+<form method="get" action="/Admin/GhiDanh" id="form-ghi-danh">
+    <input type="hidden" name="xemTruoc" value="true" />
+    <div class="row g-3 mb-3">
+        <div class="col-xl-5">
+            <div class="the-noi-dung h-100">
+                <h2 class="h5 mb-3"><span class="buoc-so">1</span>Học phần</h2>
+                <div class="row g-3">
+                    <div class="col-sm-6">
+                        <label class="form-label" for="NamHoc">Năm học</label>
+                        <select class="form-select" id="NamHoc" name="NamHoc">
+                            @foreach (var nam in GhiDanhViewModel.DsNamHoc)
+                            {
+                                <option value="@nam" selected="@(nam == yc.NamHoc)">@nam</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="form-label" for="HocKy">Học kỳ</label>
+                        <select class="form-select" id="HocKy" name="HocKy">
+                            <option value="1" selected="@(yc.HocKy == 1)">Học kỳ 1</option>
+                            <option value="2" selected="@(yc.HocKy == 2)">Học kỳ 2</option>
+                            <option value="3" selected="@(yc.HocKy == 3)">Học kỳ hè</option>
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="MaMon">Môn học</label>
+                        <select class="form-select" id="MaMon" name="MaMon" required>
+                            <option value="">-- Chọn môn --</option>
+                            @foreach (var mon in Model.DsMon)
+                            {
+                                <option value="@mon.MaMon" selected="@(mon.MaMon == yc.MaMon)">
+                                    @mon.MaMon – @mon.TenMon (@mon.SoTinChi TC, @mon.TrongSoMacDinh.Cc/@mon.TrongSoMacDinh.Gk/@mon.TrongSoMacDinh.Ck)
+                                </option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="MaGV">Giảng viên</label>
+                        <select class="form-select" id="MaGV" name="MaGV" required>
+                            <option value="">-- Chọn giảng viên --</option>
+                            @foreach (var gv in Model.DsGV)
+                            {
+                                <option value="@gv.MaGV" selected="@(gv.MaGV == yc.MaGV)">@gv.MaGV – @gv.HoTenKemHocVi</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-7">
+            <div class="the-noi-dung h-100">
+                <h2 class="h5 mb-3"><span class="buoc-so">2</span>Sinh viên</h2>
+                <div class="mb-3">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="CheDo" id="che-do-lop" value="@YeuCauGhiDanh.CheDoCaLop" checked="@laCaLop" data-che-do />
+                        <label class="form-check-label" for="che-do-lop">Cả lớp <span class="text-secondary small">(học kỳ chính)</span></label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="CheDo" id="che-do-sv" value="@YeuCauGhiDanh.CheDoTungSV" checked="@(!laCaLop)" data-che-do />
+                        <label class="form-check-label" for="che-do-sv">Từng sinh viên <span class="text-secondary small">(học lại, cải thiện, hè, học vượt)</span></label>
+                    </div>
+                </div>
+
+                <div id="khoi-ca-lop" class="@(laCaLop ? "" : "d-none")">
+                    <label class="form-label" for="MaLop">Lớp sinh hoạt</label>
+                    <select class="form-select" id="MaLop" name="MaLop">
+                        <option value="">-- Chọn lớp --</option>
+                        @foreach (var lop in Model.DsLop)
+                        {
+                            <option value="@lop.MaLop" selected="@(lop.MaLop == yc.MaLop)">@lop.MaLop – @lop.TenLop</option>
+                        }
+                    </select>
+                </div>
+
+                <div id="khoi-tung-sv" class="@(laCaLop ? "d-none" : "")">
+                    <div class="row g-3">
+                        <div class="col-md-7">
+                            <input type="search" class="form-control mb-2" id="tim-sv" placeholder="Tìm MSSV, họ tên hoặc lớp..." aria-label="Tìm sinh viên" />
+                            <div class="chon-sv" id="ds-chon-sv">
+                                @foreach (var sv in Model.DsSinhVien)
+                                {
+                                    <label class="chon-sv-dong" data-tim="@($"{sv.MaSV} {sv.HoTen} {sv.MaLop}".ToLowerInvariant())">
+                                        <input class="form-check-input" type="checkbox" name="DsMaSV" value="@sv.MaSV"
+                                               checked="@daChon.Contains(sv.MaSV)" data-ho-ten="@sv.HoTen" />
+                                        <span class="ma">@sv.MaSV</span>
+                                        <span class="flex-grow-1">@sv.HoTen</span>
+                                        <span class="small text-secondary">@sv.MaLop</span>
+                                    </label>
+                                }
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="fw-semibold small mb-2">Đã chọn: <span id="so-sv-da-chon">0</span> sinh viên</div>
+                            <div class="ds-da-chon" id="ds-da-chon"></div>
+                            <template id="mau-sv-da-chon">
+                                <span class="chip-sv">
+                                    <span class="chip-sv-ten"></span>
+                                    <button type="button" class="btn-close btn-close-sm" aria-label="Bỏ chọn"></button>
+                                </span>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-end mb-3">
+        <button type="submit" class="btn btn-primary"><i class="bi bi-eye me-1"></i>Xem trước</button>
+    </div>
+</form>
+
+@* ---------- B3: bảng xem trước + B4: xác nhận ---------- *@
+@if (xt != null)
+{
+    <div class="the-noi-dung">
+        <h2 class="h5 mb-3"><span class="buoc-so">3</span>Xem trước</h2>
+
+        @if (xt.Loi != null)
+        {
+            <div class="alert alert-warning mb-0"><i class="bi bi-exclamation-triangle me-1"></i>@xt.Loi</div>
+        }
+        else
+        {
+            <p class="text-secondary mb-3">
+                @if (xt.MonHoc != null)
+                {
+                    <strong class="text-body">@xt.MonHoc.MaMon – @xt.MonHoc.TenMon</strong>
+                    <span>· @xt.MonHoc.SoTinChi TC · trọng số @xt.MonHoc.TrongSoMacDinh.Cc/@xt.MonHoc.TrongSoMacDinh.Gk/@xt.MonHoc.TrongSoMacDinh.Ck</span>
+                }
+                @if (xt.GiangVien != null)
+                {
+                    <span>· @xt.GiangVien.HoTenKemHocVi</span>
+                }
+                <span>· @HienThi.HocKy(yc.NamHoc, yc.HocKy)</span>
+                <br />
+                <span class="text-success fw-semibold">@xt.SoHopLe hợp lệ</span> ·
+                <span class="text-danger fw-semibold">@(xt.Dong.Count - xt.SoHopLe) bị chặn</span>
+                <span class="small">– hình thức học tự nhận diện từ kết quả pipeline <code>BangDiem</code>.</span>
+            </p>
+
+            @if (xt.Dong.Count == 0)
+            {
+                <partial name="_TrangTrong" model='new TrangTrongViewModel("Không có sinh viên", "Lớp được chọn chưa có sinh viên.", "bi-person-x")' />
+            }
+            else
+            {
+                <div class="khung-bang table-responsive">
+                    <table class="table bang-du-lieu">
+                        <thead>
+                            <tr>
+                                <th class="text-center">STT</th>
+                                <th>MSSV</th>
+                                <th>Họ tên</th>
+                                <th>Lớp</th>
+                                <th class="text-center">Lần học</th>
+                                <th>Hình thức</th>
+                                <th>Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (var i = 0; i < xt.Dong.Count; i++)
+                            {
+                                var d = xt.Dong[i];
+                                <tr class="@(d.HopLe ? "" : "dong-bi-chan")">
+                                    <td class="text-center">@(i + 1)</td>
+                                    <td class="ma">
+                                        @if (d.HoTen != "")
+                                        {
+                                            <a asp-controller="SinhVien" asp-action="HoSo" asp-route-id="@d.MaSV">@d.MaSV</a>
+                                        }
+                                        else
+                                        {
+                                            @d.MaSV
+                                        }
+                                    </td>
+                                    <td>@d.HoTen</td>
+                                    <td>@d.MaLop</td>
+                                    <td class="text-center">@(d.HopLe ? d.LanHoc.ToString() : "–")</td>
+                                    <td>
+                                        @if (d.HopLe)
+                                        {
+                                            <span class="badge badge-hinh-thuc @HienThi.LopBadgeHinhThuc(d.HinhThuc)">@d.HinhThuc</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (d.HopLe)
+                                        {
+                                            <span class="text-success"><i class="bi bi-check-circle-fill me-1"></i>Hợp lệ</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-danger"><i class="bi bi-slash-circle me-1"></i>@d.LyDo</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+
+            @* B4: POST lại đúng lựa chọn – server chạy lại xem trước, chỉ ghi các dòng hợp lệ *@
+            <form asp-action="XacNhan" method="post" class="d-flex flex-wrap justify-content-end align-items-center gap-2 mt-3">
+                <input type="hidden" name="NamHoc" value="@yc.NamHoc" />
+                <input type="hidden" name="HocKy" value="@yc.HocKy" />
+                <input type="hidden" name="MaMon" value="@yc.MaMon" />
+                <input type="hidden" name="MaGV" value="@yc.MaGV" />
+                <input type="hidden" name="CheDo" value="@yc.CheDo" />
+                @if (laCaLop)
+                {
+                    <input type="hidden" name="MaLop" value="@yc.MaLop" />
+                }
+                else
+                {
+                    foreach (var ma in yc.DsMaSV)
+                    {
+                        <input type="hidden" name="DsMaSV" value="@ma" />
+                    }
+                }
+                <span class="small text-secondary"><span class="buoc-so">4</span>Chỉ các dòng hợp lệ được ghi (<code>bulkWrite</code> + <code>$push</code>).</span>
+                <button type="submit" class="btn btn-success" disabled="@(xt.SoHopLe == 0)">
+                    <i class="bi bi-check2-circle me-1"></i>Xác nhận ghi danh @xt.SoHopLe sinh viên
+                </button>
+            </form>
+        }
+    </div>
+}
+
+@section Scripts {
+    <script src="~/js/ghi-danh.js" asp-append-version="true"></script>
+}

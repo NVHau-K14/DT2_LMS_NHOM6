@@ -2,7 +2,7 @@
 
 - **Ngày hoàn thành:** 28/10/2026
 - **Trạng thái:** ✅ Hoàn thành
-- **Commit:** `<mã commit>` (điền sau khi người dùng nghiệm thu và commit)
+- **Commit:** `746df3b` (điền sau khi người dùng nghiệm thu và commit)
 
 ## 1. Đã làm gì
 - **Bộ stage quy đổi dùng chung** (`Pipelines/QuyDoiDiemStages.cs`): 4 stage `$addFields` đúng mục 3.5 (duDiem → diemTK → diemChu → diemHe4 + dat) và cụm 2 stage tính GPA + xếp loại (`floor(x*100 + 0.5000001)/100`, `$switch`, nhánh "Chưa xếp loại"). Mỗi stage là một chuỗi JSON riêng, có comment tiếng Việt. Không pipeline nào tự viết lại công thức: tất cả chèn hai cụm này qua chỗ giữ `"@quyDoi"` và `"@gpaXepLoai"`.
