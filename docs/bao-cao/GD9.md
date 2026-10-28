@@ -2,7 +2,7 @@
 
 - **Ngày hoàn thành:** 29/10/2026
 - **Trạng thái:** ✅ Hoàn thành
-- **Commit:** `<mã commit>` (điền sau khi người dùng nghiệm thu và commit)
+- **Commit:** `2bba442` (điền sau khi người dùng nghiệm thu và commit)
 
 ## 1. Đã làm gì
 - **Rà soát toàn bộ màn hình** 3 vai trò bằng 2 cách:
