@@ -1,0 +1,58 @@
+@model DangNhapViewModel
+@{
+    Layout = "_LayoutAuth";
+    ViewData["Title"] = "Đăng nhập";
+}
+
+<h2 class="auth-the-tieu-de">Đăng nhập</h2>
+<p class="text-secondary mb-4">Sử dụng tài khoản do phòng đào tạo cấp.</p>
+
+<form asp-action="Login" method="post" novalidate>
+    <input type="hidden" asp-for="ReturnUrl" />
+
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 small" role="alert"></div>
+
+    <div class="mb-3">
+        <label asp-for="TenDangNhap" class="form-label"></label>
+        <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-person"></i></span>
+            <input asp-for="TenDangNhap" class="form-control" placeholder="Mã sinh viên / mã giảng viên" autocomplete="username" autofocus />
+        </div>
+        <span asp-validation-for="TenDangNhap" class="text-danger small"></span>
+    </div>
+
+    <div class="mb-4">
+        <label asp-for="MatKhau" class="form-label"></label>
+        <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+            <input asp-for="MatKhau" class="form-control" placeholder="Mật khẩu" autocomplete="current-password" />
+            <button class="btn btn-outline-secondary" type="button" data-hien-mat-khau="#MatKhau" title="Hiện / ẩn mật khẩu" aria-label="Hiện hoặc ẩn mật khẩu">
+                <i class="bi bi-eye"></i>
+            </button>
+        </div>
+        <span asp-validation-for="MatKhau" class="text-danger small"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100 py-2">
+        <i class="bi bi-box-arrow-in-right me-1"></i> Đăng nhập
+    </button>
+</form>
+
+<p class="small text-secondary mt-4 mb-0">
+    <i class="bi bi-info-circle me-1"></i>Quên mật khẩu? Vui lòng liên hệ phòng đào tạo để được cấp lại.
+</p>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Nút hiện/ẩn mật khẩu
+        document.querySelectorAll('[data-hien-mat-khau]').forEach(function (nut) {
+            nut.addEventListener('click', function () {
+                var o = document.querySelector(nut.dataset.hienMatKhau);
+                var dangAn = o.type === 'password';
+                o.type = dangAn ? 'text' : 'password';
+                nut.querySelector('i').className = dangAn ? 'bi bi-eye-slash' : 'bi bi-eye';
+            });
+        });
+    </script>
+}

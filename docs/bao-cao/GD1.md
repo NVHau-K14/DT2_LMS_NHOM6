@@ -2,7 +2,7 @@
 
 - **Ngày hoàn thành:** 28/10/2026
 - **Trạng thái:** ✅ Hoàn thành
-- **Commit:** `<mã commit>` (điền sau khi người dùng nghiệm thu và commit)
+- **Commit:** `cd88ed8`
 
 ## 1. Đã làm gì
 - Khởi tạo git (nhánh `main`), `.gitignore` (.NET + `*.user`, `c.txt`, `cookies*.txt`, `.vs/`), solution `DT2_LMS_NHOM6.sln` ở gốc; thêm MongoDB.Driver 3.13.0, BCrypt.Net-Next 4.2.0, ClosedXML 0.105.1.

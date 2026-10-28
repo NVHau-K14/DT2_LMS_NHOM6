@@ -1,0 +1,62 @@
+@*
+    Sidebar trái: logo + menu theo vai trò (thiết kế mục 5.2–5.4).
+    Mục chưa làm vẫn trỏ tới route tương lai (tạm thời 404).
+    Mục đang mở được đánh dấu active theo area + controller hiện tại.
+*@
+@{
+    var vaiTro = User.VaiTro();
+    var areaHienTai = ViewContext.RouteData.Values["area"] as string ?? "";
+    var controllerHienTai = ViewContext.RouteData.Values["controller"] as string ?? "";
+
+    // (Tên hiển thị, icon Bootstrap Icons, area, controller)
+    (string Ten, string Icon, string Area, string Controller)[] menu = vaiTro switch
+    {
+        HangSo.VaiTro.Admin =>
+        [
+            ("Tổng quan", "bi-speedometer2", "Admin", "Home"),
+            ("Lớp học", "bi-people", "Admin", "LopHoc"),
+            ("Sinh viên", "bi-person-vcard", "Admin", "SinhVien"),
+            ("Giảng viên", "bi-person-workspace", "Admin", "GiangVien"),
+            ("Môn học", "bi-journal-bookmark", "Admin", "MonHoc"),
+            ("Ghi danh", "bi-person-plus", "Admin", "GhiDanh"),
+            ("Báo cáo học lực", "bi-bar-chart-line", "Admin", "BaoCao"),
+            ("Nhập/Xuất dữ liệu", "bi-file-earmark-spreadsheet", "Admin", "DuLieu"),
+            ("Hiệu năng", "bi-lightning-charge", "Admin", "HieuNang")
+        ],
+        HangSo.VaiTro.GiangVien =>
+        [
+            ("Tổng quan", "bi-speedometer2", "GiangVien", "Home"),
+            ("Lớp học phần", "bi-collection", "GiangVien", "LopHocPhan"),
+            ("Báo cáo học lực", "bi-bar-chart-line", "GiangVien", "BaoCao")
+        ],
+        HangSo.VaiTro.SinhVien =>
+        [
+            ("Tổng quan", "bi-speedometer2", "SinhVien", "Home"),
+            ("Kết quả học tập", "bi-journal-check", "SinhVien", "KetQua"),
+            ("Hồ sơ cá nhân", "bi-person-badge", "SinhVien", "HoSo")
+        ],
+        _ => []
+    };
+}
+<aside class="sidebar" id="sidebar">
+    <a class="sidebar-logo" href="@User.TrangChuTheoVaiTro()">
+        <span class="logo-icon"><i class="bi bi-mortarboard-fill"></i></span>
+        <span class="logo-chu">
+            <span class="logo-ten">EduScore</span>
+            <span class="logo-phu">Cổng Quản lý Học tập</span>
+        </span>
+    </a>
+
+    <div class="sidebar-nhom">@HienThi.TenVaiTro(vaiTro)</div>
+    <nav class="sidebar-menu">
+        @foreach (var muc in menu)
+        {
+            var url = muc.Controller == "Home" ? $"/{muc.Area}" : $"/{muc.Area}/{muc.Controller}";
+            var active = string.Equals(areaHienTai, muc.Area, StringComparison.OrdinalIgnoreCase)
+                         && string.Equals(controllerHienTai, muc.Controller, StringComparison.OrdinalIgnoreCase);
+            <a class="sidebar-muc @(active ? "active" : "")" href="@Url.Content("~" + url)" title="@muc.Ten">
+                <i class="bi @muc.Icon"></i><span>@muc.Ten</span>
+            </a>
+        }
+    </nav>
+</aside>

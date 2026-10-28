@@ -1,0 +1,35 @@
+@model int
+@*
+    Trang lỗi chung (C-03): 403, 404, 500... Không hiển thị chi tiết kỹ thuật (stack trace).
+    Đã đăng nhập → dùng layout chính có sidebar; chưa đăng nhập → layout trang đăng nhập.
+*@
+@{
+    var daDangNhap = User.Identity?.IsAuthenticated == true;
+    Layout = daDangNhap ? "_Layout" : "_LayoutAuth";
+
+    var (icon, tieuDe, moTa) = Model switch
+    {
+        403 => ("bi-shield-lock", "Bạn không có quyền truy cập",
+                "Trang này không thuộc phạm vi tài khoản của bạn. Hãy quay về cổng của mình."),
+        404 => ("bi-signpost-split", "Không tìm thấy trang",
+                "Đường dẫn không tồn tại hoặc chức năng chưa được triển khai."),
+        _ => ("bi-exclamation-octagon", "Đã có lỗi xảy ra",
+                "Hệ thống gặp sự cố khi xử lý yêu cầu. Vui lòng thử lại sau ít phút.")
+    };
+    ViewData["Title"] = tieuDe;
+}
+
+<div class="trang-loi @(daDangNhap ? "the-noi-dung" : "")">
+    <div class="trang-loi-ma">@Model</div>
+    <div class="trang-loi-icon"><i class="bi @icon"></i></div>
+    <h2 class="h4">@tieuDe</h2>
+    <p class="text-secondary">@moTa</p>
+    @if (daDangNhap)
+    {
+        <a href="@User.TrangChuTheoVaiTro()" class="btn btn-primary"><i class="bi bi-house-door me-1"></i>Về trang chủ</a>
+    }
+    else
+    {
+        <a asp-area="" asp-controller="Account" asp-action="Login" class="btn btn-primary"><i class="bi bi-box-arrow-in-right me-1"></i>Đến trang đăng nhập</a>
+    }
+</div>

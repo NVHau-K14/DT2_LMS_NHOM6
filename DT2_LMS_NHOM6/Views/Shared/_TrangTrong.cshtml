@@ -1,0 +1,10 @@
+@model TrangTrongViewModel
+@* Trạng thái trống: dùng khi bảng/danh sách không có dữ liệu. *@
+<div class="trang-trong">
+    <div class="trang-trong-icon"><i class="bi @Model.BieuTuong"></i></div>
+    <div class="trang-trong-tieu-de">@Model.TieuDe</div>
+    @if (!string.IsNullOrEmpty(Model.MoTa))
+    {
+        <div class="trang-trong-mo-ta">@Model.MoTa</div>
+    }
+</div>

@@ -1,31 +1,31 @@
-using System.Diagnostics;
+using DT2_LMS_NHOM6.Infrastructure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using DT2_LMS_NHOM6.Models;
 
 namespace DT2_LMS_NHOM6.Controllers;
 
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
-
-    public HomeController(ILogger<HomeController> logger)
-    {
-        _logger = logger;
-    }
-
+    /// <summary>"/" : chưa đăng nhập → [Authorize] chuyển về Login; đã đăng nhập → cổng theo vai trò.</summary>
+    [Authorize]
     public IActionResult Index()
     {
-        return View();
+        return Redirect(User.TrangChuTheoVaiTro());
     }
 
-    public IActionResult Privacy()
-    {
-        return View();
-    }
-
+    /// <summary>
+    /// Trang lỗi thân thiện cho 404, 403, 500... Được gọi lại (re-execute) bởi
+    /// UseStatusCodePagesWithReExecute và UseExceptionHandler, kể cả khi request gốc là POST
+    /// nên không giới hạn phương thức và bỏ qua kiểm tra antiforgery.
+    /// </summary>
+    [AllowAnonymous]
+    [IgnoreAntiforgeryToken]
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
+    [Route("Home/StatusCode/{code:int}")]
+    public IActionResult TrangLoi(int code)
     {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        if (code < 400 || code > 599) code = StatusCodes.Status404NotFound;
+        Response.StatusCode = code;
+        return View("StatusCode", code);
     }
 }

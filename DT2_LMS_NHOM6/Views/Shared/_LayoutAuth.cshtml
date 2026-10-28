@@ -1,0 +1,63 @@
+@*
+    Layout cho trang chưa đăng nhập (đăng nhập, trang lỗi khi chưa đăng nhập).
+    Trái: giới thiệu EduScore (hình minh họa dựng bằng CSS + Bootstrap Icons). Phải: nội dung (form).
+*@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@(ViewData["Title"] ?? "Đăng nhập") – EduScore</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="eduscore trang-auth">
+    <div class="auth-khung">
+        <section class="auth-gioi-thieu">
+            <div class="auth-trang-tri auth-trang-tri-1"></div>
+            <div class="auth-trang-tri auth-trang-tri-2"></div>
+
+            <div class="auth-logo">
+                <span class="logo-icon"><i class="bi bi-mortarboard-fill"></i></span>
+                <span class="logo-ten">EduScore</span>
+            </div>
+
+            <h1 class="auth-tieu-de">Cổng Quản lý Học tập</h1>
+            <p class="auth-mo-ta">
+                Quản lý lớp học, hồ sơ sinh viên, nhập điểm và theo dõi kết quả học tập –
+                điểm tổng kết, GPA và xếp loại học lực được tính tự động theo quy chế tín chỉ.
+            </p>
+
+            <div class="auth-minh-hoa" aria-hidden="true">
+                <div class="minh-hoa-the">
+                    <div class="minh-hoa-dong"><span class="minh-hoa-cham bg-xanh-la"></span><span class="minh-hoa-vach w-75"></span><span class="minh-hoa-chu">A</span></div>
+                    <div class="minh-hoa-dong"><span class="minh-hoa-cham bg-xanh"></span><span class="minh-hoa-vach w-50"></span><span class="minh-hoa-chu">B</span></div>
+                    <div class="minh-hoa-dong"><span class="minh-hoa-cham bg-vang"></span><span class="minh-hoa-vach w-60"></span><span class="minh-hoa-chu">C</span></div>
+                </div>
+                <div class="minh-hoa-cot">
+                    <span style="height: 45%"></span><span style="height: 70%"></span><span style="height: 55%"></span><span style="height: 90%"></span>
+                </div>
+            </div>
+
+            <ul class="auth-tinh-nang">
+                <li><i class="bi bi-people"></i> Quản lý lớp, sinh viên, giảng viên, môn học</li>
+                <li><i class="bi bi-pencil-square"></i> Giảng viên nhập điểm trực tuyến</li>
+                <li><i class="bi bi-graph-up-arrow"></i> GPA và xếp loại học lực tự động</li>
+                <li><i class="bi bi-file-earmark-spreadsheet"></i> Nhập / xuất bảng điểm Excel</li>
+            </ul>
+        </section>
+
+        <section class="auth-noi-dung">
+            <div class="auth-the">
+                @RenderBody()
+            </div>
+            <p class="auth-chan">© 2026 Cổng Quản lý Học tập – EduScore</p>
+        </section>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

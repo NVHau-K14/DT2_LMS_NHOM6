@@ -1,0 +1,38 @@
+@*
+    Khu vực toast + mẫu toast. JS (eduscore.js) nhân bản <template> rồi điền nội dung bằng textContent,
+    không dựng HTML bằng chuỗi. Toast gửi qua TempData (sau redirect) được truyền bằng data-* bên dưới.
+*@
+@{
+    var toast = TempData[ThongBaoExtensions.KhoaToast] as string;
+    var loai = TempData[ThongBaoExtensions.KhoaLoaiToast] as string ?? "success";
+    var mongoCommand = TempData[ThongBaoExtensions.KhoaMongoCommand] as string;
+}
+<div class="toast-container position-fixed top-0 end-0 p-3" id="khu-toast"></div>
+
+@if (!string.IsNullOrEmpty(toast))
+{
+    <div hidden id="toast-tempdata" data-noi-dung="@toast" data-loai="@loai" data-mongo="@mongoCommand"></div>
+}
+
+<template id="mau-toast">
+    <div class="toast toast-eduscore" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex align-items-start">
+            <i class="bi toast-icon"></i>
+            <div class="toast-body flex-grow-1">
+                <div class="toast-noi-dung"></div>
+                <div class="toast-mongo d-none">
+                    <button class="btn btn-link btn-sm p-0 toast-mongo-nut" type="button">
+                        <i class="bi bi-terminal"></i> Lệnh MongoDB đã chạy <i class="bi bi-chevron-down"></i>
+                    </button>
+                    <div class="collapse toast-mongo-khoi">
+                        <pre class="toast-mongo-lenh"></pre>
+                        <button class="btn btn-sm btn-outline-secondary toast-sao-chep" type="button">
+                            <i class="bi bi-clipboard"></i> Sao chép
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn-close me-2 mt-2" data-bs-dismiss="toast" aria-label="Đóng"></button>
+        </div>
+    </div>
+</template>

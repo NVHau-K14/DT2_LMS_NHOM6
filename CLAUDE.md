@@ -70,7 +70,7 @@ mongosh eduscore --quiet --eval "db.sinhvien.countDocuments()"
 | GĐ | Nội dung | Trạng thái |
 |---|---|---|
 | 1 | Nền móng: git, sln, package, models, khởi tạo DB, seeder | ✅ 100 SV, 640 lần học, 19 F, hè 12/8/5, 109 TK; validator + index OK |
-| 2 | Đăng nhập, phân quyền, layout, đổi mật khẩu, trang lỗi | ⬜ |
+| 2 | Đăng nhập, phân quyền, layout, đổi mật khẩu, trang lỗi | ✅ Cookie auth 8h, 3 Area + base controller, layout sidebar/toast, 403/404/500 tiếng Việt |
 | 3 | Pipeline điểm & GPA + kiểm thử 5 ca | ⬜ |
 | 4 | CRUD Admin: lớp, sinh viên, giảng viên, môn học | ⬜ |
 | 5 | Ghi danh ($push/$pull) + nhập điểm ($set+arrayFilters) | ⬜ |
@@ -87,3 +87,10 @@ mongosh eduscore --quiet --eval "db.sinhvien.countDocuments()"
 - Seeder: kế hoạch môn mỗi lớp giữ tổng ≤ 7 để SV còn chỗ 1 môn hè (tối đa 8). Bước điều chỉnh F bảo đảm ≥ 13 SV ngẫu nhiên có F và tổng F 16–19. Seeder có hàm `DiemTKMau` (cùng công thức floor) **chỉ** để chọn SV học lại/cải thiện và in số F; ứng dụng không dùng hàm này.
 - Seeder chạy khi `sinhvien` trống: xóa sạch 4 collection còn lại trước khi insert để tránh trùng khóa.
 - "Kém" không thể có ở GPA tích lũy (chỉ tính môn đạt, D = 1.0) – chỉ xuất hiện ở GPA học kỳ (TS4 HK2).
+- Antiforgery: filter toàn cục `AutoValidateAntiforgeryTokenAttribute` → mọi POST (kể cả fetch) phải gửi token; fetch dùng header `RequestVerificationToken` với `EduScore.layAntiforgeryToken()`. Action trang lỗi có `[IgnoreAntiforgeryToken]` vì được re-execute cả với POST.
+- Culture: vi-VN, `NumberDecimalSeparator="."`, `NumberGroupSeparator=" "` (không dùng "," để "8,5" không bị bind thành 85). Input điểm vẫn phải tự chuẩn hóa "," → "." ở GĐ5.
+- `WebEncoderOptions` = `UnicodeRanges.All`: Razor xuất tiếng Việt nguyên dạng (không `&#x..;`).
+- Toast sau redirect: `this.ThongBao(noiDung, loai, mongoCommand)` (TempData `Toast`/`ToastLoai`/`MongoCommand`); JS `toast(msg, type, cmd)` nhân bản `<template id="mau-toast">`. Xóa: nút `data-xac-nhan-xoa data-url data-noi-dung` → modal POST dùng chung.
+- Hiển thị: `HienThi.Diem/Gpa/HocKy/Ngay/TenVaiTro`; TagHelper `<diem-chu gia-tri="" />`, `<xep-loai gia-tri="" />`; partial `_TrangTrong` (TrangTrongViewModel); breadcrumb `ViewData["Breadcrumb"] = MucBreadcrumb[]`.
+- Menu sidebar dùng URL cứng (`/Admin/LopHoc`...) vì anchor tag helper không sinh link tới controller chưa tồn tại.
+- Trạng thái "Khóa" chỉ báo khi mật khẩu đúng; khóa tài khoản đang đăng nhập không đá phiên hiện tại (cookie còn hạn).
