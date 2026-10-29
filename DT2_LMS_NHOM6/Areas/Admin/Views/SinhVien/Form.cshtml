@@ -54,7 +54,7 @@
                             <option value="">– Chọn lớp –</option>
                             @foreach (var lop in Model.DsLop)
                             {
-                                <option value="@lop.MaLop">@lop.MaLop – @lop.TenLop</option>
+                                <option value="@lop.MaLop">@lop.TenLop</option>
                             }
                         </select>
                         <span asp-validation-for="MaLop" class="text-danger small"></span>

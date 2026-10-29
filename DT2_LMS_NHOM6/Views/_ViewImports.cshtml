@@ -4,3 +4,5 @@
 @using DT2_LMS_NHOM6.ViewModels
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @addTagHelper *, DT2_LMS_NHOM6
+@* Bảng tra maLop → tenLop (nạp một lần mỗi request): var bangLop = await TenLop.LayAsync(); bangLop.Ten(maLop) *@
+@inject DT2_LMS_NHOM6.Services.TenLopService TenLop

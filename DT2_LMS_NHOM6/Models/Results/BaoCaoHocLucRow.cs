@@ -10,6 +10,9 @@ public class BaoCaoHocLucRow
     [BsonElement("hoTen")] public string HoTen { get; set; } = "";
     [BsonElement("maLop")] public string MaLop { get; set; } = "";
 
+    /// <summary>Tên lớp hiển thị (16DHTH01) – KHÔNG do pipeline trả, API gán thêm bằng TenLopService.</summary>
+    [BsonIgnore] public string? TenLop { get; set; }
+
     /// <summary>null → "Chưa xếp loại".</summary>
     [BsonElement("gpa")] public double? Gpa { get; set; }
     [BsonElement("xepLoai")] public string XepLoai { get; set; } = "";

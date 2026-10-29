@@ -11,6 +11,7 @@ namespace DT2_LMS_NHOM6.Services;
 /// <summary>
 /// Đọc / ghi file Excel bằng ClosedXML (thiết kế mục 6). Lớp này CHỈ làm việc với file:
 /// không truy cập MongoDB, không tính điểm – mọi con số (TK, chữ, GPA, xếp loại) truyền vào đã do pipeline tính.
+/// Cột "Lớp" luôn ghi tên lớp (16DHTH01) – tra từ BangTenLop truyền vào; maLop (CNTT2501) chỉ dùng nội bộ.
 ///
 /// Bố cục chung của file xuất:
 ///   dòng 1  CỔNG QUẢN LÝ HỌC TẬP – EDUSCORE
@@ -40,8 +41,11 @@ public static class ExcelService
     public const string NhanHocKy = "Học kỳ";
     public const string NhanGiangVien = "Giảng viên";
 
-    /// <summary>Cột của file danh sách sinh viên (mẫu nhập, thiết kế mục 6).</summary>
-    public static readonly string[] CotSinhVien = ["MSSV", "Họ tên", "Ngày sinh", "Giới tính", "Email", "SĐT", "Địa chỉ", "Mã lớp"];
+    /// <summary>Cột của file danh sách sinh viên (mẫu nhập, thiết kế mục 6). Cột "Lớp" ghi tên lớp, ví dụ 16DHTH01.</summary>
+    public static readonly string[] CotSinhVien = ["MSSV", "Họ tên", "Ngày sinh", "Giới tính", "Email", "SĐT", "Địa chỉ", "Lớp"];
+
+    /// <summary>Tiêu đề cột lớp của mẫu cũ – vẫn đọc được như cột "Lớp".</summary>
+    private const string CotLopMauCu = "Mã lớp";
 
     /// <summary>Cột của bảng điểm lớp học phần (mẫu nhập = file xuất).</summary>
     public static readonly string[] CotBangDiem = ["STT", "MSSV", "Họ tên", "Lớp", "CC", "GK", "CK"];
@@ -51,7 +55,7 @@ public static class ExcelService
     // =======================================================================
 
     /// <summary>Bảng điểm lớp học phần (G-03 "Tải mẫu / Xuất bảng điểm", A-11). Cũng chính là file mẫu để nhập điểm.</summary>
-    public static byte[] XuatBangDiemLopHocPhan(ThongTinLopHocPhanExcel lhp, IReadOnlyList<DongNhapDiem> ds)
+    public static byte[] XuatBangDiemLopHocPhan(ThongTinLopHocPhanExcel lhp, IReadOnlyList<DongNhapDiem> ds, BangTenLop bangLop)
     {
         using var wb = new XLWorkbook();
         var ws = wb.Worksheets.Add("BangDiem");
@@ -81,7 +85,7 @@ public static class ExcelService
             ws.Cell(r, 1).Value = i + 1;
             ws.Cell(r, 2).Value = d.MaSV;
             ws.Cell(r, 3).Value = d.HoTen;
-            ws.Cell(r, 4).Value = d.MaLop;
+            ws.Cell(r, 4).Value = bangLop.Ten(d.MaLop);
             GhiSo(ws.Cell(r, 5), d.Diem.Cc);
             GhiSo(ws.Cell(r, 6), d.Diem.Gk);
             GhiSo(ws.Cell(r, 7), d.Diem.Ck);
@@ -93,7 +97,7 @@ public static class ExcelService
 
     /// <summary>Báo cáo học lực (A-10, G-04, A-03): bảng từng SV + thống kê số SV theo xếp loại.</summary>
     public static byte[] XuatBaoCaoHocLuc(string tenBaoCao, IReadOnlyList<(string Nhan, string GiaTri)> thongTinLoc,
-        bool laTichLuy, IReadOnlyList<BaoCaoHocLucRow> ds, IReadOnlyList<SoLuongXepLoai> thongKe)
+        bool laTichLuy, IReadOnlyList<BaoCaoHocLucRow> ds, IReadOnlyList<SoLuongXepLoai> thongKe, BangTenLop bangLop)
     {
         using var wb = new XLWorkbook();
         var ws = wb.Worksheets.Add("BaoCaoHocLuc");
@@ -114,7 +118,7 @@ public static class ExcelService
             ws.Cell(r, 1).Value = i + 1;
             ws.Cell(r, 2).Value = d.MaSV;
             ws.Cell(r, 3).Value = d.HoTen;
-            ws.Cell(r, 4).Value = d.MaLop;
+            ws.Cell(r, 4).Value = bangLop.Ten(d.MaLop);
             ws.Cell(r, 5).Value = d.TinChiTichLuy;
             GhiSo(ws.Cell(r, 6), d.Gpa);
             ws.Cell(r, 7).Value = d.XepLoai;
@@ -141,7 +145,7 @@ public static class ExcelService
 
     /// <summary>Danh sách sinh viên theo bộ lọc của A-04 (kèm GPA / xếp loại tích lũy từ pipeline).</summary>
     public static byte[] XuatDanhSachSinhVien(IReadOnlyList<(string Nhan, string GiaTri)> thongTinLoc,
-        IReadOnlyList<(SinhVien SinhVien, BaoCaoHocLucRow? HocLuc)> ds)
+        IReadOnlyList<(SinhVien SinhVien, BaoCaoHocLucRow? HocLuc)> ds, BangTenLop bangLop)
     {
         using var wb = new XLWorkbook();
         var ws = wb.Worksheets.Add("DanhSachSinhVien");
@@ -164,7 +168,7 @@ public static class ExcelService
             ws.Cell(r, 3).Value = sv.HoTen;
             ws.Cell(r, 4).Value = HienThi.Ngay(sv.NgaySinh);
             ws.Cell(r, 5).Value = sv.GioiTinh;
-            ws.Cell(r, 6).Value = sv.MaLop;
+            ws.Cell(r, 6).Value = bangLop.Ten(sv.MaLop);
             ws.Cell(r, 7).Value = sv.Email ?? "";
             ws.Cell(r, 8).Value = sv.SoDienThoai ?? "";
             ws.Cell(r, 9).Value = sv.DiaChi ?? "";
@@ -195,7 +199,7 @@ public static class ExcelService
             ("MSSV", sv.MaSV),
             ("Họ tên", sv.HoTen),
             ("Ngày sinh", HienThi.Ngay(sv.NgaySinh)),
-            ("Lớp", tenLop == null ? sv.MaLop : $"{sv.MaLop} – {tenLop}"),
+            ("Lớp", tenLop ?? sv.MaLop),
             ("Ngày xuất", NgayXuat())
         ]);
         foreach (var c in Enumerable.Range(1, cot.Length))
@@ -265,7 +269,7 @@ public static class ExcelService
 
     /// <summary>
     /// File mẫu nhập danh sách SV: sheet "DanhSach" chỉ có dòng tiêu đề cột (cột MSSV, ngày sinh, SĐT định dạng Text),
-    /// sheet "HuongDan" ghi quy tắc, 1 dòng ví dụ và các mã lớp hợp lệ.
+    /// sheet "HuongDan" ghi quy tắc, 1 dòng ví dụ và các lớp hợp lệ (tên lớp).
     /// </summary>
     public static byte[] MauDanhSachSinhVien(IEnumerable<LopHoc> dsLop)
         => XuatFileSinhVien([], dsLop);
@@ -305,7 +309,7 @@ public static class ExcelService
             "MSSV: đúng 10 chữ số, chưa có trong hệ thống, không trùng trong file.",
             "Ngày sinh: dạng dd/MM/yyyy (ví dụ 14/03/2007), từ năm 1950 và đủ 15 tuổi.",
             "Giới tính: Nam hoặc Nữ.  Email, SĐT (10 số, bắt đầu bằng 0), Địa chỉ: có thể để trống.",
-            "Mã lớp: phải là lớp đã có (xem danh sách bên dưới).",
+            "Lớp: ghi tên lớp đã có, ví dụ 16DHTH01 (xem danh sách bên dưới).",
             "Tài khoản đăng nhập được tạo tự động: tên đăng nhập = MSSV, mật khẩu = ngày sinh ddMMyyyy.",
             "Hệ thống kiểm tra toàn bộ file trước: có dòng lỗi thì không ghi dòng nào. File .xlsx, tối đa 5 MB."
         ];
@@ -330,11 +334,11 @@ public static class ExcelService
         }
         KeVien(hd.Range(dongHd, 1, dongHd + 1, CotSinhVien.Length));
         dongHd += 3;
-        hd.Cell(dongHd++, 1).Value = "Mã lớp hợp lệ:";
+        hd.Cell(dongHd++, 1).Value = "Lớp hợp lệ:";
         foreach (var lop in dsLop)
         {
-            hd.Cell(dongHd, 1).Value = lop.MaLop;
-            GopO(hd, dongHd, 2, CotSinhVien.Length, lop.TenLop);
+            hd.Cell(dongHd, 1).Value = lop.TenLop;
+            GopO(hd, dongHd, 2, CotSinhVien.Length, $"{lop.Nganh} – niên khóa {lop.NienKhoa}");
             dongHd++;
         }
         return Luu(wb);
@@ -372,7 +376,7 @@ public static class ExcelService
                 Email = O("Email"),
                 SoDienThoai = O("SĐT"),
                 DiaChi = O("Địa chỉ"),
-                MaLop = O("Mã lớp")
+                MaLop = O("Lớp") // tên lớp (hoặc mã lớp) – NhapExcelService quy đổi về maLop
             };
             var trong = new[] { dong.MaSV, dong.HoTen, dong.NgaySinh, dong.GioiTinh, dong.Email, dong.SoDienThoai, dong.DiaChi, dong.MaLop }
                 .All(string.IsNullOrEmpty);
@@ -604,6 +608,8 @@ public static class ExcelService
                 viTri.TryAdd(ten, o.Address.ColumnNumber);
                 viTri.TryAdd(tenGoc, o.Address.ColumnNumber);
             }
+            // File mẫu cũ có cột "Mã lớp" → coi như cột "Lớp"
+            if (!viTri.ContainsKey("Lớp") && viTri.TryGetValue(CotLopMauCu, out var cotLopCu)) viTri["Lớp"] = cotLopCu;
             if (cotBatBuoc.All(viTri.ContainsKey)) return (r, viTri);
         }
         return null;

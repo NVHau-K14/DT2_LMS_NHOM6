@@ -29,13 +29,17 @@ Mở đầu 30 giây, kết 30 giây. Câu in nghiêng là gợi ý lời nói.
 | Q4 – SV mới nhập từ Excel | `{ maSV: { $gte: "2001250101" } }` | – |
 | Q5 – Pipeline | Tab **Aggregations** → `</>` Text → dán nội dung `database/pipelines/BaoCaoHocLuc.json` | – |
 
+Q1–Q5 không lọc theo lớp. Muốn lọc lớp trong Compass thì dùng **mã lớp** (`{ maLop: "CNTT2501" }` = lớp 16DHTH01), không dùng tên lớp. Bảng quy đổi: CNTT2501 = 16DHTH01, CNTT2502 = 16DHTH02, ATTT2501 = 16DHATTT01, HTTT2501 = 16DHHTTT01, KHDL2501 = 16DHKHDL01.
+
 ---
 
 ## Mở đầu (0:00 – 0:30)
 
 *"EduScore là cổng quản lý kết quả học tập. Mỗi sinh viên là một document trong collection `sinhvien`, các lần học nằm trong mảng nhúng `monHoc`. Mọi điểm tổng kết, GPA, xếp loại không lưu trong database mà do Aggregation Pipeline tính lại mỗi lần xem. Em sẽ demo ba phần: nhập điểm, báo cáo học lực và nhập/xuất bảng điểm."*
 
-Trong Compass, mở nhanh một document bất kỳ, bấm mở mảng `monHoc` cho thấy cấu trúc lồng.
+Trong Compass, mở nhanh một document bất kỳ, bấm mở mảng `monHoc` cho thấy cấu trúc lồng. Chỉ vào trường `maLop: "CNTT2501"`:
+
+*"`maLop` là mã nội bộ, ví dụ CNTT2501. Tên lớp hiển thị 16DHTH01 nằm trong collection `lophoc` (trường `tenLop`). Trên web mọi nơi đều hiện 16DHTH01, chỉ trang Lớp học có thêm cột mã lớp."*
 
 ---
 
@@ -43,7 +47,7 @@ Trong Compass, mở nhanh một document bất kỳ, bấm mở mảng `monHoc` 
 
 | # | Thao tác | Lời nói gợi ý |
 |---|---|---|
-| 1 | **Compass**: chạy **Q1**. Mở phần tử `monHoc` → chỉ ra `diem: { cc: 10, gk: 9, ck: null }`, `maDK`, `giangVien.maGV: "GV005"`. | *"Sinh viên Võ Ngọc Bảo Anh, môn NoSQL học kỳ này đã có chuyên cần và giữa kỳ, chưa có cuối kỳ. Mỗi lần học có `maDK` riêng để cập nhật đúng phần tử."* |
+| 1 | **Compass**: chạy **Q1**. Document có `maLop: "CNTT2501"` (lớp 16DHTH01). Mở phần tử `monHoc` → chỉ ra `diem: { cc: 10, gk: 9, ck: null }`, `maDK`, `giangVien.maGV: "GV005"`. | *"Sinh viên Võ Ngọc Bảo Anh, môn NoSQL học kỳ này đã có chuyên cần và giữa kỳ, chưa có cuối kỳ. Mỗi lần học có `maDK` riêng để cập nhật đúng phần tử."* |
 | 2 | **Cửa sổ 1 (GV005)**: trang Tổng quan → thẻ lớp học phần **INT301** → **Nhập điểm** (hoặc menu Lớp học phần). Chỉ thanh tiến độ 0/56. | *"Giảng viên chỉ thấy các lớp học phần mình dạy; lớp học phần gồm sinh viên của nhiều lớp sinh hoạt."* |
 | 3 | Ô lọc lớp chọn **16DHTH01**. Dòng **2001250005**: gõ CK `11` → báo lỗi đỏ. Sửa thành `8,5` (dấu phẩy). Bấm **Lưu** cuối dòng. | *"Ô nhập kiểm tra 0–10, tối đa một chữ số thập phân, nhận cả dấu phẩy."* |
 | 4 | Toast hiện → bấm **Lệnh MongoDB đã chạy** để mở lệnh. Chỉ vào `$set: { "monHoc.$[e].diem.ck": 8.5 ... }` và `arrayFilters: [{ "e.maDK": ..., "e.giangVien.maGV": "GV005" }]`. Cột TK/Chữ/Hệ 4 hiện **8.8 / A / 4**. | *"Lệnh dùng `$set` với toán tử `$[e]` và `arrayFilters`: chỉ phần tử có đúng `maDK` **và** do chính GV005 dạy mới bị sửa. Quyền của giảng viên nằm ngay trong câu lệnh – giảng viên khác gửi cùng `maDK` sẽ ra `modifiedCount = 0`. TK 8.8 là do pipeline tính lại sau khi lưu: (10×10 + 9×30 + 8.5×60)/100 = 8.8."* |
@@ -74,8 +78,8 @@ Câu hỏi hay gặp: *"Sao biết pipeline đúng?"* → mở `docs/kiem-thu-gp
 | 2 | Thẻ *Nhập bảng điểm* → **Chọn file** `docs/demo/diem_INT301_loi.xlsx` → **Kiểm tra file**. Các dòng lỗi đỏ: CK = 11, chữ "abc", GK 8.25, MSSV không thuộc lớp học phần. | *"Hệ thống kiểm tra toàn bộ file trước; chỉ cần một dòng lỗi là không ghi gì."* |
 | 3 | **Tải file khác** → chọn `diem_INT301_hop_le.xlsx` → **Kiểm tra file**. Chỉ cột điểm cũ/mới (dòng vàng = có thay đổi); dòng 2001250005 CK **8.5 → 4** (vì file mẫu được tạo trước phần 1). Bấm **Xác nhận ghi điểm (… sinh viên)**. | *"Ô trống trong file nghĩa là giữ nguyên điểm cũ; ô có giá trị khác thì ghi đè."* |
 | 4 | Toast: mở **Lệnh MongoDB đã chạy** → `bulkWrite` các `updateOne` `$set` + `arrayFilters`, `capNhatBoi: "admin"`, "tổng cộng N lệnh". | *"Admin nhập thì arrayFilters chỉ lọc theo `maDK`, không kèm điều kiện giảng viên."* |
-| 5 | **Compass**: chạy **Q2** → 56 document (đủ cả lớp học phần); **Q3** → các SV do admin nhập. Mở 1 document: `capNhatBoi: "admin"`. | *"Toàn bộ 56 sinh viên của lớp học phần đã có điểm cuối kỳ, ghi vào đúng phần tử INT301 trong mảng của từng người."* |
-| 6 | Quay lại **Nhập/Xuất dữ liệu** → *Nhập danh sách sinh viên* → `sinhvien_hop_le.xlsx` → **Kiểm tra file** → **Xác nhận nhập 5 sinh viên**. Toast: `insertMany`. **Compass**: **Q4** → 5 document mới với `monHoc: []`; collection `taikhoan` có 5 tài khoản mới (mật khẩu = ngày sinh). | *"Thêm sinh viên ghi vào hai collection; MongoDB standalone không có transaction nên em ghi tuần tự, bước tài khoản lỗi thì xóa lại các sinh viên vừa thêm."* |
+| 5 | **Compass**: chạy **Q2** → 56 document (đủ cả lớp học phần); **Q3** → các SV do admin nhập. Mở 1 document: `capNhatBoi: "admin"`; trường `maLop` là mã mới (`CNTT2501`, `CNTT2502` hoặc `KHDL2501`), trên web vẫn hiện 16DHTH01… | *"Toàn bộ 56 sinh viên của lớp học phần đã có điểm cuối kỳ, ghi vào đúng phần tử INT301 trong mảng của từng người."* |
+| 6 | Quay lại **Nhập/Xuất dữ liệu** → *Nhập danh sách sinh viên* → `sinhvien_hop_le.xlsx` → **Kiểm tra file** → **Xác nhận nhập 5 sinh viên**. Toast: `insertMany`. **Compass**: **Q4** → 5 document mới với `monHoc: []` và `maLop: "KHDL2501"` (file ghi lớp 16DHKHDL01, khi nhập được đổi sang mã lớp); collection `taikhoan` có 5 tài khoản mới (mật khẩu = ngày sinh). | *"File Excel ghi tên lớp như người dùng thấy, hệ thống tra collection `lophoc` để đổi sang mã lớp trước khi ghi. Thêm sinh viên ghi vào hai collection; MongoDB standalone không có transaction nên em ghi tuần tự, bước tài khoản lỗi thì xóa lại các sinh viên vừa thêm."* |
 | 7 | **Compass**: collection `sinhvien` → tab **Validation** (JSON Schema) và tab **Indexes** (multikey `ix_monHoc_*`). Thẻ *Xuất báo cáo học lực* → **Xuất Excel** (nếu còn thời gian). | *"Schema linh hoạt nhưng có validator `$jsonSchema` strict: tín chỉ phải là số nguyên, điểm 0–10 hoặc null. Index multikey trên mảng `monHoc` phục vụ tìm lớp học phần của giảng viên."* |
 
 ---

@@ -15,7 +15,7 @@ public class BoLocSinhVien
     /// <summary>Toàn trường: { }</summary>
     public static BoLocSinhVien TatCa() => new(new BsonDocument());
 
-    /// <summary>Một lớp sinh hoạt: { maLop: "16DHTH01" }</summary>
+    /// <summary>Một lớp sinh hoạt: { maLop: "CNTT2501" } (maLop nội bộ của lớp 16DHTH01)</summary>
     public static BoLocSinhVien TheoLop(string maLop) => new(new BsonDocument("maLop", maLop));
 
     /// <summary>Một sinh viên: { maSV: "2001250001" }</summary>
@@ -28,7 +28,7 @@ public class BoLocSinhVien
     /// <summary>SV có ít nhất một lần học do giảng viên này dạy: { "monHoc.giangVien.maGV": "GV005" }</summary>
     public static BoLocSinhVien TheoGiangVien(string maGV) => new(new BsonDocument("monHoc.giangVien.maGV", maGV));
 
-    /// <summary>Thêm điều kiện lớp sinh hoạt vào bộ lọc hiện có, ví dụ { "monHoc.giangVien.maGV": "GV005", maLop: "16DHTH01" }.</summary>
+    /// <summary>Thêm điều kiện lớp sinh hoạt vào bộ lọc hiện có, ví dụ { "monHoc.giangVien.maGV": "GV005", maLop: "CNTT2501" }.</summary>
     public BoLocSinhVien VaLop(string maLop)
         => new(new BsonDocument(DieuKien) { { "maLop", maLop } });
 

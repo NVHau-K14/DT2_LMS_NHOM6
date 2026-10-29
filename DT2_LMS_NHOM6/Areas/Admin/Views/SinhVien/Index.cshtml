@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Sinh viên";
     var coLoc = !string.IsNullOrEmpty(Model.MaLop) || !string.IsNullOrEmpty(Model.TrangThai) || !string.IsNullOrEmpty(Model.Q);
+    var bangLop = await TenLop.LayAsync();
 }
 
 <div class="the-noi-dung">
@@ -11,7 +12,7 @@
                 <option value="">Tất cả lớp</option>
                 @foreach (var lop in Model.DsLop)
                 {
-                    <option value="@lop.MaLop" selected="@(lop.MaLop == Model.MaLop)">@lop.MaLop</option>
+                    <option value="@lop.MaLop" selected="@(lop.MaLop == Model.MaLop)">@lop.TenLop</option>
                 }
             </select>
             <select name="trangThai" class="form-select" aria-label="Lọc theo trạng thái">
@@ -72,7 +73,7 @@
                                     <span class="badge badge-trang-thai tt-khoa ms-1" title="Tài khoản đang bị khóa"><i class="bi bi-lock-fill"></i> Khóa</span>
                                 }
                             </td>
-                            <td>@sv.MaLop</td>
+                            <td>@bangLop.Ten(sv.MaLop)</td>
                             <td>@HienThi.Ngay(sv.NgaySinh)</td>
                             <td><span class="badge badge-trang-thai @HienThi.LopBadgeTrangThai(sv.TrangThai)">@sv.TrangThai</span></td>
                             <td class="text-center fw-semibold">@HienThi.Gpa(dong.HocLuc?.Gpa)</td>

@@ -50,6 +50,7 @@ builder.Services.AddScoped<DiemService>();
 builder.Services.AddScoped<BaoCaoService>();
 builder.Services.AddScoped<TaiKhoanService>();
 builder.Services.AddScoped<LopHocService>();
+builder.Services.AddScoped<TenLopService>();
 builder.Services.AddScoped<SinhVienService>();
 builder.Services.AddScoped<GiangVienService>();
 builder.Services.AddScoped<MonHocService>();

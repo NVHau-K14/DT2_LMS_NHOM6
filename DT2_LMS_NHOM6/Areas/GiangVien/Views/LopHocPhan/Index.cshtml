@@ -1,5 +1,6 @@
 @model LopHocPhanViewModel
 @{
+    var bangLop = await TenLop.LayAsync();
     ViewData["Title"] = "Lớp học phần";
 }
 
@@ -51,7 +52,7 @@
                             <td class="text-nowrap">
                                 @foreach (var lop in l.CacLop)
                                 {
-                                    <div>@lop</div>
+                                    <div>@bangLop.Ten(lop)</div>
                                 }
                             </td>
                             <td class="text-center">@l.SiSo</td>

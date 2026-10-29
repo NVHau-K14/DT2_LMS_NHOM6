@@ -1,7 +1,7 @@
 @model LopHocChiTietViewModel
 @{
     var lop = Model.Lop;
-    ViewData["Title"] = $"Lớp {lop.MaLop}";
+    ViewData["Title"] = $"Lớp {lop.TenLop}";
     ViewData["Breadcrumb"] = new[] { new MucBreadcrumb("Lớp học", "/Admin/LopHoc") };
 }
 

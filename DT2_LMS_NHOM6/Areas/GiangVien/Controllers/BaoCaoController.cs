@@ -19,12 +19,14 @@ public class BaoCaoController : GiangVienControllerBase
     private readonly BaoCaoService _baoCao;
     private readonly DiemService _diem;
     private readonly XuatExcelService _xuat;
+    private readonly TenLopService _tenLop;
 
-    public BaoCaoController(BaoCaoService baoCao, DiemService diem, XuatExcelService xuat)
+    public BaoCaoController(BaoCaoService baoCao, DiemService diem, XuatExcelService xuat, TenLopService tenLop)
     {
         _baoCao = baoCao;
         _diem = diem;
         _xuat = xuat;
+        _tenLop = tenLop;
     }
 
     /// <summary>
@@ -44,7 +46,7 @@ public class BaoCaoController : GiangVienControllerBase
     }
 
     /// <param name="lhp">Lớp học phần dạng "INT301_2026-2027_1"; trống = mọi lớp học phần.</param>
-    /// <param name="trang">Trang bảng SV – mỗi trang một lớp sinh hoạt (mã lớp tăng dần); ngoài phạm vi → kẹp về 1 / trang cuối.</param>
+    /// <param name="trang">Trang bảng SV – mỗi trang một lớp sinh hoạt (tên lớp tăng dần); ngoài phạm vi → kẹp về 1 / trang cuối.</param>
     [HttpGet]
     public async Task<IActionResult> Index(string? lhp, int? trang)
     {
@@ -68,7 +70,7 @@ public class BaoCaoController : GiangVienControllerBase
                 UrlXuatExcel = Url.Action(nameof(XuatExcel), new { lhp = lhpChon == null ? null : lhp }),
                 // Chỉ tách bảng theo lớp khi hiển thị; thẻ số, biểu đồ, Xuất Excel vẫn dùng toàn bộ danh sách
                 PhanTrang = new PhanTrangTheoLop(baoCao.DuLieu, trang,
-                    new() { ["lhp"] = lhpChon == null ? null : lhp }),
+                    new() { ["lhp"] = lhpChon == null ? null : lhp }, await _tenLop.LayAsync()),
                 Pipelines =
                 [
                     PipelineDaChay.Tu("BaoCaoHocLuc", "Bảng học lực: mỗi sinh viên một dòng (GPA, xếp loại, TC, số môn nợ).", baoCao),

@@ -23,7 +23,7 @@
                 </div>
                 <div class="col-sm-6">
                     <dl class="danh-sach-thong-tin">
-                        <dt>Lớp</dt><dd class="ma">@sv.MaLop</dd>
+                        <dt>Lớp</dt><dd class="ma">@(lop?.TenLop ?? sv.MaLop)</dd>
                         <dt>Khóa học</dt><dd>@Model.HoSo.KhoaHoc</dd>
                         <dt>Ngành</dt><dd>@(lop?.Nganh ?? "–")</dd>
                     </dl>

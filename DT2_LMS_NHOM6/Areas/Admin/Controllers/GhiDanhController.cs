@@ -33,7 +33,7 @@ public class GhiDanhController : AdminControllerBase
     }
 
     /// <summary>
-    /// /Admin/GhiDanh?maLop=16DHTH02 (từ chi tiết lớp) hoặc ?maSV=2001250004 (từ hồ sơ SV) để điền sẵn.
+    /// /Admin/GhiDanh?maLop=CNTT2502 (từ chi tiết lớp 16DHTH02) hoặc ?maSV=2001250004 (từ hồ sơ SV) để điền sẵn.
     /// xemTruoc=true → chạy bước xem trước (không ghi DB).
     /// </summary>
     [HttpGet]

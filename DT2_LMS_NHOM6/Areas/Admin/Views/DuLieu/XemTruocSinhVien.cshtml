@@ -1,6 +1,8 @@
 @model XemTruocNhapSinhVienViewModel
 @{
     var phien = Model.Phien;
+    // Dòng hợp lệ đã quy đổi về maLop → hiện lại tên lớp; dòng lớp sai giữ nguyên chữ trong file
+    var bangLop = await TenLop.LayAsync();
     ViewData["Title"] = "Kiểm tra file sinh viên";
     ViewData["Breadcrumb"] = new[] { new MucBreadcrumb("Nhập/Xuất dữ liệu", "/Admin/DuLieu") };
 }
@@ -51,7 +53,7 @@
                         <th>Giới tính</th>
                         <th>Email</th>
                         <th>SĐT</th>
-                        <th>Mã lớp</th>
+                        <th>Lớp</th>
                         <th>Kết quả kiểm tra</th>
                     </tr>
                 </thead>
@@ -66,7 +68,7 @@
                             <td>@d.GioiTinh</td>
                             <td>@d.Email</td>
                             <td>@d.SoDienThoai</td>
-                            <td class="ma">@d.MaLop</td>
+                            <td class="ma">@bangLop.Ten(d.MaLop)</td>
                             <td>
                                 @if (d.HopLe)
                                 {

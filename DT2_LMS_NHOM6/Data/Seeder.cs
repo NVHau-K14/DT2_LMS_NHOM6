@@ -111,7 +111,7 @@ public class Seeder
     private List<LopHoc> TaoLopHoc() => Lop.Select(l => new LopHoc
     {
         MaLop = l.MaLop,
-        TenLop = $"Đại học {l.Nganh} 16 - Lớp {l.SoThuTu:00}",
+        TenLop = l.TenLop,
         NienKhoa = NienKhoa,
         Nganh = l.Nganh,
         Khoa = Khoa,
@@ -131,7 +131,7 @@ public class Seeder
         var ds = new List<SvTam>();
         var hoTenDaDung = new HashSet<string>();
 
-        // 5 SV kiểm thử (lớp 16DHTH01, MSSV 2001250001–2001250005) – dữ liệu cố định mục 7.5
+        // 5 SV kiểm thử (lớp 16DHTH01 – maLop CNTT2501, MSSV 2001250001–2001250005) – dữ liệu cố định mục 7.5
         foreach (var sv in TaoSinhVienKiemThu())
         {
             hoTenDaDung.Add(sv.HoTen);
@@ -248,7 +248,7 @@ public class Seeder
 
     private List<SinhVien> TaoSinhVienKiemThu()
     {
-        const string lop = "16DHTH01";
+        const string lop = LopKiemThu; // CNTT2501 (tên lớp 16DHTH01)
         DiemThanhPhan D(double cc, double gk, double? ck) => new() { Cc = cc, Gk = gk, Ck = ck };
         MonHocDangKy Moi(string maMon, HocKyMau hk, DiemThanhPhan d) => TaoLanHoc(maMon, hk, 1, HangSo.HinhThuc.HocMoi, d);
 
@@ -460,7 +460,7 @@ public class Seeder
         Console.WriteLine();
         Console.WriteLine("================ THỐNG KÊ DỮ LIỆU MẪU ================");
         foreach (var lop in lopHocs)
-            Console.WriteLine($"  Lớp {lop.MaLop,-12}: {ds.Count(x => x.Sv.MaLop == lop.MaLop),3} SV");
+            Console.WriteLine($"  Lớp {lop.TenLop,-12} ({lop.MaLop}): {ds.Count(x => x.Sv.MaLop == lop.MaLop),3} SV");
         Console.WriteLine($"  Tổng sinh viên         : {ds.Count}");
         Console.WriteLine($"  Số phần tử monHoc / SV : min {soMon.Min()}, max {soMon.Max()}, TB {soMon.Average().ToString("0.00", CultureInfo.InvariantCulture)}");
         Console.WriteLine($"  Tổng lần học           : {tatCaLanHoc.Count}");

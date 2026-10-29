@@ -26,10 +26,10 @@
         <div class="the-noi-dung h-100">
             <h2 class="h6 text-secondary mb-3">Lớp sinh hoạt</h2>
             <dl class="danh-sach-thong-tin">
-                <dt>Mã lớp</dt><dd class="ma">@sv.MaLop</dd>
+                @* Chỉ hiện tên lớp (16DHTH01); maLop là mã nội bộ *@
+                <dt>Lớp</dt><dd class="ma">@(Model.Lop?.TenLop ?? sv.MaLop)</dd>
                 @if (Model.Lop != null)
                 {
-                    <dt>Tên lớp</dt><dd>@Model.Lop.TenLop</dd>
                     <dt>Niên khóa</dt><dd>@Model.Lop.NienKhoa</dd>
                     <dt>Ngành</dt><dd>@Model.Lop.Nganh</dd>
                     <dt>Khoa</dt><dd>@Model.Lop.Khoa</dd>

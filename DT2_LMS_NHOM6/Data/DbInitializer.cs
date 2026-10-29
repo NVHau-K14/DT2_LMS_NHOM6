@@ -80,8 +80,12 @@ public static class DbInitializer
             Index(new BsonDocument("hoTen", 1), "ix_hoTen"),
         });
 
-        await db.GetCollection<BsonDocument>(MongoContext.TenLopHoc).Indexes.CreateOneAsync(
-            Index(new BsonDocument("maLop", 1), "ux_maLop", unique: true));
+        await db.GetCollection<BsonDocument>(MongoContext.TenLopHoc).Indexes.CreateManyAsync(new[]
+        {
+            Index(new BsonDocument("maLop", 1), "ux_maLop", unique: true),
+            // tenLop là tên hiển thị duy nhất người dùng nhìn thấy (16DHTH01) nên cũng không được trùng
+            Index(new BsonDocument("tenLop", 1), "ux_tenLop", unique: true),
+        });
 
         await db.GetCollection<BsonDocument>(MongoContext.TenGiangVien).Indexes.CreateOneAsync(
             Index(new BsonDocument("maGV", 1), "ux_maGV", unique: true));

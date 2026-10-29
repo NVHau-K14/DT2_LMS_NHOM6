@@ -3,6 +3,7 @@ using DT2_LMS_NHOM6.Infrastructure;
 using DT2_LMS_NHOM6.Models;
 using DT2_LMS_NHOM6.Models.Documents;
 using DT2_LMS_NHOM6.Models.Results;
+using DT2_LMS_NHOM6.Services;
 
 namespace DT2_LMS_NHOM6.ViewModels;
 
@@ -88,7 +89,7 @@ public class BaoCaoHocLucViewModel
     public string? UrlXuatExcel { get; set; }
 
     /// <summary>Phân trang theo lớp sinh hoạt (mỗi lớp một trang) – A-10 và G-04.</summary>
-    public PhanTrangTheoLop PhanTrang { get; set; } = new([], null, new());
+    public PhanTrangTheoLop PhanTrang { get; set; } = new([], null, new(), new BangTenLop([]));
 
     /// <summary>
     /// Các dòng hiện trong bảng: chỉ SV thuộc lớp của trang hiện tại
@@ -116,21 +117,22 @@ public class BaoCaoHocLucViewModel
 }
 
 /// <summary>
-/// Phân trang theo lớp sinh hoạt cho bảng báo cáo A-10 / G-04: trang i = lớp thứ i (mã lớp sắp tăng dần).
+/// Phân trang theo lớp sinh hoạt cho bảng báo cáo A-10 / G-04: trang i = lớp thứ i (tên lớp sắp tăng dần).
 /// Chuyển trang bằng form GET (?trang=n), giữ lại các tham số lọc trong ThamSoGiuLai (A-10: maLop, phamVi; G-04: lhp).
 /// </summary>
 public class PhanTrangTheoLop
 {
-    /// <summary>Các mã lớp khác nhau trong danh sách, sắp tăng dần.</summary>
+    /// <summary>Các maLop khác nhau trong danh sách, sắp theo tên lớp (16DHATTT01, 16DHHTTT01, ...).</summary>
     public List<string> CacLop { get; }
     /// <summary>Trang hiện tại (1..TongSoTrang), đã kẹp vào phạm vi.</summary>
     public int Trang { get; }
     /// <summary>Tham số query giữ nguyên khi chuyển trang (ví dụ lhp).</summary>
     public Dictionary<string, string?> ThamSoGiuLai { get; }
 
-    public PhanTrangTheoLop(IEnumerable<BaoCaoHocLucRow> danhSach, int? trang, Dictionary<string, string?> thamSoGiuLai)
+    public PhanTrangTheoLop(IEnumerable<BaoCaoHocLucRow> danhSach, int? trang, Dictionary<string, string?> thamSoGiuLai,
+        BangTenLop bangLop)
     {
-        CacLop = danhSach.Select(sv => sv.MaLop).Distinct().Order(StringComparer.Ordinal).ToList();
+        CacLop = bangLop.SapXep(danhSach.Select(sv => sv.MaLop).Distinct(), ma => ma).ToList();
         Trang = Math.Clamp(trang ?? 1, 1, Math.Max(CacLop.Count, 1));
         ThamSoGiuLai = thamSoGiuLai;
     }
@@ -178,15 +180,20 @@ public class TongQuanAdminViewModel
     public long SoMon { get; set; }
     public List<SoLuongXepLoai> PhanBoXepLoai { get; set; } = new();
     public List<GpaTheoLopRow> GpaTheoLop { get; set; } = new();
+    /// <summary>Tra tên lớp cho nhãn biểu đồ (pipeline GpaTheoLop trả maLop).</summary>
+    public BangTenLop BangLop { get; set; } = new([]);
 
     public CauHinhBieuDo BieuDoXepLoai => CauHinhBieuDo.PhanBoXepLoai(PhanBoXepLoai, "doughnut");
 
-    public CauHinhBieuDo BieuDoGpaLop => new()
+    /// <summary>Cột theo tên lớp (16DHATTT01 … 16DHTH02) – chỉ đổi nhãn và thứ tự, số liệu nguyên từ pipeline.</summary>
+    public CauHinhBieuDo BieuDoGpaLop => TaoBieuDoGpaLop(BangLop.SapXep(GpaTheoLop, l => l.MaLop).ToList());
+
+    private CauHinhBieuDo TaoBieuDoGpaLop(List<GpaTheoLopRow> ds) => new()
     {
         Loai = "bar",
-        Nhan = GpaTheoLop.Select(l => l.MaLop).ToList(),
-        DuLieu = GpaTheoLop.Select(l => l.GpaTrungBinh).ToList(),
-        Mau = GpaTheoLop.Select(_ => "#2563EB").ToList(),
+        Nhan = ds.Select(l => BangLop.Ten(l.MaLop)).ToList(),
+        DuLieu = ds.Select(l => l.GpaTrungBinh).ToList(),
+        Mau = ds.Select(_ => "#2563EB").ToList(),
         TenChuoi = "GPA tích lũy trung bình",
         TrucYToiDa = 4,
         SoLe = 2

@@ -187,7 +187,7 @@ Sinh viên chưa có lần học nào đủ điểm vẫn phải xuất hiện t
   "email": "2001250006@sv.eduscore.vn",
   "soDienThoai": "0912345678",
   "diaChi": "Tân Phú, TP.HCM",
-  "maLop": "16DHTH01",
+  "maLop": "CNTT2501",                  // mã nội bộ của lớp 16DHTH01 (xem 4.2)
   "trangThai": "Đang học",              // "Đang học" | "Bảo lưu" | "Thôi học"
   "monHoc": [
     {
@@ -214,10 +214,15 @@ Sinh viên chưa có lần học nào đủ điểm vẫn phải xuất hiện t
 
 ### 4.2 `lophoc`
 ```jsonc
-{ "_id": ObjectId("..."), "maLop": "16DHTH01", "tenLop": "Đại học Công nghệ thông tin 16 - Lớp 01",
+{ "_id": ObjectId("..."), "maLop": "CNTT2501", "tenLop": "16DHTH01",
   "nienKhoa": "2025-2029", "nganh": "Công nghệ thông tin", "khoa": "Khoa Công nghệ thông tin",
   "coVanHocTap": { "maGV": "GV001", "hoTen": "ThS. Nguyễn Văn An" }, "ngayTao": ISODate("...") }
 ```
+**Quy ước: `maLop` là mã nội bộ, `tenLop` là tên hiển thị.**
+- `maLop` (CNTT2501) là khóa liên kết: `sinhvien.maLop`, bộ lọc pipeline, URL, `value` của ô chọn lớp, lệnh MongoDB trong toast.
+- `tenLop` (16DHTH01) là tên người dùng thấy ở mọi màn hình, file Excel (xuất và nhập) và lời nói khi demo. `tenLop` unique (`ux_tenLop`).
+- Mã lớp chỉ hiện ở trang Lớp học (A-02, A-03). Pipeline vẫn trả `maLop`; ứng dụng tra `maLop → tenLop` bằng C# khi hiển thị. Việc này không phải tính điểm.
+- Danh sách lớp, phân trang báo cáo theo lớp và các danh sách có nhóm theo lớp đều sắp theo `tenLop`.
 
 ### 4.3 `giangvien`
 ```jsonc
@@ -294,7 +299,7 @@ Mảng `monHoc` **không giới hạn số phần tử** (giới hạn 4–8 ch�
 | Collection | Index |
 |---|---|
 | sinhvien | `{maSV:1}` unique; `{maLop:1}`; `{"monHoc.giangVien.maGV":1, "monHoc.namHoc":1, "monHoc.hocKy":1}`; `{"monHoc.maMon":1}`; `{hoTen:1}` |
-| lophoc | `{maLop:1}` unique |
+| lophoc | `{maLop:1}` unique; `{tenLop:1}` unique |
 | giangvien | `{maGV:1}` unique |
 | monhoc | `{maMon:1}` unique |
 | taikhoan | `{tenDangNhap:1}` unique; `{vaiTro:1, maThamChieu:1}` |
@@ -369,7 +374,7 @@ Khung chung: sidebar trái màu xanh dương (logo EduScore, menu theo vai trò,
 
 - **Nguyên tắc nhập: kiểm tra toàn bộ file trước; có dòng lỗi → hiện danh sách lỗi theo dòng, KHÔNG ghi gì. Sạch → xác nhận → ghi bằng bulkWrite.** Lưu kết quả kiểm tra tạm (TempData/cache theo phiên) giữa bước xem trước và bước xác nhận.
 - Ô MSSV, ngày sinh định dạng Text trong file mẫu. Ngày sinh `dd/MM/yyyy`. Tối đa 5MB, chỉ `.xlsx`.
-- **Mẫu danh sách SV**: MSSV | Họ tên | Ngày sinh | Giới tính | Email | SĐT | Địa chỉ | Mã lớp. Lỗi: MSSV sai định dạng / đã tồn tại / trùng trong file; lớp không tồn tại; ngày sinh sai; giới tính sai. Ghi: insert SV (monHoc rỗng) + tài khoản.
+- **Mẫu danh sách SV**: MSSV | Họ tên | Ngày sinh | Giới tính | Email | SĐT | Địa chỉ | Lớp. Cột Lớp ghi **tên lớp** (16DHTH01); vẫn nhận mã lớp (CNTT2501) và file mẫu cũ có cột "Mã lớp". Trước khi ghi được quy đổi về `maLop`. Mọi file xuất ghi cột Lớp là tên lớp. Lỗi: MSSV sai định dạng / đã tồn tại / trùng trong file; lớp không tồn tại; ngày sinh sai; giới tính sai. Ghi: insert SV (monHoc rỗng) + tài khoản.
 - **Mẫu bảng điểm (theo lớp học phần)**: phần đầu file ghi Mã môn, Tên môn, Năm học, Học kỳ, Giảng viên; bảng: STT | MSSV | Họ tên | Lớp | CC | GK | CK. "Tải mẫu" = xuất danh sách lớp học phần hiện tại kèm điểm đang có. Lỗi: MSSV không thuộc lớp học phần; điểm không phải số / ngoài 0–10 / quá 1 chữ số thập phân. **Ô trống = giữ nguyên điểm cũ.** Ghi: bulkWrite `$set`+arrayFilters (GV: kèm điều kiện maGV).
 - **Xuất**: bảng điểm lớp học phần; bảng điểm cá nhân (S-02, A-06); báo cáo học lực (A-10, G-04, A-03). Có tiêu đề, ngày xuất, định dạng cột, tên file không dấu (ví dụ `BangDiem_INT301_2026-2027_HK1.xlsx`).
 
@@ -381,13 +386,13 @@ Khung chung: sidebar trái màu xanh dương (logo EduScore, menu theo vai trò,
 - Họ tên tiếng Việt tự nhiên (danh sách họ, tên đệm theo giới tính, tên), **không đánh số**. Ngày sinh năm 2007. Địa chỉ quận/huyện TP.HCM và các tỉnh lân cận.
 
 ### 7.1 Lớp (niên khóa 2025-2029, Khoa Công nghệ thông tin), mỗi lớp 20 SV
-| maLop | Ngành | CVHT |
-|---|---|---|
-| 16DHTH01 | Công nghệ thông tin | GV001 |
-| 16DHTH02 | Công nghệ thông tin | GV002 |
-| 16DHATTT01 | An toàn thông tin | GV005 |
-| 16DHHTTT01 | Hệ thống thông tin | GV007 |
-| 16DHKHDL01 | Khoa học dữ liệu | GV003 |
+| maLop | tenLop | Ngành | CVHT |
+|---|---|---|---|
+| CNTT2501 | 16DHTH01 | Công nghệ thông tin | GV001 |
+| CNTT2502 | 16DHTH02 | Công nghệ thông tin | GV002 |
+| ATTT2501 | 16DHATTT01 | An toàn thông tin | GV005 |
+| HTTT2501 | 16DHHTTT01 | Hệ thống thông tin | GV007 |
+| KHDL2501 | 16DHKHDL01 | Khoa học dữ liệu | GV003 |
 MSSV liên tiếp `2001250001` … `2001250100` (lớp 1: 001–020, lớp 2: 021–040, …).
 
 ### 7.2 Giảng viên
@@ -421,14 +426,14 @@ MSSV liên tiếp `2001250001` … `2001250100` (lớp 1: 001–020, lớp 2: 02
 | INT301 | Cơ sở dữ liệu NoSQL | 3 | 10/30/60 | HK1 26-27 |
 
 ### 7.4 Phân bổ học kỳ (trừ 5 SV kiểm thử)
-- Ghi danh theo lớp: mỗi lớp chọn **2–3 môn HK1 25-26**, **2–3 môn HK2 25-26**, **1–2 môn HK1 26-27** từ đúng nhóm học kỳ ở bảng trên. Bắt buộc lớp 16DHTH01 và 16DHTH02 có INT301 ở HK1 26-27 (GV005 – dùng cho demo nhập điểm).
+- Ghi danh theo lớp: mỗi lớp chọn **2–3 môn HK1 25-26**, **2–3 môn HK2 25-26**, **1–2 môn HK1 26-27** từ đúng nhóm học kỳ ở bảng trên. Bắt buộc lớp 16DHTH01 và 16DHTH02 (CNTT2501, CNTT2502) có INT301 ở HK1 26-27 (GV005 – dùng cho demo nhập điểm).
 - HK1, HK2 25-26: đủ điểm. Năng lực mỗi SV ~ N(7.0, 1.3); điểm thành phần = năng lực + nhiễu N(0, 1.0), kẹp 0–10; CC làm tròn số nguyên (thường cao hơn), GK/CK làm tròn 0.5. Bảo đảm toàn bộ dữ liệu có khoảng 15–20 lần F và có SV ở mọi mức xếp loại.
 - HK hè 25-26 (~25 SV, đủ điểm): ~12 học lại môn F; ~8 cải thiện môn C/D (khoảng 3 trường hợp điểm mới **thấp hơn**); ~5 học vượt LAW101/SKL101. Vẫn còn vài SV nợ môn không học lại.
 - HK1 26-27 (học kỳ hiện tại): **CC và GK đã có, CK = null.**
 - capNhatLuc: HK1 → 2026-01-15, HK2 → 2026-06-10, hè → 2026-08-20, HK1 26-27 → 2026-10-20; capNhatBoi = maGV của lần học.
 - **Ràng buộc: mỗi SV có tổng 4–8 phần tử `monHoc`.** Seeder tự kiểm tra và báo số liệu cuối cùng (số SV/lớp, min/max số môn, số F, số học lại/cải thiện/học vượt, phân bố xếp loại).
 
-### 7.5 Năm sinh viên kiểm thử (lớp 16DHTH01, MSSV 2001250001–2001250005, dữ liệu cố định, tên tự nhiên)
+### 7.5 Năm sinh viên kiểm thử (lớp 16DHTH01 – maLop CNTT2501, MSSV 2001250001–2001250005, dữ liệu cố định, tên tự nhiên)
 Giảng viên theo bảng 7.2. Kết quả mong đợi đã tính tay – pipeline phải ra **đúng y hệt**.
 
 | SV | MSSV | Họ tên | Giới tính | Ngày sinh | Mật khẩu |

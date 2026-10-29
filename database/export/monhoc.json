@@ -1,6 +1,6 @@
 [
 {
-  "_id" : { "$oid" : "6ae235f4a6594dfebc9c1eff" },
+  "_id" : { "$oid" : "6ae333208c446cfd23ec1852" },
   "maMon" : "INT101",
   "tenMon" : "Nhập môn lập trình",
   "soTinChi" : 3,
@@ -10,10 +10,10 @@
     "ck" : 60
   },
   "khoa" : "Khoa Công nghệ thông tin",
-  "ngayTao" : { "$date" : "2026-10-28T17:50:36.61Z" }
+  "ngayTao" : { "$date" : "2026-10-29T11:50:47.758Z" }
 },
 {
-  "_id" : { "$oid" : "6ae235f4a6594dfebc9c1f00" },
+  "_id" : { "$oid" : "6ae333208c446cfd23ec1853" },
   "maMon" : "MAT101",
   "tenMon" : "Toán cao cấp A1",
   "soTinChi" : 3,
@@ -23,10 +23,10 @@
     "ck" : 60
   },
   "khoa" : "Khoa Công nghệ thông tin",
-  "ngayTao" : { "$date" : "2026-10-28T17:50:36.61Z" }
+  "ngayTao" : { "$date" : "2026-10-29T11:50:47.758Z" }
 },
 {
-  "_id" : { "$oid" : "6ae235f4a6594dfebc9c1f01" },
+  "_id" : { "$oid" : "6ae333208c446cfd23ec1854" },
   "maMon" : "POL101",
   "tenMon" : "Triết học Mác - Lênin",
   "soTinChi" : 3,
@@ -36,10 +36,10 @@
     "ck" : 60
   },
   "khoa" : "Khoa Công nghệ thông tin",
-  "ngayTao" : { "$date" : "2026-10-28T17:50:36.61Z" }
+  "ngayTao" : { "$date" : "2026-10-29T11:50:47.758Z" }
 },
 {
-  "_id" : { "$oid" : "6ae235f4a6594dfebc9c1f02" },
+  "_id" : { "$oid" : "6ae333208c446cfd23ec1855" },
   "maMon" : "ENG101",
   "tenMon" : "Tiếng Anh 1",
   "soTinChi" : 2,
@@ -49,10 +49,10 @@
     "ck" : 50
   },
   "khoa" : "Khoa Công nghệ thông tin",
-  "ngayTao" : { "$date" : "2026-10-28T17:50:36.61Z" }
+  "ngayTao" : { "$date" : "2026-10-29T11:50:47.758Z" }
 },
 {
-  "_id" : { "$oid" : "6ae235f4a6594dfebc9c1f03" },
+  "_id" : { "$oid" : "6ae333208c446cfd23ec1856" },
   "maMon" : "INT102",
   "tenMon" : "Kỹ thuật lập trình",
   "soTinChi" : 3,
@@ -62,10 +62,10 @@
     "ck" : 60
   },
   "khoa" : "Khoa Công nghệ thông tin",
-  "ngayTao" : { "$date" : "2026-10-28T17:50:36.61Z" }
+  "ngayTao" : { "$date" : "2026-10-29T11:50:47.758Z" }
 },
 {
-  "_id" : { "$oid" : "6ae235f4a6594dfebc9c1f04" },
+  "_id" : { "$oid" : "6ae333208c446cfd23ec1857" },
   "maMon" : "MAT102",
   "tenMon" : "Toán rời rạc",
   "soTinChi" : 3,
@@ -75,10 +75,10 @@
     "ck" : 60
   },
   "khoa" : "Khoa Công nghệ thông tin",
-  "ngayTao" : { "$date" : "2026-10-28T17:50:36.61Z" }
+  "ngayTao" : { "$date" : "2026-10-29T11:50:47.758Z" }
 },
 {
-  "_id" : { "$oid" : "6ae235f4a6594dfebc9c1f05" },
+  "_id" : { "$oid" : "6ae333208c446cfd23ec1858" },
   "maMon" : "POL102",
   "tenMon" : "Kinh tế chính trị Mác - Lênin",
   "soTinChi" : 2,
@@ -88,10 +88,10 @@
     "ck" : 60
   },
   "khoa" : "Khoa Công nghệ thông tin",
-  "ngayTao" : { "$date" : "2026-10-28T17:50:36.61Z" }
+  "ngayTao" : { "$date" : "2026-10-29T11:50:47.758Z" }
 },
 {
-  "_id" : { "$oid" : "6ae235f4a6594dfebc9c1f06" },
+  "_id" : { "$oid" : "6ae333208c446cfd23ec1859" },
   "maMon" : "ENG102",
   "tenMon" : "Tiếng Anh 2",
   "soTinChi" : 2,
@@ -101,10 +101,10 @@
     "ck" : 50
   },
   "khoa" : "Khoa Công nghệ thông tin",
-  "ngayTao" : { "$date" : "2026-10-28T17:50:36.61Z" }
+  "ngayTao" : { "$date" : "2026-10-29T11:50:47.758Z" }
 },
 {
-  "_id" : { "$oid" : "6ae235f4a6594dfebc9c1f07" },
+  "_id" : { "$oid" : "6ae333208c446cfd23ec185a" },
   "maMon" : "LAW101",
   "tenMon" : "Pháp luật đại cương",
   "soTinChi" : 2,
@@ -114,10 +114,10 @@
     "ck" : 60
   },
   "khoa" : "Khoa Công nghệ thông tin",
-  "ngayTao" : { "$date" : "2026-10-28T17:50:36.61Z" }
+  "ngayTao" : { "$date" : "2026-10-29T11:50:47.758Z" }
 },
 {
-  "_id" : { "$oid" : "6ae235f4a6594dfebc9c1f08" },
+  "_id" : { "$oid" : "6ae333208c446cfd23ec185b" },
   "maMon" : "SKL101",
   "tenMon" : "Kỹ năng mềm",
   "soTinChi" : 2,
@@ -127,10 +127,10 @@
     "ck" : 50
   },
   "khoa" : "Khoa Công nghệ thông tin",
-  "ngayTao" : { "$date" : "2026-10-28T17:50:36.61Z" }
+  "ngayTao" : { "$date" : "2026-10-29T11:50:47.758Z" }
 },
 {
-  "_id" : { "$oid" : "6ae235f4a6594dfebc9c1f09" },
+  "_id" : { "$oid" : "6ae333208c446cfd23ec185c" },
   "maMon" : "INT201",
   "tenMon" : "Cấu trúc dữ liệu và giải thuật",
   "soTinChi" : 4,
@@ -140,10 +140,10 @@
     "ck" : 60
   },
   "khoa" : "Khoa Công nghệ thông tin",
-  "ngayTao" : { "$date" : "2026-10-28T17:50:36.61Z" }
+  "ngayTao" : { "$date" : "2026-10-29T11:50:47.758Z" }
 },
 {
-  "_id" : { "$oid" : "6ae235f4a6594dfebc9c1f0a" },
+  "_id" : { "$oid" : "6ae333208c446cfd23ec185d" },
   "maMon" : "INT202",
   "tenMon" : "Cơ sở dữ liệu",
   "soTinChi" : 3,
@@ -153,10 +153,10 @@
     "ck" : 50
   },
   "khoa" : "Khoa Công nghệ thông tin",
-  "ngayTao" : { "$date" : "2026-10-28T17:50:36.61Z" }
+  "ngayTao" : { "$date" : "2026-10-29T11:50:47.758Z" }
 },
 {
-  "_id" : { "$oid" : "6ae235f4a6594dfebc9c1f0b" },
+  "_id" : { "$oid" : "6ae333208c446cfd23ec185e" },
   "maMon" : "INT203",
   "tenMon" : "Mạng máy tính",
   "soTinChi" : 3,
@@ -166,10 +166,10 @@
     "ck" : 60
   },
   "khoa" : "Khoa Công nghệ thông tin",
-  "ngayTao" : { "$date" : "2026-10-28T17:50:36.61Z" }
+  "ngayTao" : { "$date" : "2026-10-29T11:50:47.758Z" }
 },
 {
-  "_id" : { "$oid" : "6ae235f4a6594dfebc9c1f0c" },
+  "_id" : { "$oid" : "6ae333208c446cfd23ec185f" },
   "maMon" : "INT301",
   "tenMon" : "Cơ sở dữ liệu NoSQL",
   "soTinChi" : 3,
@@ -179,6 +179,6 @@
     "ck" : 60
   },
   "khoa" : "Khoa Công nghệ thông tin",
-  "ngayTao" : { "$date" : "2026-10-28T17:50:36.61Z" }
+  "ngayTao" : { "$date" : "2026-10-29T11:50:47.758Z" }
 }
 ]

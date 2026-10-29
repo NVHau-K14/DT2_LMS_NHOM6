@@ -14,13 +14,16 @@ public class XuatExcelService
     private readonly BaoCaoService _baoCao;
     private readonly SinhVienService _sinhVien;
     private readonly LopHocService _lopHoc;
+    private readonly TenLopService _tenLop;
 
-    public XuatExcelService(DiemService diem, BaoCaoService baoCao, SinhVienService sinhVien, LopHocService lopHoc)
+    public XuatExcelService(DiemService diem, BaoCaoService baoCao, SinhVienService sinhVien, LopHocService lopHoc,
+        TenLopService tenLop)
     {
         _diem = diem;
         _baoCao = baoCao;
         _sinhVien = sinhVien;
         _lopHoc = lopHoc;
+        _tenLop = tenLop;
     }
 
     /// <summary>"HK1", "HK2", "HKhe" – phần học kỳ trong tên file.</summary>
@@ -48,7 +51,7 @@ public class XuatExcelService
         };
         return new TepExcel(
             ExcelService.TenFile("BangDiem", maMon, namHoc, HocKyTrongTenFile(hocKy), maGV),
-            ExcelService.XuatBangDiemLopHocPhan(thongTin, ds));
+            ExcelService.XuatBangDiemLopHocPhan(thongTin, ds, await _tenLop.LayAsync()));
     }
 
     /// <summary>Báo cáo học lực theo bộ lọc + phạm vi đang chọn (pipeline BaoCaoHocLuc + ThongKeXepLoai).</summary>
@@ -59,7 +62,7 @@ public class XuatExcelService
         var thongKe = BaoCaoHocLucViewModel.DuBayMuc((await _baoCao.ThongKeXepLoaiAsync(boLoc, phamVi)).DuLieu);
         return new TepExcel(
             ExcelService.TenFile(["BaoCaoHocLuc", .. phanTenFile]),
-            ExcelService.XuatBaoCaoHocLuc("BÁO CÁO HỌC LỰC", thongTinLoc, phamVi.LaTichLuy, ds, thongKe));
+            ExcelService.XuatBaoCaoHocLuc("BÁO CÁO HỌC LỰC", thongTinLoc, phamVi.LaTichLuy, ds, thongKe, await _tenLop.LayAsync()));
     }
 
     /// <summary>Bảng điểm cá nhân (pipeline BangDiem, GpaHocKy, BaoCaoHocLuc – giống S-02 / A-06). null nếu không có SV.</summary>
@@ -87,17 +90,18 @@ public class XuatExcelService
             ? new Dictionary<string, BaoCaoHocLucRow>()
             : (await _baoCao.BaoCaoHocLucAsync(BoLocSinhVien.TheoDanhSach(ds.Select(sv => sv.MaSV)), PhamViBaoCao.TichLuy()))
                 .DuLieu.ToDictionary(r => r.MaSV);
+        var bangLop = await _tenLop.LayAsync();
 
         var thongTinLoc = new List<(string, string)>
         {
-            ("Lớp", string.IsNullOrEmpty(maLop) ? "Tất cả lớp" : maLop),
+            ("Lớp", string.IsNullOrEmpty(maLop) ? "Tất cả lớp" : bangLop.Ten(maLop)),
             ("Trạng thái", string.IsNullOrEmpty(trangThai) ? "Tất cả" : trangThai)
         };
         if (!string.IsNullOrWhiteSpace(q)) thongTinLoc.Add(("Từ khóa tìm", q.Trim()));
 
         return new TepExcel(
-            ExcelService.TenFile("DanhSachSinhVien", string.IsNullOrEmpty(maLop) ? "TatCa" : maLop),
-            ExcelService.XuatDanhSachSinhVien(thongTinLoc, ds.Select(sv => (sv, hocLuc.GetValueOrDefault(sv.MaSV))).ToList()));
+            ExcelService.TenFile("DanhSachSinhVien", string.IsNullOrEmpty(maLop) ? "TatCa" : bangLop.Ten(maLop)),
+            ExcelService.XuatDanhSachSinhVien(thongTinLoc, ds.Select(sv => (sv, hocLuc.GetValueOrDefault(sv.MaSV))).ToList(), bangLop));
     }
 
     /// <summary>File mẫu nhập danh sách SV (kèm mã lớp hợp lệ ở sheet hướng dẫn).</summary>

@@ -17,12 +17,14 @@ public class BaoCaoController : AdminControllerBase
     private readonly BaoCaoService _baoCao;
     private readonly LopHocService _lopHoc;
     private readonly XuatExcelService _xuat;
+    private readonly TenLopService _tenLop;
 
-    public BaoCaoController(BaoCaoService baoCao, LopHocService lopHoc, XuatExcelService xuat)
+    public BaoCaoController(BaoCaoService baoCao, LopHocService lopHoc, XuatExcelService xuat, TenLopService tenLop)
     {
         _baoCao = baoCao;
         _lopHoc = lopHoc;
         _xuat = xuat;
+        _tenLop = tenLop;
     }
 
     /// <summary>Bộ lọc đã kiểm tra: lớp có thật (null = tất cả), phạm vi tích lũy hoặc một học kỳ có dữ liệu.</summary>
@@ -48,7 +50,7 @@ public class BaoCaoController : AdminControllerBase
 
     /// <param name="maLop">Trống = tất cả lớp.</param>
     /// <param name="phamVi">"tichluy" (mặc định) hoặc học kỳ dạng "2025-2026_2".</param>
-    /// <param name="trang">Trang bảng SV – mỗi trang một lớp sinh hoạt (mã lớp tăng dần); ngoài phạm vi → kẹp về 1 / trang cuối.</param>
+    /// <param name="trang">Trang bảng SV – mỗi trang một lớp sinh hoạt (tên lớp tăng dần); ngoài phạm vi → kẹp về 1 / trang cuối.</param>
     [HttpGet]
     public async Task<IActionResult> Index(string? maLop, string? phamVi, int? trang)
     {
@@ -72,7 +74,7 @@ public class BaoCaoController : AdminControllerBase
                 UrlXuatExcel = Url.Action(nameof(XuatExcel), new { maLop = loc.MaLop, phamVi = loc.PhamVi }),
                 // Chỉ tách bảng theo lớp khi hiển thị; thẻ số, biểu đồ, Xuất Excel vẫn dùng toàn bộ danh sách
                 PhanTrang = new PhanTrangTheoLop(baoCao.DuLieu, trang,
-                    new() { ["maLop"] = loc.MaLop, ["phamVi"] = loc.PhamVi }),
+                    new() { ["maLop"] = loc.MaLop, ["phamVi"] = loc.PhamVi }, await _tenLop.LayAsync()),
                 Pipelines =
                 [
                     PipelineDaChay.Tu("BaoCaoHocLuc", "Bảng học lực: mỗi sinh viên một dòng (GPA, xếp loại, TC, số môn nợ).", baoCao),
@@ -90,8 +92,9 @@ public class BaoCaoController : AdminControllerBase
         var lop = loc.DsLop.FirstOrDefault(l => l.MaLop == loc.MaLop);
         var pv = loc.PhamViBaoCao;
         var tep = await _xuat.BaoCaoHocLucAsync(loc.BoLocSinhVien, pv,
-            [("Lớp", lop == null ? "Tất cả lớp" : $"{lop.MaLop} – {lop.TenLop}"), ("Phạm vi", loc.TenPhamVi)],
-            loc.MaLop ?? "TatCa", pv.LaTichLuy ? "TichLuy" : pv.NamHoc,
+            [("Lớp", lop == null ? "Tất cả lớp" : lop.TenLop), ("Phạm vi", loc.TenPhamVi)],
+            // Tên file theo tên lớp: BaoCaoHocLuc_16DHTH01_TichLuy.xlsx
+            lop?.TenLop ?? "TatCa", pv.LaTichLuy ? "TichLuy" : pv.NamHoc,
             pv.HocKy is int hk ? XuatExcelService.HocKyTrongTenFile(hk) : null);
         return File(tep.NoiDung, ExcelService.LoaiNoiDung, tep.TenFile);
     }

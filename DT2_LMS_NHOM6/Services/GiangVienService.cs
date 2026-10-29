@@ -173,7 +173,7 @@ public class GiangVienService
         if (soSV > 0) lyDo.Add($"đang được phân công dạy ({soSV} sinh viên có lần học do GV này phụ trách)");
         // db.lophoc.find({ "coVanHocTap.maGV": maGV })
         var dsLop = await _db.LopHoc.Find(new BsonDocument("coVanHocTap.maGV", maGV)).ToListAsync();
-        if (dsLop.Count > 0) lyDo.Add($"đang làm cố vấn học tập lớp {string.Join(", ", dsLop.Select(l => l.MaLop))}");
+        if (dsLop.Count > 0) lyDo.Add($"đang làm cố vấn học tập lớp {string.Join(", ", dsLop.Select(l => l.TenLop))}");
         if (lyDo.Count > 0)
             return KetQuaGhi.Loi($"Không thể xóa giảng viên {gv.HoTenKemHocVi} vì {string.Join(" và ", lyDo)}.");
 

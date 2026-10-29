@@ -1,7 +1,7 @@
 [
   {
     "$match": {
-      "maLop": "16DHTH01"
+      "maLop": "CNTT2501"
     }
   },
   {

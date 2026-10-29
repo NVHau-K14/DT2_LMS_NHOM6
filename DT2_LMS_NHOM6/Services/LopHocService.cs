@@ -22,16 +22,16 @@ public class LopHocService
         _db = db;
     }
 
-    /// <summary>Mọi lớp, sắp theo mã (dùng cho ô chọn lớp).</summary>
+    /// <summary>Mọi lớp, sắp theo tên lớp – tên hiển thị (dùng cho ô chọn lớp).</summary>
     public Task<List<LopHoc>> TatCaAsync()
-        => _db.LopHoc.Find(FilterDefinition<LopHoc>.Empty).SortBy(l => l.MaLop).ToListAsync();
+        => _db.LopHoc.Find(FilterDefinition<LopHoc>.Empty).SortBy(l => l.TenLop).ToListAsync();
 
     public Task<LopHoc?> LayAsync(string maLop)
         => _db.LopHoc.Find(l => l.MaLop == maLop).FirstOrDefaultAsync()!;
 
     /// <summary>
     /// Danh sách lớp theo bộ lọc ngành, niên khóa và từ khóa (mã hoặc tên lớp, không phân biệt hoa thường), kèm sĩ số.
-    /// Tương đương: db.lophoc.find({ nganh, nienKhoa, $or: [{ maLop: /q/i }, { tenLop: /q/i }] }).sort({ maLop: 1 })
+    /// Tương đương: db.lophoc.find({ nganh, nienKhoa, $or: [{ maLop: /q/i }, { tenLop: /q/i }] }).sort({ tenLop: 1 })
     /// </summary>
     public async Task<List<DongLopHoc>> DanhSachAsync(string? nganh, string? nienKhoa, string? q)
     {
@@ -45,7 +45,7 @@ public class LopHocService
             filter &= b.Or(b.Regex(l => l.MaLop, regex), b.Regex(l => l.TenLop, regex));
         }
 
-        var dsLop = await _db.LopHoc.Find(filter).SortBy(l => l.MaLop).ToListAsync();
+        var dsLop = await _db.LopHoc.Find(filter).SortBy(l => l.TenLop).ToListAsync();
         var siSo = await SiSoTheoLopAsync();
         return dsLop.Select(l => new DongLopHoc(l, siSo.GetValueOrDefault(l.MaLop))).ToList();
     }
@@ -68,8 +68,13 @@ public class LopHocService
     public async Task<KetQuaGhi> ThemAsync(LopHocFormViewModel form)
     {
         var maLop = form.MaLop.Trim().ToUpperInvariant();
+        var tenLop = form.TenLop.Trim();
         if (await _db.LopHoc.Find(l => l.MaLop == maLop).AnyAsync())
             return KetQuaGhi.Loi($"Mã lớp {maLop} đã tồn tại.", nameof(form.MaLop));
+        if (await _db.LopHoc.Find(l => l.TenLop == maLop).AnyAsync())
+            return KetQuaGhi.Loi($"Mã lớp {maLop} trùng với tên của một lớp khác.", nameof(form.MaLop));
+        var loiTen = await KiemTraTenLopAsync(tenLop, null);
+        if (loiTen != null) return loiTen;
 
         var (coVan, loi) = await TimCoVanAsync(form.MaGVCoVan);
         if (loi != null) return loi;
@@ -77,7 +82,7 @@ public class LopHocService
         var lop = new LopHoc
         {
             MaLop = maLop,
-            TenLop = form.TenLop.Trim(),
+            TenLop = tenLop,
             NienKhoa = form.NienKhoa.Trim(),
             Nganh = form.Nganh.Trim(),
             Khoa = form.Khoa.Trim(),
@@ -90,30 +95,66 @@ public class LopHocService
         }
         catch (MongoWriteException ex) when (ex.WriteError.Category == ServerErrorCategory.DuplicateKey)
         {
-            return KetQuaGhi.Loi($"Mã lớp {maLop} đã tồn tại.", nameof(form.MaLop));
+            // Bấm đồng thời: index ux_maLop hoặc ux_tenLop chặn
+            return LoiTrungKhoa(ex, maLop, tenLop);
         }
-        return KetQuaGhi.Thanh($"Đã thêm lớp {maLop}.");
+        return KetQuaGhi.Thanh($"Đã thêm lớp {tenLop} (mã {maLop}).");
     }
 
     /// <summary>Sửa lớp: mã lớp KHÔNG đổi (lấy từ route, bỏ qua giá trị trên form).</summary>
     public async Task<KetQuaGhi> SuaAsync(string maLop, LopHocFormViewModel form)
     {
+        var tenLop = form.TenLop.Trim();
+        var loiTen = await KiemTraTenLopAsync(tenLop, maLop);
+        if (loiTen != null) return loiTen;
+
         var (coVan, loi) = await TimCoVanAsync(form.MaGVCoVan);
         if (loi != null) return loi;
 
         // db.lophoc.updateOne({ maLop }, { $set: { tenLop, nienKhoa, nganh, khoa, coVanHocTap } })
-        var kq = await _db.LopHoc.UpdateOneAsync(
-            l => l.MaLop == maLop,
-            Builders<LopHoc>.Update
-                .Set(l => l.TenLop, form.TenLop.Trim())
-                .Set(l => l.NienKhoa, form.NienKhoa.Trim())
-                .Set(l => l.Nganh, form.Nganh.Trim())
-                .Set(l => l.Khoa, form.Khoa.Trim())
-                .Set(l => l.CoVanHocTap, coVan));
+        UpdateResult kq;
+        try
+        {
+            kq = await _db.LopHoc.UpdateOneAsync(
+                l => l.MaLop == maLop,
+                Builders<LopHoc>.Update
+                    .Set(l => l.TenLop, tenLop)
+                    .Set(l => l.NienKhoa, form.NienKhoa.Trim())
+                    .Set(l => l.Nganh, form.Nganh.Trim())
+                    .Set(l => l.Khoa, form.Khoa.Trim())
+                    .Set(l => l.CoVanHocTap, coVan));
+        }
+        catch (MongoWriteException ex) when (ex.WriteError.Category == ServerErrorCategory.DuplicateKey)
+        {
+            return LoiTrungKhoa(ex, maLop, tenLop);
+        }
         if (kq.MatchedCount == 0)
             return KetQuaGhi.Loi($"Không tìm thấy lớp {maLop}.");
-        return KetQuaGhi.Thanh($"Đã cập nhật lớp {maLop}.");
+        return KetQuaGhi.Thanh($"Đã cập nhật lớp {tenLop} (mã {maLop}).");
     }
+
+    /// <summary>
+    /// Tên lớp là tên hiển thị (16DHTH01) nên không được trùng – không phân biệt hoa thường – và không được trùng
+    /// mã của lớp khác (nhập Excel / API nhận cả mã lẫn tên lớp). maLopDangSua = lớp đang sửa (bỏ qua chính nó).
+    /// </summary>
+    private async Task<KetQuaGhi?> KiemTraTenLopAsync(string tenLop, string? maLopDangSua)
+    {
+        var b = Builders<LopHoc>.Filter;
+        var khacLop = maLopDangSua == null ? b.Empty : b.Ne(l => l.MaLop, maLopDangSua);
+        var regex = new BsonRegularExpression($"^{Regex.Escape(tenLop)}$", "i");
+
+        // db.lophoc.findOne({ tenLop: /^ten$/i, maLop: { $ne: maLopDangSua } })
+        if (await _db.LopHoc.Find(khacLop & b.Regex(l => l.TenLop, regex)).AnyAsync())
+            return KetQuaGhi.Loi($"Tên lớp {tenLop} đã tồn tại.", nameof(LopHocFormViewModel.TenLop));
+        if (await _db.LopHoc.Find(khacLop & b.Eq(l => l.MaLop, tenLop.ToUpperInvariant())).AnyAsync())
+            return KetQuaGhi.Loi($"Tên lớp {tenLop} trùng với mã của một lớp khác.", nameof(LopHocFormViewModel.TenLop));
+        return null;
+    }
+
+    private static KetQuaGhi LoiTrungKhoa(MongoWriteException ex, string maLop, string tenLop)
+        => ex.WriteError.Message.Contains("ux_tenLop")
+            ? KetQuaGhi.Loi($"Tên lớp {tenLop} đã tồn tại.", nameof(LopHocFormViewModel.TenLop))
+            : KetQuaGhi.Loi($"Mã lớp {maLop} đã tồn tại.", nameof(LopHocFormViewModel.MaLop));
 
     /// <summary>Xóa lớp – chặn khi còn sinh viên (A2).</summary>
     public async Task<KetQuaGhi> XoaAsync(string maLop)

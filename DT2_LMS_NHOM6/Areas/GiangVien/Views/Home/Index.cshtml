@@ -1,5 +1,6 @@
 @model LopHocPhanViewModel
 @{
+    var bangLop = await TenLop.LayAsync();
     ViewData["Title"] = "Tổng quan";
 }
 
@@ -60,7 +61,7 @@ else
                     <div class="small text-secondary">
                         @foreach (var lop in l.CacLop)
                         {
-                            <div>@lop</div>
+                            <div>@bangLop.Ten(lop)</div>
                         }
                     </div>
                     <div class="mt-auto">

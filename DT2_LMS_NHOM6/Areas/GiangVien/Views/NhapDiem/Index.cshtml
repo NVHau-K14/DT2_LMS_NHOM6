@@ -1,6 +1,7 @@
 @model NhapDiemViewModel
 @{
     var l = Model.LopHocPhan;
+    var bangLop = await TenLop.LayAsync();
     // Tiến độ ban đầu theo lớp lọc sẵn (nếu có) – nhap-diem.js tính lại khi đổi lọc / sau khi lưu
     var dsTienDo = l.CacLop.Contains(Model.LocLop ?? "")
         ? Model.DanhSach.Where(d => d.MaLop == Model.LocLop).ToList()
@@ -37,9 +38,10 @@
         <div class="thanh-loc">
             <select class="form-select" id="loc-lop" aria-label="Lọc theo lớp">
                 <option value="">Tất cả lớp</option>
+                @* value = maLop (khớp data-lop của từng dòng), chữ hiện = tên lớp *@
                 @foreach (var maLop in l.CacLop)
                 {
-                    <option value="@maLop" selected="@(maLop == Model.LocLop)">@maLop</option>
+                    <option value="@maLop" selected="@(maLop == Model.LocLop)">@bangLop.Ten(maLop)</option>
                 }
             </select>
             <div class="form-check ms-2">
@@ -90,7 +92,7 @@
                             <td class="text-center">@(i + 1)</td>
                             <td class="ma">@d.MaSV</td>
                             <td>@d.HoTen</td>
-                            <td>@d.MaLop</td>
+                            <td>@bangLop.Ten(d.MaLop)</td>
                             <td><span class="badge badge-hinh-thuc @HienThi.LopBadgeHinhThuc(d.HinhThuc)">@d.HinhThuc</span></td>
                             @foreach (var (ten, giaTri) in new[] { ("cc", d.Diem.Cc), ("gk", d.Diem.Gk), ("ck", d.Diem.Ck) })
                             {

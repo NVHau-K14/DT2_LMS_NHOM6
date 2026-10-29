@@ -18,7 +18,7 @@ public static class XuatPipeline
     private const string MaMonMau = "INT301";
     private const string NamHocMau = "2026-2027";
     private const int HocKyMau = 1;
-    private const string MaLopMau = "16DHTH01";
+    private const string MaLopMau = "CNTT2501"; // lớp 16DHTH01
 
     public static async Task ChayAsync(string thuMucGoc)
     {

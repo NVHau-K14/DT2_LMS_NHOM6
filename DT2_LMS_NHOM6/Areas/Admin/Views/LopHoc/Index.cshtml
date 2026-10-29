@@ -72,13 +72,13 @@
                             <td class="text-end">
                                 <div class="dropdown">
                                     <button class="btn nut-thao-tac" type="button" data-bs-toggle="dropdown" aria-expanded="false"
-                                            data-bs-popper-config='{"strategy":"fixed"}' aria-label="Thao tác với lớp @lop.MaLop">
+                                            data-bs-popper-config='{"strategy":"fixed"}' aria-label="Thao tác với lớp @lop.TenLop">
                                         <i class="bi bi-three-dots-vertical"></i>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-end shadow-sm">
                                         <li><a class="dropdown-item" asp-action="ChiTiet" asp-route-id="@lop.MaLop"><i class="bi bi-eye"></i>Xem chi tiết</a></li>
                                         <li>
-                                            <button type="button" class="dropdown-item" data-mo-modal="#modal-lop" data-tieu-de="Sửa lớp @lop.MaLop"
+                                            <button type="button" class="dropdown-item" data-mo-modal="#modal-lop" data-tieu-de="Sửa lớp @lop.TenLop"
                                                     data-gia-tri="@Json.Serialize(giaTriSua).ToString()">
                                                 <i class="bi bi-pencil"></i>Sửa
                                             </button>
@@ -87,7 +87,7 @@
                                         <li>
                                             <button type="button" class="dropdown-item text-danger" data-xac-nhan-xoa
                                                     data-url="@Url.Action("Xoa", new { id = lop.MaLop })"
-                                                    data-noi-dung="Xóa lớp @lop.MaLop – @lop.TenLop?">
+                                                    data-noi-dung="Xóa lớp @lop.TenLop (mã @lop.MaLop)?">
                                                 <i class="bi bi-trash"></i>Xóa
                                             </button>
                                         </li>
@@ -109,7 +109,7 @@
         <div class="modal-content">
             <form asp-action="Luu" method="post" novalidate>
                 <div class="modal-header">
-                    <h2 class="modal-title h5" id="modal-lop-tieu-de" data-tieu-de-modal>@(Model.Form.LaSua ? $"Sửa lớp {Model.Form.MaLop}" : "Thêm lớp")</h2>
+                    <h2 class="modal-title h5" id="modal-lop-tieu-de" data-tieu-de-modal>@(Model.Form.LaSua ? $"Sửa lớp {Model.Form.TenLop}" : "Thêm lớp")</h2>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
                 </div>
                 <div class="modal-body">
@@ -118,12 +118,12 @@
                     <div class="row g-3">
                         <div class="col-md-4">
                             <label asp-for="Form.MaLop" class="form-label"></label>
-                            <input asp-for="Form.MaLop" class="form-control" data-khoa-khi-sua placeholder="16DHTH03" />
+                            <input asp-for="Form.MaLop" class="form-control" data-khoa-khi-sua placeholder="CNTT2503" />
                             <span asp-validation-for="Form.MaLop" class="text-danger small"></span>
                         </div>
                         <div class="col-md-8">
                             <label asp-for="Form.TenLop" class="form-label"></label>
-                            <input asp-for="Form.TenLop" class="form-control" placeholder="Đại học Công nghệ thông tin 16 - Lớp 03" />
+                            <input asp-for="Form.TenLop" class="form-control" placeholder="16DHTH03" />
                             <span asp-validation-for="Form.TenLop" class="text-danger small"></span>
                         </div>
                         <div class="col-md-4">

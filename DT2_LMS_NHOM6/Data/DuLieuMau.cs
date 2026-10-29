@@ -20,19 +20,24 @@ public static class DuLieuMau
     public static readonly HocKyMau HK1_2627 = new("2026-2027", 1, new DateTime(2026, 10, 20, 3, 0, 0, DateTimeKind.Utc));
 
     // ---------- 7.1 Lớp ----------
-    public record LopMau(string MaLop, string Nganh, string MaCVHT, int SoThuTu);
+    // maLop là mã nội bộ (khóa liên kết sinhvien.maLop), tenLop là tên hiển thị cho người dùng.
+    // Giữ nguyên thứ tự mảng: Seeder duyệt lớp theo thứ tự này nên dữ liệu ngẫu nhiên không đổi.
+    public record LopMau(string MaLop, string TenLop, string Nganh, string MaCVHT);
 
     public static readonly LopMau[] Lop =
     {
-        new("16DHTH01",   "Công nghệ thông tin", "GV001", 1),
-        new("16DHTH02",   "Công nghệ thông tin", "GV002", 2),
-        new("16DHATTT01", "An toàn thông tin",   "GV005", 1),
-        new("16DHHTTT01", "Hệ thống thông tin",  "GV007", 1),
-        new("16DHKHDL01", "Khoa học dữ liệu",    "GV003", 1),
+        new("CNTT2501", "16DHTH01",   "Công nghệ thông tin", "GV001"),
+        new("CNTT2502", "16DHTH02",   "Công nghệ thông tin", "GV002"),
+        new("ATTT2501", "16DHATTT01", "An toàn thông tin",   "GV005"),
+        new("HTTT2501", "16DHHTTT01", "Hệ thống thông tin",  "GV007"),
+        new("KHDL2501", "16DHKHDL01", "Khoa học dữ liệu",    "GV003"),
     };
 
-    /// <summary>Lớp bắt buộc có INT301 ở HK1 2026-2027 (demo nhập điểm của GV005).</summary>
-    public static readonly string[] LopBatBuocINT301 = { "16DHTH01", "16DHTH02" };
+    /// <summary>Lớp bắt buộc có INT301 ở HK1 2026-2027 (demo nhập điểm của GV005) – lớp 16DHTH01, 16DHTH02.</summary>
+    public static readonly string[] LopBatBuocINT301 = { "CNTT2501", "CNTT2502" };
+
+    /// <summary>Lớp của 5 SV kiểm thử (mục 7.5) – lớp 16DHTH01.</summary>
+    public const string LopKiemThu = "CNTT2501";
 
     // ---------- 7.2 Giảng viên ----------
     public record GiangVienMau(string MaGV, string HoTen, string HocVi, string Email, string SoDienThoai);

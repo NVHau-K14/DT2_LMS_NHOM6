@@ -6,6 +6,7 @@
 *@
 @{
     var phien = Model.Phien;
+    var bangLop = await TenLop.LayAsync();
     var lhp = phien.LopHocPhan;
     var soKhongCoTrongFile = phien.SiSo - phien.Dong.Count(d => d.MaDK != null);
 }
@@ -84,7 +85,7 @@
                         <td class="text-center">@d.SoDong</td>
                         <td class="ma">@d.MaSV</td>
                         <td>@d.HoTen</td>
-                        <td>@d.MaLop</td>
+                        <td>@bangLop.Ten(d.MaLop)</td>
                         @foreach (var (nhap, cu, moi, thayDoi) in new[]
                         {
                             (d.CcNhap, d.DiemCu.Cc, d.CcMoi, d.CcThayDoi),

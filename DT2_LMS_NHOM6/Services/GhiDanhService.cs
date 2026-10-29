@@ -21,11 +21,13 @@ public class GhiDanhService
 
     private readonly MongoContext _db;
     private readonly DiemService _diem;
+    private readonly TenLopService _tenLop;
 
-    public GhiDanhService(MongoContext db, DiemService diem)
+    public GhiDanhService(MongoContext db, DiemService diem, TenLopService tenLop)
     {
         _db = db;
         _diem = diem;
+        _tenLop = tenLop;
     }
 
     /// <summary>
@@ -95,7 +97,9 @@ public class GhiDanhService
             }
         }
 
-        ketQua.Dong = ketQua.Dong.OrderBy(d => d.MaLop).ThenBy(d => d.MaSV).ToList();
+        // Sắp theo tên lớp hiển thị (16DHATTT01, ..., 16DHTH02) rồi MSSV
+        var bangLop = await _tenLop.LayAsync();
+        ketQua.Dong = bangLop.SapXep(ketQua.Dong.OrderBy(d => d.MaSV), d => d.MaLop).ToList();
         return ketQua;
     }
 

@@ -31,7 +31,10 @@ public class SinhVienTomTatApi
     public string? Email { get; set; }
     public string? SoDienThoai { get; set; }
     public string? DiaChi { get; set; }
+    /// <summary>Mã lớp nội bộ, ví dụ CNTT2501.</summary>
     public string MaLop { get; set; } = "";
+    /// <summary>Tên lớp hiển thị, ví dụ 16DHTH01.</summary>
+    public string TenLop { get; set; } = "";
     public string TrangThai { get; set; } = "";
     public double? Gpa { get; set; }
     public string? XepLoai { get; set; }
@@ -55,6 +58,7 @@ public class BangDiemApi
     public string MaSV { get; set; } = "";
     public string HoTen { get; set; } = "";
     public string MaLop { get; set; } = "";
+    public string TenLop { get; set; } = "";
     public List<KetQuaMon> LanHoc { get; set; } = new();
     public List<GpaHocKyResult> GpaHocKy { get; set; } = new();
     public BaoCaoHocLucRow? TongKet { get; set; }
@@ -65,6 +69,8 @@ public class BaoCaoHocLucApi
 {
     /// <summary>null = toàn bộ phạm vi được phép (Admin: toàn trường; GV: SV của mình).</summary>
     public string? MaLop { get; set; }
+    /// <summary>Tên lớp của MaLop; null khi không lọc lớp.</summary>
+    public string? TenLop { get; set; }
     public int SoSinhVien { get; set; }
     /// <summary>Thời gian chạy pipeline (ms).</summary>
     public double ThoiGianMs { get; set; }

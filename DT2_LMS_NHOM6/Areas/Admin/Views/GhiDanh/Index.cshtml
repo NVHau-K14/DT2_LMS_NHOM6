@@ -5,6 +5,7 @@
     var xt = Model.XemTruoc;
     var laCaLop = yc.CheDo != YeuCauGhiDanh.CheDoTungSV;
     var daChon = yc.DsMaSV.ToHashSet();
+    var bangLop = await TenLop.LayAsync();
 }
 
 @* ---------- B1 + B2: form GET → /Admin/GhiDanh?...&xemTruoc=true (chỉ đọc, không ghi DB) ---------- *@
@@ -78,7 +79,7 @@
                         <option value="">-- Chọn lớp --</option>
                         @foreach (var lop in Model.DsLop)
                         {
-                            <option value="@lop.MaLop" selected="@(lop.MaLop == yc.MaLop)">@lop.MaLop – @lop.TenLop</option>
+                            <option value="@lop.MaLop" selected="@(lop.MaLop == yc.MaLop)">@lop.TenLop</option>
                         }
                     </select>
                 </div>
@@ -90,12 +91,12 @@
                             <div class="chon-sv" id="ds-chon-sv">
                                 @foreach (var sv in Model.DsSinhVien)
                                 {
-                                    <label class="chon-sv-dong" data-tim="@($"{sv.MaSV} {sv.HoTen} {sv.MaLop}".ToLowerInvariant())">
+                                    <label class="chon-sv-dong" data-tim="@($"{sv.MaSV} {sv.HoTen} {bangLop.Ten(sv.MaLop)}".ToLowerInvariant())">
                                         <input class="form-check-input" type="checkbox" name="DsMaSV" value="@sv.MaSV"
                                                checked="@daChon.Contains(sv.MaSV)" data-ho-ten="@sv.HoTen" />
                                         <span class="ma">@sv.MaSV</span>
                                         <span class="flex-grow-1">@sv.HoTen</span>
-                                        <span class="small text-secondary">@sv.MaLop</span>
+                                        <span class="small text-secondary">@bangLop.Ten(sv.MaLop)</span>
                                     </label>
                                 }
                             </div>
@@ -186,7 +187,7 @@
                                         }
                                     </td>
                                     <td>@d.HoTen</td>
-                                    <td>@d.MaLop</td>
+                                    <td>@bangLop.Ten(d.MaLop)</td>
                                     <td class="text-center">@(d.HopLe ? d.LanHoc.ToString() : "–")</td>
                                     <td>
                                         @if (d.HopLe)

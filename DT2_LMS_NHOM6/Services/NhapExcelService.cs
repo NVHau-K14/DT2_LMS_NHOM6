@@ -25,13 +25,16 @@ public class NhapExcelService
     private readonly DiemService _diem;
     private readonly SinhVienService _sinhVien;
     private readonly TaiKhoanService _taiKhoan;
+    private readonly TenLopService _tenLop;
 
-    public NhapExcelService(MongoContext db, DiemService diem, SinhVienService sinhVien, TaiKhoanService taiKhoan)
+    public NhapExcelService(MongoContext db, DiemService diem, SinhVienService sinhVien, TaiKhoanService taiKhoan,
+        TenLopService tenLop)
     {
         _db = db;
         _diem = diem;
         _sinhVien = sinhVien;
         _taiKhoan = taiKhoan;
+        _tenLop = tenLop;
     }
 
     /// <summary>Kiểm tra file tải lên ở mức tệp: có chọn file, đuôi .xlsx, ≤ 5 MB. null = hợp lệ.</summary>
@@ -62,7 +65,7 @@ public class NhapExcelService
         var maDaCo = (await _db.SinhVien.Find(Builders<SinhVien>.Filter.In(sv => sv.MaSV, dsMa))
             .Project(sv => sv.MaSV).ToListAsync()).ToHashSet();
         var tenDangNhapDaDung = await _taiKhoan.TenDangNhapDaDungAsync(dsMa);
-        var dsLop = (await _db.LopHoc.Find(FilterDefinition<LopHoc>.Empty).Project(l => l.MaLop).ToListAsync()).ToHashSet();
+        var bangLop = await _tenLop.LayAsync();
 
         // MSSV xuất hiện nhiều lần trong file → số các dòng chứa nó
         var dongTheoMa = cacDong.Where(d => d.MaSV.Length > 0)
@@ -113,10 +116,10 @@ public class NhapExcelService
             if (d.DiaChi.Length > 200)
                 d.Loi.Add("Địa chỉ tối đa 200 ký tự.");
 
-            // Mã lớp
-            d.MaLop = d.MaLop.ToUpperInvariant();
-            if (d.MaLop.Length == 0) d.Loi.Add("Thiếu mã lớp.");
-            else if (!dsLop.Contains(d.MaLop)) d.Loi.Add($"Lớp {d.MaLop} không tồn tại.");
+            // Lớp: file ghi tên lớp (16DHTH01) – nhận cả mã lớp (CNTT2501) – quy đổi về maLop trước khi ghi
+            if (d.MaLop.Length == 0) d.Loi.Add("Thiếu lớp.");
+            else if (bangLop.TimMaLop(d.MaLop) is { } maLop) d.MaLop = maLop;
+            else d.Loi.Add($"Lớp {d.MaLop.ToUpperInvariant()} không tồn tại.");
         }
 
         return new PhienNhapSinhVien { TenFile = tenFile, Dong = cacDong };

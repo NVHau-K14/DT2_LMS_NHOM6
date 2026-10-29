@@ -31,7 +31,8 @@
             </div>
             <dl class="danh-sach-thong-tin">
                 <dt>Lớp</dt>
-                <dd><a asp-controller="LopHoc" asp-action="ChiTiet" asp-route-id="@sv.MaLop">@sv.MaLop</a>@(Model.TenLop != null ? $" – {Model.TenLop}" : "")</dd>
+                @* Hiện tên lớp (16DHTH01); link vẫn theo maLop *@
+                <dd><a asp-controller="LopHoc" asp-action="ChiTiet" asp-route-id="@sv.MaLop">@(Model.TenLop ?? sv.MaLop)</a></dd>
                 <dt>Ngày sinh</dt><dd>@HienThi.Ngay(sv.NgaySinh)</dd>
                 <dt>Giới tính</dt><dd>@sv.GioiTinh</dd>
                 <dt>Email</dt><dd>@(sv.Email ?? "–")</dd>

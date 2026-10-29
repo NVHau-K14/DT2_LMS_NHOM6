@@ -12,10 +12,12 @@ namespace DT2_LMS_NHOM6.Areas.Admin.Controllers;
 public class HomeController : AdminControllerBase
 {
     private readonly BaoCaoService _baoCao;
+    private readonly TenLopService _tenLop;
 
-    public HomeController(BaoCaoService baoCao)
+    public HomeController(BaoCaoService baoCao, TenLopService tenLop)
     {
         _baoCao = baoCao;
+        _tenLop = tenLop;
     }
 
     public async Task<IActionResult> Index()
@@ -31,7 +33,8 @@ public class HomeController : AdminControllerBase
             SoGV = soGV,
             SoMon = soMon,
             PhanBoXepLoai = BaoCaoHocLucViewModel.DuBayMuc(thongKe.DuLieu),
-            GpaTheoLop = gpaTheoLop.DuLieu
+            GpaTheoLop = gpaTheoLop.DuLieu,
+            BangLop = await _tenLop.LayAsync()
         });
     }
 }

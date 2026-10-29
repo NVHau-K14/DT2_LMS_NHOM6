@@ -22,6 +22,7 @@ public class DongNhapSinhVien
     public string Email { get; set; } = "";
     public string SoDienThoai { get; set; } = "";
     public string DiaChi { get; set; } = "";
+    /// <summary>Cột "Lớp" trong file (tên lớp hoặc mã lớp); sau khi kiểm tra hợp lệ = maLop (CNTT2501).</summary>
     public string MaLop { get; set; } = "";
 
     /// <summary>Ngày sinh đã đọc được (00:00 UTC); null nếu sai định dạng.</summary>

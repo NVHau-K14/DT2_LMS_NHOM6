@@ -9,6 +9,7 @@ namespace DT2_LMS_NHOM6.Data;
 /// Lệnh: dotnet run --project DT2_LMS_NHOM6 -- --tao-file-demo
 /// Ghi 4 file Excel phục vụ demo 3 (nhập / xuất) vào docs/demo/:
 ///   sinhvien_hop_le.xlsx    – 5 SV mới hợp lệ, lớp 16DHKHDL01 (MSSV 2001250101–2001250105)
+///   (cột Lớp ghi tên lớp như người dùng nhìn thấy – khi nhập được quy đổi về maLop, ví dụ KHDL2501)
 ///   sinhvien_loi.xlsx       – MSSV đã tồn tại, MSSV trùng trong file, lớp không tồn tại, ngày sinh sai, ...
 ///   diem_INT301_hop_le.xlsx – điểm CK cho lớp học phần INT301 HK1 2026-2027 của GV005
 ///   diem_INT301_loi.xlsx    – điểm 11, chữ "abc", 8.25, MSSV không thuộc lớp học phần
@@ -79,7 +80,8 @@ public static class TaoFileDemo
             TenGV = ds[0].GiangVien.HoTen,
             TrongSo = lhp.TrongSo
         };
-        var fileHopLe = ExcelService.XuatBangDiemLopHocPhan(thongTin, ds);
+        var fileHopLe = ExcelService.XuatBangDiemLopHocPhan(thongTin, ds,
+            await scope.ServiceProvider.GetRequiredService<TenLopService>().LayAsync());
         await GhiAsync(thuMuc, "diem_INT301_hop_le.xlsx", fileHopLe);
 
         // File lỗi: sửa vài ô của file hợp lệ + thêm 1 SV không thuộc lớp học phần

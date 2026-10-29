@@ -131,12 +131,21 @@ DT2_LMS_NHOM6/
 
 ## Mô hình dữ liệu (tóm tắt)
 
-Database `eduscore`, 5 collection:
+Database `eduscore`, 5 collection. Quy ước lớp: **`maLop` là mã nội bộ, `tenLop` là tên hiển thị**. Trên giao diện, Excel và lời nói đều dùng tên lớp (16DHTH01). Mã lớp (CNTT2501) chỉ hiện ở trang Lớp học và trong dữ liệu / lệnh MongoDB.
+
+| maLop | tenLop |
+|---|---|
+| CNTT2501 | 16DHTH01 |
+| CNTT2502 | 16DHTH02 |
+| ATTT2501 | 16DHATTT01 |
+| HTTT2501 | 16DHHTTT01 |
+| KHDL2501 | 16DHKHDL01 |
+
 
 | Collection | Nội dung | Quan hệ |
 |---|---|---|
 | `sinhvien` | Hồ sơ SV + **mảng `monHoc` nhúng** (mỗi phần tử: `maDK`, `maMon`, `tenMon`, `soTinChi`, `namHoc`, `hocKy`, `lanHoc`, `hinhThuc`, `giangVien {maGV, hoTen}`, `trongSo {cc,gk,ck}`, `diem {cc,gk,ck}`, `capNhatLuc`, `capNhatBoi`) | `maLop` → `lophoc`; `monHoc[].maMon` → `monhoc`; `monHoc[].giangVien.maGV` → `giangvien` |
-| `lophoc` | Lớp sinh hoạt, cố vấn học tập nhúng `{maGV, hoTen}` | `coVanHocTap.maGV` → `giangvien` |
+| `lophoc` | Lớp sinh hoạt: `maLop` là mã nội bộ (CNTT2501), `tenLop` là tên hiển thị (16DHTH01, unique); cố vấn học tập nhúng `{maGV, hoTen}` | `coVanHocTap.maGV` → `giangvien` |
 | `giangvien` | Giảng viên, học vị, khoa | |
 | `monhoc` | Danh mục môn: tín chỉ, trọng số mặc định | |
 | `taikhoan` | Tài khoản đăng nhập (BCrypt), vai trò, trạng thái | `maThamChieu` → maSV / maGV / `admin` |

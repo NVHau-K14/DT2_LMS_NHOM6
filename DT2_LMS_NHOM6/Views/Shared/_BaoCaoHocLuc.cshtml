@@ -10,6 +10,8 @@
     // Phân trang theo lớp: bảng chỉ hiện SV của lớp trang hiện tại; thẻ số, biểu đồ dùng toàn bộ
     var pt = Model.PhanTrang;
     var dongHienThi = Model.DongHienThi;
+    // Pipeline trả maLop (CNTT2501); người dùng thấy tên lớp (16DHTH01)
+    var bangLop = await TenLop.LayAsync();
 }
 
 <partial name="_TheXepLoai" model="Model.ThongKe" />
@@ -72,7 +74,7 @@
                             <td class="text-center" data-stt>@(i + 1)</td>
                             <td class="ma">@sv.MaSV</td>
                             <td>@sv.HoTen</td>
-                            <td class="ma">@sv.MaLop</td>
+                            <td class="ma">@bangLop.Ten(sv.MaLop)</td>
                             <td class="text-center">@sv.TinChiTichLuy</td>
                             @* GPA null (Chưa xếp loại) sắp như -1 để nằm cuối khi giảm dần *@
                             <td class="text-center fw-semibold" data-gia-tri="@(sv.Gpa?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "-1")">@HienThi.Gpa(sv.Gpa)</td>
@@ -117,7 +119,7 @@
             {
                 <button type="button" class="btn btn-sm btn-outline-secondary" disabled aria-label="Trang sau"><i class="bi bi-chevron-right"></i></button>
             }
-            <span class="small text-secondary text-nowrap">Lớp <span class="ma fw-semibold">@pt.LopHienTai</span></span>
+            <span class="small text-secondary text-nowrap">Lớp <span class="ma fw-semibold">@bangLop.Ten(pt.LopHienTai)</span></span>
         </form>
     }
 </div>

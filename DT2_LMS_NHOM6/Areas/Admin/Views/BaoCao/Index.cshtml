@@ -10,7 +10,7 @@
             <option value="">Tất cả lớp</option>
             @foreach (var lop in Model.DsLop)
             {
-                <option value="@lop.MaLop" selected="@(lop.MaLop == Model.MaLop)">@lop.MaLop</option>
+                <option value="@lop.MaLop" selected="@(lop.MaLop == Model.MaLop)">@lop.TenLop</option>
             }
         </select>
         <label class="small text-secondary ms-2" for="phamVi">Phạm vi</label>

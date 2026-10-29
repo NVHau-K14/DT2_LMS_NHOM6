@@ -69,7 +69,7 @@ MongoDB: `db.sinhvien.findOne({ maSV: "2001250001" })` – tên môn, tên giả
 | Lần học – Giảng viên (N–1) | **Nhúng một phần** `giangVien: {maGV, hoTen}` | `maGV` để tham chiếu và phân quyền (arrayFilters); `hoTen` (kèm học vị) để hiển thị ngay không cần tra cứu. Thông tin khác (email, khoa…) vẫn ở `giangvien`. |
 | Lần học – Môn học (N–1) | **Nhúng một phần + ảnh chụp** `maMon, tenMon, soTinChi, trongSo` | `soTinChi`, `trongSo` là **ảnh chụp lúc ghi danh**: môn đổi tín chỉ/trọng số sau này không làm sai điểm các khóa trước. `tenMon` để hiển thị. |
 | Lớp – Cố vấn học tập (N–1) | **Nhúng một phần** `lophoc.coVanHocTap: {maGV, hoTen}` | Hiển thị danh sách lớp không cần tra cứu GV. |
-| Sinh viên – Lớp (N–1) | **Tham chiếu** `sinhvien.maLop` | Một lớp có nhiều SV; lớp có thông tin riêng (ngành, niên khóa, CVHT) và được CRUD độc lập. Sĩ số **không lưu**, luôn đếm bằng pipeline `SiSoTheoLop`. |
+| Sinh viên – Lớp (N–1) | **Tham chiếu** `sinhvien.maLop` | Một lớp có nhiều SV; lớp có thông tin riêng (ngành, niên khóa, CVHT) và được CRUD độc lập. Sĩ số **không lưu**, luôn đếm bằng pipeline `SiSoTheoLop`. `maLop` là mã nội bộ (CNTT2501); tên hiển thị `tenLop` (16DHTH01) chỉ lưu ở `lophoc`, ứng dụng tra một lần mỗi request (`TenLopService`) – đổi tên lớp không phải sửa document sinh viên nào. |
 | Tài khoản – SV/GV (1–1) | **Tham chiếu** `taikhoan.maThamChieu` | Tách dữ liệu xác thực (hash mật khẩu, trạng thái khóa) khỏi hồ sơ; một collection duy nhất cho đăng nhập 3 vai trò. |
 | Giảng viên, Môn học | **Collection riêng** | Danh mục dùng chung, CRUD độc lập. |
 
@@ -168,14 +168,14 @@ classDiagram
 Ví dụ thật (TS5, lần học INT301 ở học kỳ hiện tại – chưa có điểm CK):
 ```jsonc
 {
-  "_id": ObjectId("6ae235f4a6594dfebc9c1f16"),
+  "_id": ObjectId("6ae333208c446cfd23ec1869"),
   "maSV": "2001250005", "hoTen": "Võ Ngọc Bảo Anh",
   "ngaySinh": ISODate("2007-05-28T00:00:00Z"), "gioiTinh": "Nữ",
   "email": "2001250005@sv.eduscore.vn", "soDienThoai": "0988678905", "diaChi": "Thủ Đức, TP.HCM",
-  "maLop": "16DHTH01", "trangThai": "Đang học",
+  "maLop": "CNTT2501", "trangThai": "Đang học",   // lớp 16DHTH01 (tenLop trong lophoc)
   "monHoc": [
     // ... 4 lần học HK1, HK2 2025-2026 ...
-    { "maDK": ObjectId("6ae235eca6594dfebc9c1c91"),
+    { "maDK": ObjectId("6ae333178c446cfd23ec15e4"),
       "maMon": "INT301", "tenMon": "Cơ sở dữ liệu NoSQL", "soTinChi": 3,
       "namHoc": "2026-2027", "hocKy": 1, "lanHoc": 1, "hinhThuc": "Học mới",
       "giangVien": { "maGV": "GV005", "hoTen": "ThS. Trần Văn Bình" },
@@ -295,7 +295,8 @@ Tạo lúc khởi động (`DbInitializer.TaoIndexAsync`), đặt tên `ux_*` (u
 | `sinhvien` | `{"monHoc.giangVien.maGV": 1, "monHoc.namHoc": 1, "monHoc.hocKy": 1}` | `ix_monHoc_maGV_namHoc_hocKy` | **Multikey** trên mảng: lớp học phần của GV theo học kỳ (G-01, G-02, G-04), danh sách nhập điểm G-03 |
 | `sinhvien` | `{"monHoc.maMon": 1}` | `ix_monHoc_maMon` | Multikey: lan truyền tên môn (`updateMany` theo `monHoc.maMon`), đếm lần học của môn, chặn xóa môn đã có người học |
 | `sinhvien` | `{hoTen: 1}` | `ix_hoTen` | Sắp xếp / tìm theo họ tên ở A-04 |
-| `lophoc` | `{maLop: 1}` unique | `ux_maLop` | Tra cứu + chống trùng mã lớp |
+| `lophoc` | `{maLop: 1}` unique | `ux_maLop` | Tra cứu + chống trùng mã lớp (mã nội bộ, ví dụ CNTT2501) |
+| `lophoc` | `{tenLop: 1}` unique | `ux_tenLop` | Chống trùng tên lớp – tên hiển thị duy nhất người dùng thấy (16DHTH01); form A-02 báo lỗi trước khi ghi |
 | `giangvien` | `{maGV: 1}` unique | `ux_maGV` | Tra cứu + chống trùng mã GV |
 | `monhoc` | `{maMon: 1}` unique | `ux_maMon` | Tra cứu + chống trùng mã môn |
 | `taikhoan` | `{tenDangNhap: 1}` unique | `ux_tenDangNhap` | Đăng nhập; chống trùng tên đăng nhập |
@@ -394,11 +395,11 @@ db.sinhvien.updateOne(
 ```js
 db.sinhvien.updateOne(
   { maSV: "2001250005",
-    monHoc: { $elemMatch: { maDK: ObjectId("6ae235eca6594dfebc9c1c91"), "giangVien.maGV": "GV005" } } },
+    monHoc: { $elemMatch: { maDK: ObjectId("6ae333178c446cfd23ec15e4"), "giangVien.maGV": "GV005" } } },
   { $set: { "monHoc.$[e].diem.ck": 8.5,
             "monHoc.$[e].capNhatLuc": ISODate(), "monHoc.$[e].capNhatBoi": "GV005",
             ngayCapNhat: ISODate() } },
-  { arrayFilters: [ { "e.maDK": ObjectId("6ae235eca6594dfebc9c1c91"), "e.giangVien.maGV": "GV005" } ] })
+  { arrayFilters: [ { "e.maDK": ObjectId("6ae333178c446cfd23ec15e4"), "e.giangVien.maGV": "GV005" } ] })
 ```
 - `$[e]` là **filtered positional operator**: chỉ các phần tử thỏa điều kiện của `e` trong `arrayFilters` bị sửa. `maDK` xác định đúng một lần học, không phụ thuộc vị trí trong mảng.
 - **Quyền của giảng viên nằm ngay trong câu lệnh**: `e.giangVien.maGV` = mã GV lấy từ claim đăng nhập. GV khác gửi `maDK` của lớp không phải mình dạy → không phần tử nào khớp → `modifiedCount = 0` → báo "Không có quyền hoặc không tìm thấy lần học".

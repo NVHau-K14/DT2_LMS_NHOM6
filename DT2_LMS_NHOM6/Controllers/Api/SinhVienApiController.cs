@@ -24,21 +24,29 @@ public class SinhVienApiController : ApiControllerBase
     private readonly GhiDanhService _ghiDanh;
     private readonly DiemService _diem;
     private readonly BaoCaoService _baoCao;
+    private readonly TenLopService _tenLop;
 
-    public SinhVienApiController(SinhVienService sinhVien, GhiDanhService ghiDanh, DiemService diem, BaoCaoService baoCao)
+    public SinhVienApiController(SinhVienService sinhVien, GhiDanhService ghiDanh, DiemService diem, BaoCaoService baoCao,
+        TenLopService tenLop)
     {
         _sinhVien = sinhVien;
         _ghiDanh = ghiDanh;
         _diem = diem;
         _baoCao = baoCao;
+        _tenLop = tenLop;
     }
+
+    /// <summary>maLop nhận mã lớp (CNTT2501) hoặc tên lớp (16DHTH01) → quy đổi về mã lớp; không tìm thấy → giữ nguyên.</summary>
+    private async Task<string?> QuyDoiMaLopAsync(string? maHoacTen)
+        => string.IsNullOrWhiteSpace(maHoacTen) ? maHoacTen
+            : (await _tenLop.LayAsync()).TimMaLop(maHoacTen) ?? maHoacTen;
 
     /// <summary>Danh sách sinh viên (phân trang 20 dòng) kèm GPA tích lũy và xếp loại.</summary>
     /// <remarks>
     /// Chỉ Admin. Hồ sơ lấy bằng find (bỏ mảng monHoc), GPA / xếp loại lấy từ pipeline BaoCaoHocLuc
     /// với bộ lọc { maSV: { $in: [MSSV của trang] } }.
     /// </remarks>
-    /// <param name="maLop">Mã lớp sinh hoạt, ví dụ 16DHTH01 (bỏ trống = mọi lớp).</param>
+    /// <param name="maLop">Lớp sinh hoạt: mã lớp (CNTT2501) hoặc tên lớp (16DHTH01); bỏ trống = mọi lớp.</param>
     /// <param name="page">Số trang, bắt đầu từ 1.</param>
     /// <response code="200">Một trang danh sách.</response>
     [HttpGet]
@@ -47,6 +55,8 @@ public class SinhVienApiController : ApiControllerBase
     public async Task<ActionResult<TrangSinhVienApi>> DanhSach(string? maLop, int page = 1)
     {
         page = Math.Max(1, page);
+        maLop = await QuyDoiMaLopAsync(maLop);
+        var bangLop = await _tenLop.LayAsync();
         var (danhSach, tongSo) = await _sinhVien.DanhSachAsync(maLop, null, null, page, KichThuocTrang);
 
         var dsMaSV = danhSach.Select(sv => sv.MaSV).ToList();
@@ -68,7 +78,7 @@ public class SinhVienApiController : ApiControllerBase
                 {
                     MaSV = sv.MaSV, HoTen = sv.HoTen, NgaySinh = sv.NgaySinh, GioiTinh = sv.GioiTinh,
                     Email = sv.Email, SoDienThoai = sv.SoDienThoai, DiaChi = sv.DiaChi,
-                    MaLop = sv.MaLop, TrangThai = sv.TrangThai,
+                    MaLop = sv.MaLop, TenLop = bangLop.Ten(sv.MaLop), TrangThai = sv.TrangThai,
                     Gpa = hl?.Gpa, XepLoai = hl?.XepLoai,
                     TinChiTichLuy = hl?.TinChiTichLuy ?? 0, SoMonNo = hl?.SoMonNo ?? 0
                 };
@@ -100,7 +110,9 @@ public class SinhVienApiController : ApiControllerBase
     /// Ví dụ body:
     ///
     ///     { "maSV": "2001259999", "hoTen": "Trần Thị Thử", "ngaySinh": "2007-05-20", "gioiTinh": "Nữ",
-    ///       "maLop": "16DHTH01", "trangThai": "Đang học" }
+    ///       "maLop": "CNTT2501", "trangThai": "Đang học" }
+    ///
+    /// maLop nhận mã lớp (CNTT2501) hoặc tên lớp (16DHTH01); luôn lưu mã lớp.
     /// </remarks>
     /// <response code="201">Đã thêm; duLieu = document vừa tạo, mongoCommand = các lệnh đã chạy.</response>
     /// <response code="400">Dữ liệu không hợp lệ hoặc MSSV đã tồn tại.</response>
@@ -111,6 +123,7 @@ public class SinhVienApiController : ApiControllerBase
     public async Task<IActionResult> Them(SinhVienFormViewModel form)
     {
         form.LaSua = false;
+        form.MaLop = await QuyDoiMaLopAsync(form.MaLop) ?? "";
         var kq = await _sinhVien.ThemAsync(form);
         if (!kq.ThanhCong) return KetQua(kq);
 
@@ -141,6 +154,7 @@ public class SinhVienApiController : ApiControllerBase
 
         form.LaSua = true;
         form.MaSV = maSV;
+        form.MaLop = await QuyDoiMaLopAsync(form.MaLop) ?? "";
         var kq = await _sinhVien.SuaAsync(maSV, form);
         return KetQua(kq, kq.ThanhCong ? await _sinhVien.LayAsync(maSV) : null);
     }
@@ -267,15 +281,20 @@ public class SinhVienApiController : ApiControllerBase
         var sv = await _sinhVien.LayAsync(maSV);
         if (sv == null) return Loi(StatusCodes.Status404NotFound, $"Không tìm thấy sinh viên {maSV}.");
 
+        var tenLop = (await _tenLop.LayAsync()).Ten(sv.MaLop);
+        var tongKet = (await _baoCao.BaoCaoHocLucAsync(BoLocSinhVien.TheoSinhVien(maSV), PhamViBaoCao.TichLuy()))
+            .DuLieu.FirstOrDefault();
+        if (tongKet != null) tongKet.TenLop = tenLop;
+
         return Ok(new BangDiemApi
         {
             MaSV = sv.MaSV,
             HoTen = sv.HoTen,
             MaLop = sv.MaLop,
+            TenLop = tenLop,
             LanHoc = (await _diem.BangDiemAsync(maSV)).DuLieu,
             GpaHocKy = (await _diem.GpaHocKyAsync(maSV)).DuLieu,
-            TongKet = (await _baoCao.BaoCaoHocLucAsync(BoLocSinhVien.TheoSinhVien(maSV), PhamViBaoCao.TichLuy()))
-                .DuLieu.FirstOrDefault()
+            TongKet = tongKet
         });
     }
 

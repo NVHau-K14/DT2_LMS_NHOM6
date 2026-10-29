@@ -17,10 +17,12 @@ namespace DT2_LMS_NHOM6.Services;
 public class DiemService
 {
     private readonly MongoContext _db;
+    private readonly TenLopService _tenLop;
 
-    public DiemService(MongoContext db)
+    public DiemService(MongoContext db, TenLopService tenLop)
     {
         _db = db;
+        _tenLop = tenLop;
     }
 
     /// <summary>Mọi lần học của một SV (pipeline BangDiem), sắp theo năm học, học kỳ, mã môn.</summary>
@@ -35,9 +37,18 @@ public class DiemService
     public Task<KetQuaPipeline<GpaHocKyResult>> GpaHocKyAsync(BoLocSinhVien boLoc)
         => PipelineRunner.ChayAsync<GpaHocKyResult>(_db, GpaHocKyPipeline.Tao(boLoc));
 
-    /// <summary>Các lớp học phần của giảng viên; namHoc/hocKy null → mọi học kỳ.</summary>
-    public Task<KetQuaPipeline<LopHocPhanRow>> LopHocPhanCuaGVAsync(string maGV, string? namHoc = null, int? hocKy = null)
-        => PipelineRunner.ChayAsync<LopHocPhanRow>(_db, LopHocPhanCuaGVPipeline.Tao(maGV, namHoc, hocKy));
+    /// <summary>
+    /// Các lớp học phần của giảng viên; namHoc/hocKy null → mọi học kỳ.
+    /// Pipeline trả cacLop là maLop sắp theo mã; sắp lại theo tên lớp hiển thị (không đụng số liệu).
+    /// </summary>
+    public async Task<KetQuaPipeline<LopHocPhanRow>> LopHocPhanCuaGVAsync(string maGV, string? namHoc = null, int? hocKy = null)
+    {
+        var kq = await PipelineRunner.ChayAsync<LopHocPhanRow>(_db, LopHocPhanCuaGVPipeline.Tao(maGV, namHoc, hocKy));
+        var bangLop = await _tenLop.LayAsync();
+        foreach (var l in kq.DuLieu)
+            l.CacLop = bangLop.SapXep(l.CacLop, ma => ma).ToList();
+        return kq;
+    }
 
     /// <summary>Một lớp học phần của GV (null nếu GV không dạy lớp học phần này) – dùng để kiểm tra quyền vào G-03.</summary>
     public async Task<LopHocPhanRow?> LayLopHocPhanAsync(string maGV, string maMon, string namHoc, int hocKy)
@@ -48,8 +59,16 @@ public class DiemService
         => (await PipelineRunner.ChayAsync<LopHocPhanToanTruongRow>(_db, ThongKeDanhMucPipeline.LopHocPhanToanTruong())).DuLieu;
 
     /// <summary>SV của một lớp học phần kèm điểm; maGV = null khi Admin xem.</summary>
-    public Task<KetQuaPipeline<DongNhapDiem>> DanhSachNhapDiemAsync(string? maGV, string maMon, string namHoc, int hocKy)
-        => PipelineRunner.ChayAsync<DongNhapDiem>(_db, DanhSachNhapDiemPipeline.Tao(maGV, maMon, namHoc, hocKy));
+    /// <remarks>Pipeline sắp theo (maLop, maSV); sắp lại theo tên lớp (ổn định – MSSV trong lớp giữ nguyên thứ tự).</remarks>
+    public async Task<KetQuaPipeline<DongNhapDiem>> DanhSachNhapDiemAsync(string? maGV, string maMon, string namHoc, int hocKy)
+    {
+        var kq = await PipelineRunner.ChayAsync<DongNhapDiem>(_db, DanhSachNhapDiemPipeline.Tao(maGV, maMon, namHoc, hocKy));
+        var bangLop = await _tenLop.LayAsync();
+        var daSap = bangLop.SapXep(kq.DuLieu, d => d.MaLop).ToList();
+        kq.DuLieu.Clear();
+        kq.DuLieu.AddRange(daSap);
+        return kq;
+    }
 
     /// <summary>
     /// Lưu một dòng điểm (nút Lưu từng dòng). maGV = null khi Admin nhập (GĐ7, capNhatBoi "admin").
