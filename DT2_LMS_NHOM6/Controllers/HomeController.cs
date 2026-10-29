@@ -8,11 +8,14 @@ namespace DT2_LMS_NHOM6.Controllers;
 
 public class HomeController : Controller
 {
-    /// <summary>"/" : chưa đăng nhập → [Authorize] chuyển về Login; đã đăng nhập → cổng theo vai trò.</summary>
-    [Authorize]
+    /// <summary>"/" : chưa đăng nhập → trang giới thiệu (chỉ có nút Đăng nhập); đã đăng nhập → cổng theo vai trò.</summary>
+    [AllowAnonymous]
     public IActionResult Index()
     {
-        return Redirect(User.TrangChuTheoVaiTro());
+        if (User.Identity?.IsAuthenticated == true)
+            return Redirect(User.TrangChuTheoVaiTro());
+
+        return View();
     }
 
     /// <summary>

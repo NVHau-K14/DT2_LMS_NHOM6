@@ -1,0 +1,229 @@
+@*
+    Trang chủ giới thiệu (C-00) cho người chưa đăng nhập.
+    Bố cục: header (logo + nút Đăng nhập) · Giới thiệu · Lợi ích nổi bật (accordion) · Tính năng chính theo vai trò · chân trang.
+    Hình minh họa dựng bằng HTML/CSS + Bootstrap Icons, không dùng ảnh ngoài.
+*@
+@{
+    Layout = null;
+
+    var loiIch = new[]
+    {
+        (Tieu: "Quản lý tập trung, thống nhất",
+         NoiDung: new[] {
+             "Lớp sinh hoạt, hồ sơ sinh viên, giảng viên và danh mục môn học được quản lý trên một nền tảng duy nhất.",
+             "Ghi danh môn cho cả lớp hoặc từng sinh viên: học lại, cải thiện điểm, học kỳ hè, học vượt." }),
+        (Tieu: "Nhập điểm nhanh chóng, chính xác",
+         NoiDung: new[] {
+             "Giảng viên nhập điểm chuyên cần, giữa kỳ, cuối kỳ trực tuyến; lưu từng dòng hoặc lưu tất cả.",
+             "Nhập/xuất bảng điểm bằng Excel, xem trước và kiểm tra dữ liệu trước khi ghi." }),
+        (Tieu: "Tính điểm và xếp loại tự động",
+         NoiDung: new[] {
+             "Điểm tổng kết, điểm chữ, điểm hệ 4, GPA học kỳ và tích lũy, xếp loại học lực được tính tự động theo quy chế đào tạo tín chỉ.",
+             "Báo cáo học lực toàn trường, theo lớp, theo học kỳ kèm biểu đồ trực quan." }),
+        (Tieu: "An toàn, phân quyền rõ ràng",
+         NoiDung: new[] {
+             "Ba vai trò Phòng đào tạo, Giảng viên, Sinh viên với quyền hạn tách biệt.",
+             "Giảng viên chỉ sửa điểm lớp học phần mình dạy; sinh viên chỉ xem kết quả của chính mình." })
+    };
+
+    var tinhNang = new[]
+    {
+        (Tieu: "Phòng đào tạo", Icon: "bi-building", Lop: "tc-the-xanh", Muc: new[] {
+            "Quản lý lớp học, sinh viên, giảng viên, môn học",
+            "Ghi danh môn cho cả lớp hoặc từng sinh viên",
+            "Báo cáo học lực toàn trường, theo lớp, theo học kỳ",
+            "Nhập/xuất danh sách sinh viên và bảng điểm Excel",
+            "Cấp lại mật khẩu, khóa/mở tài khoản" }),
+        (Tieu: "Giảng viên", Icon: "bi-person-workspace", Lop: "tc-the-luc", Muc: new[] {
+            "Xem các lớp học phần mình phụ trách theo học kỳ",
+            "Nhập, sửa điểm chuyên cần, giữa kỳ, cuối kỳ",
+            "Nhập điểm từ file Excel, xuất bảng điểm lớp học phần",
+            "Theo dõi học lực sinh viên mình giảng dạy" }),
+        (Tieu: "Sinh viên", Icon: "bi-mortarboard", Lop: "tc-the-tim", Muc: new[] {
+            "Xem GPA tích lũy, tín chỉ tích lũy, xếp loại học lực",
+            "Theo dõi biểu đồ GPA qua từng học kỳ",
+            "Xem kết quả học tập chi tiết, xuất Excel",
+            "Xem hồ sơ cá nhân, đổi mật khẩu" })
+    };
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cổng Quản lý Học tập – EduScore</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="eduscore trang-chu">
+    <header class="tc-header">
+        <div class="container tc-header-trong">
+            <a class="tc-logo" href="/">
+                <span class="logo-icon"><i class="bi bi-mortarboard-fill"></i></span>
+                <span class="logo-chu">
+                    <span class="logo-ten">EduScore</span>
+                    <span class="logo-phu">Cổng Quản lý Học tập</span>
+                </span>
+            </a>
+            <a class="btn btn-primary tc-nut-dang-nhap" asp-controller="Account" asp-action="Login">
+                <i class="bi bi-box-arrow-in-right me-1"></i>Đăng nhập
+            </a>
+        </div>
+    </header>
+
+    <main>
+        @* ===== Giới thiệu ===== *@
+        <section class="tc-gioi-thieu">
+            <div class="container tc-gioi-thieu-trong">
+                <div class="tc-gioi-thieu-chu">
+                    <h1 class="tc-tieu-de">Giới thiệu</h1>
+                    <p>
+                        <strong>EduScore</strong> là cổng quản lý kết quả học tập bậc đại học, hỗ trợ phòng đào tạo,
+                        giảng viên và sinh viên quản lý lớp học, hồ sơ sinh viên, ghi danh môn học và nhập điểm
+                        một cách hiệu quả, minh bạch và linh hoạt.
+                    </p>
+                    <p>
+                        Với EduScore, điểm tổng kết, điểm chữ, điểm hệ 4, GPA và xếp loại học lực đều được tính
+                        tự động theo quy chế đào tạo tín chỉ (Thông tư 08/2021/TT-BGDĐT) trên một hệ thống thống nhất,
+                        an toàn và thân thiện với người dùng.
+                    </p>
+                </div>
+
+                <div class="tc-minh-hoa" aria-hidden="true">
+                    <div class="tc-cua-so">
+                        <div class="tc-cua-so-thanh"><span></span><span></span><span></span></div>
+                        <div class="tc-cua-so-noi-dung">
+                            <div class="tc-cua-so-tieu-de">Kết quả học tập – HK1 2026-2027</div>
+                            <table class="tc-bang-mau">
+                                <thead><tr><th>Môn học</th><th>TK</th><th>Chữ</th></tr></thead>
+                                <tbody>
+                                    <tr><td>Cơ sở dữ liệu NoSQL</td><td>8.7</td><td><span class="tc-chu tc-chu-a">A</span></td></tr>
+                                    <tr><td>Lập trình Web</td><td>7.9</td><td><span class="tc-chu tc-chu-b">B+</span></td></tr>
+                                    <tr><td>Mạng máy tính</td><td>6.8</td><td><span class="tc-chu tc-chu-c">C+</span></td></tr>
+                                    <tr><td>Toán rời rạc</td><td>8.2</td><td><span class="tc-chu tc-chu-b">B+</span></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tc-the-noi tc-the-gpa">
+                        <span class="tc-the-noi-nhan">GPA tích lũy</span>
+                        <span class="tc-the-noi-so">3.42</span>
+                        <span class="badge text-bg-success">Giỏi</span>
+                    </div>
+                    <div class="tc-the-noi tc-the-cot">
+                        <span style="height: 45%"></span><span style="height: 62%"></span><span style="height: 55%"></span><span style="height: 80%"></span><span style="height: 92%"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        @* ===== Lợi ích nổi bật ===== *@
+        <section class="tc-loi-ich">
+            <div class="container tc-loi-ich-trong">
+                <div class="tc-loi-ich-hinh" aria-hidden="true">
+                    <div class="tc-vong">
+                        <div class="tc-vong-giua">
+                            <i class="bi bi-graph-up-arrow"></i>
+                            <span>Học lực</span>
+                        </div>
+                    </div>
+                    <span class="tc-bong-icon tc-bong-1"><i class="bi bi-people-fill"></i></span>
+                    <span class="tc-bong-icon tc-bong-2"><i class="bi bi-pencil-square"></i></span>
+                    <span class="tc-bong-icon tc-bong-3"><i class="bi bi-file-earmark-spreadsheet-fill"></i></span>
+                    <span class="tc-bong-icon tc-bong-4"><i class="bi bi-shield-lock-fill"></i></span>
+                </div>
+
+                <div class="tc-loi-ich-chu">
+                    <h2 class="tc-tieu-de">Lợi ích nổi bật</h2>
+                    <div class="tc-accordion" id="loiIch">
+                        @for (var i = 0; i < loiIch.Length; i++)
+                        {
+                            var mo = i == 0;
+                            <div class="tc-accordion-muc">
+                                <button type="button" class="tc-accordion-nut @(mo ? "" : "collapsed")"
+                                        data-bs-toggle="collapse" data-bs-target="#loiIch-@i"
+                                        aria-expanded="@(mo ? "true" : "false")" aria-controls="loiIch-@i">
+                                    <span class="tc-accordion-dau"><i class="bi bi-check-lg"></i></span>
+                                    <span>@(i + 1). @loiIch[i].Tieu</span>
+                                </button>
+                                <div id="loiIch-@i" class="collapse @(mo ? "show" : "")" data-bs-parent="#loiIch">
+                                    <div class="tc-accordion-noi-dung">
+                                        @foreach (var dong in loiIch[i].NoiDung)
+                                        {
+                                            <p>@dong</p>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        @* ===== Tính năng chính ===== *@
+        <section class="tc-tinh-nang">
+            <div class="tc-trang-tri tc-trang-tri-1"></div>
+            <div class="tc-trang-tri tc-trang-tri-2"></div>
+            <div class="container position-relative">
+                <h2 class="tc-tieu-de tc-tieu-de-trang">Tính năng chính</h2>
+                <div class="tc-luoi-the">
+                    @foreach (var vt in tinhNang)
+                    {
+                        <article class="tc-the @vt.Lop">
+                            <div class="tc-the-dau">
+                                <span class="tc-the-icon"><i class="bi @vt.Icon"></i></span>
+                                <h3>@vt.Tieu</h3>
+                            </div>
+                            <ul>
+                                @foreach (var muc in vt.Muc)
+                                {
+                                    <li>@muc</li>
+                                }
+                            </ul>
+                        </article>
+                    }
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="tc-chan">
+        <div class="container">
+            <div class="tc-chan-luoi">
+                <div>
+                    <div class="tc-logo tc-logo-chan">
+                        <span class="logo-icon"><i class="bi bi-mortarboard-fill"></i></span>
+                        <span class="logo-chu">
+                            <span class="logo-ten">EduScore</span>
+                            <span class="logo-phu">Cổng Quản lý Học tập</span>
+                        </span>
+                    </div>
+                    <p class="tc-chan-mo-ta">
+                        Hệ thống quản lý và chấm điểm học tập trực tuyến theo quy chế đào tạo tín chỉ.
+                    </p>
+                </div>
+                <div>
+                    <h4>Thông tin</h4>
+                    <ul>
+                        <li>Đồ án NoSQL – Đề tài 02</li>
+                        <li>Hệ thống quản lý và chấm điểm học tập trực tuyến</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Công nghệ</h4>
+                    <ul>
+                        <li>ASP.NET Core MVC (.NET 9)</li>
+                        <li>MongoDB 8 – Aggregation Pipeline</li>
+                        <li>Bootstrap 5, Chart.js</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="tc-chan-cuoi">© 2026 Cổng Quản lý Học tập – EduScore</div>
+        </div>
+    </footer>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
