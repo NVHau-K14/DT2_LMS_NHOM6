@@ -1,7 +1,12 @@
 @model NhapDiemViewModel
 @{
     var l = Model.LopHocPhan;
-    var phanTram = LopHocPhanViewModel.PhanTramTienDo(l);
+    // Tiến độ ban đầu theo lớp lọc sẵn (nếu có) – nhap-diem.js tính lại khi đổi lọc / sau khi lưu
+    var dsTienDo = l.CacLop.Contains(Model.LocLop ?? "")
+        ? Model.DanhSach.Where(d => d.MaLop == Model.LocLop).ToList()
+        : Model.DanhSach;
+    var soDuDiem = dsTienDo.Count(d => d.DuDiem);
+    var phanTram = dsTienDo.Count == 0 ? 0 : soDuDiem * 100 / dsTienDo.Count;
     ViewData["Title"] = $"Nhập điểm {l.MaMon}";
     ViewData["Breadcrumb"] = new[] { new MucBreadcrumb("Lớp học phần", "/GiangVien/LopHocPhan") };
     var thamSoLhp = $"maMon={Uri.EscapeDataString(l.MaMon)}&namHoc={Uri.EscapeDataString(l.NamHoc)}&hocKy={l.HocKy}";
@@ -13,17 +18,12 @@
     <div class="row g-3 align-items-center">
         <div class="col-lg-7">
             <span class="ma text-primary fw-semibold">@l.MaMon</span>
-            <h2 class="h5 mb-1">@l.TenMon</h2>
-            <div class="text-secondary small">
-                @HienThi.HocKy(l.NamHoc, l.HocKy) · @l.SoTinChi tín chỉ ·
-                trọng số CC/GK/CK <strong class="text-body">@l.TrongSo.Cc/@l.TrongSo.Gk/@l.TrongSo.Ck</strong> ·
-                lớp @string.Join(", ", l.CacLop) · sĩ số <strong class="text-body">@l.SiSo</strong>
-            </div>
+            <h2 class="h5 mb-0">@l.TenMon</h2>
         </div>
         <div class="col-lg-5">
             <div class="d-flex justify-content-between small mb-1">
-                <span>Tiến độ nhập điểm (đủ 3 thành phần)</span>
-                <span><strong id="so-du-diem">@l.SoDuDiem</strong>/<span id="si-so">@l.SiSo</span> (<span id="phan-tram">@phanTram</span>%)</span>
+                <span>Tiến độ nhập điểm</span>
+                <span><strong id="so-du-diem">@soDuDiem</strong>/<span id="si-so">@dsTienDo.Count</span></span>
             </div>
             <div class="progress tien-do @(phanTram == 100 ? "xong" : "")" id="thanh-tien-do" role="progressbar" aria-label="Tiến độ nhập điểm">
                 <div class="progress-bar" style="width: @phanTram%"></div>
@@ -46,7 +46,6 @@
                 <input class="form-check-input" type="checkbox" id="loc-chua-du" />
                 <label class="form-check-label" for="loc-chua-du">Chỉ hiện chưa đủ điểm</label>
             </div>
-            <span class="small text-secondary ms-2" id="so-dong-hien"></span>
         </div>
         <div class="nhom-nut">
             @* File mẫu nhập điểm = bảng điểm xuất ra (danh sách lớp học phần kèm điểm đang có) *@
@@ -57,11 +56,6 @@
             </button>
         </div>
     </div>
-
-    <p class="small text-secondary">
-        Nhập điểm thang 10, tối đa 1 chữ số thập phân (chấp nhận <code>8,5</code> hoặc <code>8.5</code>); để trống = chưa có / xóa điểm.
-        TK, Chữ, Hệ 4 do Aggregation Pipeline tính lại sau khi lưu.
-    </p>
 
     @if (Model.DanhSach.Count == 0)
     {

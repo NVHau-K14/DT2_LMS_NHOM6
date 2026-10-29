@@ -1087,6 +1087,10 @@ body.trang-auth {
     .tien-do .progress-bar { background: var(--es-xanh); }
     .tien-do.xong .progress-bar { background: #16A34A; }
 
+/* Thanh tiến độ + số x/N cùng một hàng (cột "Đã đủ điểm" G-02): thanh co giãn, số nằm cuối */
+.tien-do-hang { display: flex; align-items: center; gap: .625rem; }
+    .tien-do-hang .tien-do { flex: 1 1 auto; min-width: 80px; }
+
 .bang-nhap-diem td { vertical-align: middle; }
 
 .o-diem {

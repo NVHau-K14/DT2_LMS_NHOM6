@@ -4,7 +4,7 @@
 //   - dòng đã sửa chưa lưu được tô màu; cảnh báo khi rời trang còn dòng chưa lưu
 //   - Lưu từng dòng : POST /GiangVien/NhapDiem/LuuDong   (updateOne + $set + arrayFilters)
 //   - Lưu tất cả    : POST /GiangVien/NhapDiem/LuuTatCa  (bulkWrite)
-//   - lọc theo lớp, "chỉ hiện chưa đủ điểm"
+//   - lọc theo lớp, "chỉ hiện chưa đủ điểm"; thanh tiến độ tính theo lớp đang lọc
 // TK / Chữ / Hệ 4 KHÔNG tính ở đây: server chạy lại pipeline rồi trả về, JS chỉ đặt vào ô.
 // Server luôn kiểm tra lại toàn bộ điểm (DiemNhap.TryParse).
 // ===========================================================================
@@ -37,7 +37,6 @@
         var soDongSua = document.getElementById('so-dong-sua');
         var locLop = document.getElementById('loc-lop');
         var locChuaDu = document.getElementById('loc-chua-du');
-        var soDongHien = document.getElementById('so-dong-hien');
 
         function cacO(dong) { return dong.querySelectorAll('input[data-thanh-phan]'); }
 
@@ -66,13 +65,16 @@
             nutLuuTatCa.disabled = n === 0;
         }
 
-        /** Tiến độ = số dòng đủ 3 điểm (cờ duDiem do pipeline trả về) / sĩ số – chỉ là đếm để vẽ thanh. */
+        /** Tiến độ = số dòng đủ 3 điểm (cờ duDiem do pipeline trả về) / số SV của lớp đang lọc
+         *  ("Tất cả lớp" = cả lớp học phần) – chỉ là đếm để vẽ thanh; ô "chưa đủ điểm" không ảnh hưởng. */
         function capNhatTienDo() {
-            var siSo = dsDong.length;
-            var du = dsDong.filter(function (d) { return d.dataset.duDiem === 'true'; }).length;
+            var lop = locLop.value;
+            var dsTinh = dsDong.filter(function (d) { return lop === '' || d.dataset.lop === lop; });
+            var siSo = dsTinh.length;
+            var du = dsTinh.filter(function (d) { return d.dataset.duDiem === 'true'; }).length;
             var pt = siSo === 0 ? 0 : Math.floor(du * 100 / siSo);
             document.getElementById('so-du-diem').textContent = du;
-            document.getElementById('phan-tram').textContent = pt;
+            document.getElementById('si-so').textContent = siSo;
             var thanh = document.getElementById('thanh-tien-do');
             thanh.querySelector('.progress-bar').style.width = pt + '%';
             thanh.classList.toggle('xong', pt === 100);
@@ -81,13 +83,10 @@
         function apDungLoc() {
             var lop = locLop.value;
             var chiChuaDu = locChuaDu.checked;
-            var hien = 0;
             dsDong.forEach(function (d) {
                 var an = (lop !== '' && d.dataset.lop !== lop) || (chiChuaDu && d.dataset.duDiem === 'true');
                 d.classList.toggle('d-none', an);
-                if (!an) { hien++; }
             });
-            soDongHien.textContent = 'Hiển thị ' + hien + '/' + dsDong.length + ' sinh viên';
         }
 
         /** Đặt dữ liệu mới (từ pipeline) vào dòng: ô nhập, giá trị gốc, TK, Chữ, Hệ 4, cờ đủ điểm. */
@@ -194,7 +193,7 @@
         });
 
         // ---------- Lọc ----------
-        locLop.addEventListener('change', apDungLoc);
+        locLop.addEventListener('change', function () { apDungLoc(); capNhatTienDo(); });
         locChuaDu.addEventListener('change', apDungLoc);
 
         // ---------- Cảnh báo rời trang khi còn dòng chưa lưu ----------
@@ -206,5 +205,6 @@
         });
 
         apDungLoc();
+        capNhatTienDo();
     });
 })();

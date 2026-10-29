@@ -56,9 +56,11 @@
                             </td>
                             <td class="text-center">@l.SiSo</td>
                             <td>
-                                <div class="small mb-1">@l.SoDuDiem/@l.SiSo</div>
-                                <div class="progress tien-do @(phanTram == 100 ? "xong" : "")" role="progressbar" aria-valuenow="@phanTram" aria-valuemin="0" aria-valuemax="100" aria-label="Tiến độ nhập điểm">
-                                    <div class="progress-bar" style="width: @phanTram%"></div>
+                                <div class="tien-do-hang">
+                                    <div class="progress tien-do @(phanTram == 100 ? "xong" : "")" role="progressbar" aria-valuenow="@phanTram" aria-valuemin="0" aria-valuemax="100" aria-label="Tiến độ nhập điểm">
+                                        <div class="progress-bar" style="width: @phanTram%"></div>
+                                    </div>
+                                    <span class="small text-nowrap">@l.SoDuDiem/@l.SiSo</span>
                                 </div>
                             </td>
                             <td class="text-end">
