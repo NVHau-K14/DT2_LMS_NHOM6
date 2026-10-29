@@ -9,7 +9,6 @@ Không được bỏ giai đoạn này: README và database là thứ phải n�
 
 ## Việc cần làm
 
-> Nếu skill `frontend-design` đã được cài: dùng nó cho phần giao diện, nhưng **bắt buộc giữ đúng phong cách ở thiết kế mục 8** (tông xanh dương kiểu hoclieu, sidebar trái, nền sáng, Bootstrap 5, không font/thư viện từ CDN).
 1. **Rà soát toàn bộ màn hình** theo thiết kế mục 5 (đăng nhập từng vai trò, đi hết menu): thống nhất tiêu đề/breadcrumb, khoảng cách, màu badge, empty state, thông báo lỗi; không còn trang mặc định của template, không còn chữ tiếng Anh, không còn link chết; responsive cơ bản; không có lỗi console JS. Sửa lỗi phát hiện được (không thêm chức năng mới).
 2. **Xử lý lỗi**: kết nối MongoDB thất bại khi khởi động → thông báo rõ trên console ("Không kết nối được MongoDB tại ..."); exception trong request → trang lỗi thân thiện + log.
 3. **Export database** – lệnh `-- --export`:

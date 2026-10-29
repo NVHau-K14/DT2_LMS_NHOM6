@@ -7,7 +7,6 @@
 
 ## Việc cần làm
 
-> Nếu skill `frontend-design` đã được cài: dùng nó cho phần giao diện, nhưng **bắt buộc giữ đúng phong cách ở thiết kế mục 8** (tông xanh dương kiểu hoclieu, sidebar trái, nền sáng, Bootstrap 5, không font/thư viện từ CDN).
 1. **Thư viện cục bộ**: tải về `wwwroot/lib/` – Bootstrap Icons 1.11.3 (css + thư mục fonts) và Chart.js 4.4.x (file UMD). Bootstrap 5 và jQuery validation đã có sẵn.
 2. **Xác thực**: Cookie Authentication (LoginPath `/Account/Login`, AccessDeniedPath `/Account/AccessDenied`, hết hạn 8 giờ, sliding). `AccountService`: kiểm tra BCrypt, chặn tài khoản "Khóa", cập nhật `lanDangNhapCuoi`, đổi mật khẩu. Claims: `Name` = hoTen, `NameIdentifier` = tenDangNhap, `Role` = vaiTro, `MaThamChieu`. Helper đọc claim (`User.MaThamChieu()`).
 3. **AccountController**: Login (GET/POST, ViewModel + validation, thông báo sai tài khoản chung chung), Logout (POST), DoiMatKhau (GET/POST, mọi vai trò), AccessDenied. **Không hiện tài khoản demo.**
