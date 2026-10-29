@@ -3,16 +3,8 @@
     ViewData["Title"] = "Kết quả học tập";
 }
 
-<div class="the-noi-dung mb-3">
-    <div class="thanh-cong-cu mb-2">
-        <h2 class="h5 mb-0"><i class="bi bi-journal-text me-2 text-primary"></i>Bảng điểm theo học kỳ</h2>
-        <a asp-action="XuatExcel" class="btn btn-sm btn-outline-secondary"><i class="bi bi-file-earmark-excel me-1"></i>Xuất Excel</a>
-    </div>
-    <ul class="chu-thich-quy-tac small text-secondary mb-0">
-        <li>Điểm tổng kết (TK) = CC × trọng số + GK × trọng số + CK × trọng số, làm tròn 1 chữ số (nửa lên). A: 8.5–10 · B: 7.0–8.4 · C: 5.5–6.9 · D: 4.0–5.4 · F: dưới 4.0.</li>
-        <li>Cột <strong>Tính tích lũy</strong> <i class="bi bi-check-circle-fill dau-tich"></i> đánh dấu lần học tốt nhất của mỗi môn (hệ 4 cao nhất, rồi TK cao nhất, rồi lần học sau cùng) và lần đó đạt. Cải thiện bị điểm thấp hơn thì giữ lần cũ.</li>
-        <li>Môn F không được tính vào tín chỉ và GPA tích lũy, nhưng vẫn tính vào GPA học kỳ (F = 0). Môn chưa đủ 3 điểm thành phần không tính vào GPA nào.</li>
-    </ul>
+<div class="d-flex justify-content-end mb-3">
+    <a asp-action="XuatExcel" class="btn btn-sm btn-outline-secondary"><i class="bi bi-file-earmark-excel me-1"></i>Xuất Excel</a>
 </div>
 
 <partial name="_BangDiem" model="Model" />

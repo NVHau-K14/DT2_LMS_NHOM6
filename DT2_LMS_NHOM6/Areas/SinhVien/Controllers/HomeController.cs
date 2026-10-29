@@ -8,24 +8,34 @@ using Microsoft.Extensions.Options;
 namespace DT2_LMS_NHOM6.Areas.SinhVien.Controllers;
 
 /// <summary>
-/// S-01 Tổng quan (S1): thẻ học lực tích lũy (BaoCaoHocLuc), biểu đồ GPA theo học kỳ (GpaHocKy),
+/// S-01 Tổng quan (S1): card thông tin sinh viên, thẻ học lực tích lũy (BaoCaoHocLuc), biểu đồ GPA theo học kỳ (GpaHocKy),
 /// các môn của học kỳ hiện tại (BangDiem). Mọi pipeline lọc theo MSSV lấy từ claim.
 /// </summary>
 public class HomeController : SinhVienControllerBase
 {
     private readonly DiemService _diem;
     private readonly BaoCaoService _baoCao;
+    private readonly SinhVienService _sinhVien;
+    private readonly LopHocService _lopHoc;
     private readonly HocKyHienTaiOptions _hocKyHienTai;
 
-    public HomeController(DiemService diem, BaoCaoService baoCao, IOptions<HocKyHienTaiOptions> hocKyHienTai)
+    public HomeController(DiemService diem, BaoCaoService baoCao, SinhVienService sinhVien, LopHocService lopHoc,
+        IOptions<HocKyHienTaiOptions> hocKyHienTai)
     {
         _diem = diem;
         _baoCao = baoCao;
+        _sinhVien = sinhVien;
+        _lopHoc = lopHoc;
         _hocKyHienTai = hocKyHienTai.Value;
     }
 
     public async Task<IActionResult> Index()
     {
+        // Card thông tin sinh viên: hồ sơ + lớp sinh hoạt (giống HoSoController)
+        var sv = await _sinhVien.LayAsync(MaSV);
+        var hoSo = sv == null ? null : new HoSoCaNhanViewModel { SinhVien = sv, Lop = await _lopHoc.LayAsync(sv.MaLop) };
+
+
         var tongKet = (await _baoCao.BaoCaoHocLucAsync(BoLocSinhVien.TheoSinhVien(MaSV), PhamViBaoCao.TichLuy()))
             .DuLieu.FirstOrDefault();
         var gpaHocKy = await _diem.GpaHocKyAsync(MaSV);
@@ -33,6 +43,7 @@ public class HomeController : SinhVienControllerBase
 
         return View(new TongQuanSinhVienViewModel
         {
+            HoSo = hoSo,
             TongKet = tongKet,
             GpaHocKy = gpaHocKy.DuLieu,
             // Chỉ chọn các lần học thuộc học kỳ hiện tại để hiển thị – điểm TK/chữ vẫn là kết quả pipeline

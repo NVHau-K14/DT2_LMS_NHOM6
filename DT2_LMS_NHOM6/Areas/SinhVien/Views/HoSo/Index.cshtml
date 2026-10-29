@@ -1,27 +1,25 @@
 @model HoSoCaNhanViewModel
 @{
-    ViewData["Title"] = "Hồ sơ cá nhân";
+    ViewData["Title"] = "Thông tin sinh viên";
     var sv = Model.SinhVien;
 }
 
 <div class="row g-3">
     <div class="col-xl-8">
         <div class="the-noi-dung h-100">
-            <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
-                <div>
-                    <h2 class="h5 mb-1">@sv.HoTen</h2>
-                    <span class="ma text-secondary">@sv.MaSV</span>
-                    <span class="badge badge-trang-thai @HienThi.LopBadgeTrangThai(sv.TrangThai) ms-2">@sv.TrangThai</span>
-                </div>
-                <a asp-area="" asp-controller="Account" asp-action="DoiMatKhau" class="btn btn-sm btn-outline-primary"><i class="bi bi-key me-1"></i>Đổi mật khẩu</a>
+            <div class="the-sinh-vien">
+                <div class="anh-dai-dien-sv" aria-hidden="true"><i class="bi bi-person-fill"></i></div>
+                <dl class="danh-sach-thong-tin flex-grow-1">
+                    <dt>MSSV</dt><dd class="ma">@sv.MaSV</dd>
+                    <dt>Họ tên</dt><dd>@sv.HoTen</dd>
+                    <dt>Trạng thái</dt><dd><span class="badge badge-trang-thai @HienThi.LopBadgeTrangThai(sv.TrangThai)">@sv.TrangThai</span></dd>
+                    <dt>Ngày sinh</dt><dd>@HienThi.Ngay(sv.NgaySinh)</dd>
+                    <dt>Giới tính</dt><dd>@sv.GioiTinh</dd>
+                    <dt>Email</dt><dd>@(sv.Email ?? "–")</dd>
+                    <dt>Số điện thoại</dt><dd>@(sv.SoDienThoai ?? "–")</dd>
+                    <dt>Địa chỉ</dt><dd>@(sv.DiaChi ?? "–")</dd>
+                </dl>
             </div>
-            <dl class="danh-sach-thong-tin">
-                <dt>Ngày sinh</dt><dd>@HienThi.Ngay(sv.NgaySinh)</dd>
-                <dt>Giới tính</dt><dd>@sv.GioiTinh</dd>
-                <dt>Email</dt><dd>@(sv.Email ?? "–")</dd>
-                <dt>Số điện thoại</dt><dd>@(sv.SoDienThoai ?? "–")</dd>
-                <dt>Địa chỉ</dt><dd>@(sv.DiaChi ?? "–")</dd>
-            </dl>
         </div>
     </div>
     <div class="col-xl-4">
@@ -41,4 +39,3 @@
         </div>
     </div>
 </div>
-<p class="small text-secondary mt-3 mb-0"><i class="bi bi-info-circle me-1"></i>Thông tin cá nhân chỉ xem. Nếu có sai sót, vui lòng liên hệ phòng đào tạo.</p>

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DT2_LMS_NHOM6.Areas.SinhVien.Controllers;
 
-/// <summary>S-03 Hồ sơ cá nhân (S3): thông tin chỉ đọc + liên kết đổi mật khẩu.</summary>
+/// <summary>S-03 Thông tin sinh viên (S3): thông tin chỉ đọc (đổi mật khẩu nằm ở dropdown người dùng).</summary>
 public class HoSoController : SinhVienControllerBase
 {
     private readonly SinhVienService _sinhVien;

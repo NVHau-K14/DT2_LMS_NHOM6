@@ -395,6 +395,46 @@ body.eduscore {
     font-size: 1.75rem;
 }
 
+/* ---------- Card thông tin sinh viên (S-01, S-03): hình đại diện trái, thông tin phải ---------- */
+.the-sinh-vien {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+}
+
+    .the-sinh-vien > * {
+        min-width: 0;
+    }
+
+    .the-sinh-vien dd {
+        overflow-wrap: anywhere;
+    }
+
+.anh-dai-dien-sv {
+    width: 96px;
+    height: 96px;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--es-xanh-nhat);
+    color: var(--es-xanh);
+    font-size: 3.25rem;
+}
+
+@media (max-width: 575.98px) {
+    .the-sinh-vien {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+
+        .the-sinh-vien > .flex-grow-1 {
+            width: 100%;
+        }
+}
+
 /* ---------- Badge điểm chữ (A xanh lá, B xanh dương, C vàng, D cam, F đỏ) ---------- */
 .badge-diem {
     min-width: 2rem;

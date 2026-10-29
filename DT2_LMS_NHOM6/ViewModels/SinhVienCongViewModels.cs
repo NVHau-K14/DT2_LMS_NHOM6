@@ -7,6 +7,9 @@ namespace DT2_LMS_NHOM6.ViewModels;
 /// <summary>S-01: tổng quan của sinh viên đang đăng nhập.</summary>
 public class TongQuanSinhVienViewModel
 {
+    /// <summary>Hồ sơ + lớp sinh hoạt cho card thông tin sinh viên; null nếu hồ sơ đã bị xóa.</summary>
+    public HoSoCaNhanViewModel? HoSo { get; set; }
+
     /// <summary>Học lực tích lũy (pipeline BaoCaoHocLuc của chính SV); null nếu không có.</summary>
     public BaoCaoHocLucRow? TongKet { get; set; }
 
@@ -37,9 +40,14 @@ public class TongQuanSinhVienViewModel
     }
 }
 
-/// <summary>S-03: hồ sơ cá nhân (chỉ đọc).</summary>
+/// <summary>S-03: thông tin sinh viên (chỉ đọc); dùng lại cho card thông tin ở S-01.</summary>
 public class HoSoCaNhanViewModel
 {
     public SinhVien SinhVien { get; set; } = new();
     public LopHoc? Lop { get; set; }
+
+    /// <summary>Khóa học = năm đầu của niên khóa lớp sinh hoạt ("2025-2029" → "2025").</summary>
+    public string KhoaHoc => Lop == null || string.IsNullOrWhiteSpace(Lop.NienKhoa)
+        ? "–"
+        : Lop.NienKhoa.Split('-')[0].Trim();
 }
