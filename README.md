@@ -200,10 +200,20 @@ Quy tắc điểm (Thông tư 08/2021/TT-BGDĐT): TK = CC×tsCC + GK×tsGK + CK�
 
 ## Thông tin nhóm
 
-**Nhóm 6 – Đề tài 02** · Môn: Cơ sở dữ liệu NoSQL · Giảng viên hướng dẫn: ……………………
+**Nhóm 6 – Đề tài 02: Hệ thống quản lý và chấm điểm học tập trực tuyến (LMS)**
+
+| Mục | Nội dung |
+|---|---|
+| Trường | Trường Đại học Công Thương TP. Hồ Chí Minh (HUIT) |
+| Môn học | Cơ sở dữ liệu NoSQL – Đồ án cuối kỳ |
+| Ngành / Lớp | Công nghệ thông tin · 14DHTH07 |
+| Giảng viên hướng dẫn | Trần Quang Bình |
+| Thời gian | Tháng 10 năm 2026 |
 
 | STT | Họ và tên | MSSV | Vai trò |
 |---|---|---|---|
-| 1 | | | |
-| 2 | | | |
-| 3 | | | |
+| 1 | Trần Khoa Chánh | 2001230076 | SV1 – Data Architect & CRUD Lead |
+| 2 | Nguyễn Văn Hậu (nhóm trưởng) | 2001230225 | SV3 – Fullstack Integrator & DB Tester |
+| 3 | Lê Đình Anh Khoa | 2001230411 | SV2 – Advanced Query Specialist |
+
+Hồ sơ đặc tả yêu cầu phần mềm (SRS): [`docs/srs/SRS_EduScore_Nhom6.docx`](docs/srs/SRS_EduScore_Nhom6.docx).
