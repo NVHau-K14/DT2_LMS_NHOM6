@@ -44,8 +44,8 @@
                         <span class="nguoi-dung-ten d-none d-md-inline">@User.HoTen()</span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end shadow-sm">
-                        @* Sinh viên: dropdown chỉ còn Đổi mật khẩu + Đăng xuất (thông tin đã có ở trang Tổng quan) *@
-                        @if (vaiTro != HangSo.VaiTro.SinhVien)
+                        @* Sinh viên, giảng viên: dropdown chỉ còn Đổi mật khẩu + Đăng xuất; chỉ Admin thấy khối tên/vai trò *@
+                        @if (vaiTro != HangSo.VaiTro.SinhVien && vaiTro != HangSo.VaiTro.GiangVien)
                         {
                             <li class="px-3 py-2">
                                 <div class="fw-semibold">@User.HoTen()</div>

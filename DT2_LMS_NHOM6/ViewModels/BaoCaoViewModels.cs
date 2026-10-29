@@ -87,6 +87,17 @@ public class BaoCaoHocLucViewModel
     /// <summary>Nút "Xuất Excel" – URL xuất theo đúng bộ lọc đang chọn.</summary>
     public string? UrlXuatExcel { get; set; }
 
+    /// <summary>G-04: phân trang theo lớp sinh hoạt (mỗi lớp một trang); null = không phân trang (A-10).</summary>
+    public PhanTrangTheoLop? PhanTrang { get; set; }
+
+    /// <summary>
+    /// Các dòng hiện trong bảng: có phân trang → chỉ SV thuộc lớp của trang hiện tại
+    /// (lọc hiển thị trên kết quả pipeline, không tính lại gì). Thẻ số và biểu đồ vẫn dùng toàn bộ.
+    /// </summary>
+    public List<BaoCaoHocLucRow> DongHienThi => PhanTrang?.LopHienTai is { } lop
+        ? DanhSach.Where(sv => sv.MaLop == lop).ToList()
+        : DanhSach;
+
     public CauHinhBieuDo BieuDo => CauHinhBieuDo.PhanBoXepLoai(ThongKe, "bar");
 
     /// <summary>Xếp kết quả ThongKeXepLoai vào đủ 7 mức (mức không có SV → 0).</summary>
@@ -102,6 +113,35 @@ public class BaoCaoHocLucViewModel
         var i = Array.IndexOf(HangSo.CacXepLoai, xepLoai);
         return i < 0 ? HangSo.CacXepLoai.Length : i + 1;
     }
+}
+
+/// <summary>
+/// Phân trang theo lớp sinh hoạt cho bảng báo cáo G-04: trang i = lớp thứ i (mã lớp sắp tăng dần).
+/// Chuyển trang bằng form GET (?trang=n), giữ lại các tham số lọc trong ThamSoGiuLai.
+/// </summary>
+public class PhanTrangTheoLop
+{
+    /// <summary>Các mã lớp khác nhau trong danh sách, sắp tăng dần.</summary>
+    public List<string> CacLop { get; }
+    /// <summary>Trang hiện tại (1..TongSoTrang), đã kẹp vào phạm vi.</summary>
+    public int Trang { get; }
+    /// <summary>Tham số query giữ nguyên khi chuyển trang (ví dụ lhp).</summary>
+    public Dictionary<string, string?> ThamSoGiuLai { get; }
+
+    public PhanTrangTheoLop(IEnumerable<BaoCaoHocLucRow> danhSach, int? trang, Dictionary<string, string?> thamSoGiuLai)
+    {
+        CacLop = danhSach.Select(sv => sv.MaLop).Distinct().Order(StringComparer.Ordinal).ToList();
+        Trang = Math.Clamp(trang ?? 1, 1, Math.Max(CacLop.Count, 1));
+        ThamSoGiuLai = thamSoGiuLai;
+    }
+
+    public int TongSoTrang => CacLop.Count;
+    public string? LopHienTai => CacLop.Count == 0 ? null : CacLop[Trang - 1];
+
+    /// <summary>Query string của một trang, ví dụ "?lhp=INT301_2026-2027_1&amp;trang=2".</summary>
+    public string UrlTrang(int trang) => QueryString.Create(
+        ThamSoGiuLai.Where(t => !string.IsNullOrEmpty(t.Value))
+            .Append(new KeyValuePair<string, string?>("trang", trang.ToString()))).ToString();
 }
 
 /// <summary>A-10: bộ lọc lớp + phạm vi, kèm báo cáo.</summary>

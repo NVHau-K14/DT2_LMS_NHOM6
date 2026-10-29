@@ -7,6 +7,9 @@
 *@
 @{
     var tongSV = Model.DanhSach.Count;
+    // G-04 có phân trang theo lớp: bảng chỉ hiện SV của lớp trang hiện tại (A-10: toàn bộ)
+    var pt = Model.PhanTrang;
+    var dongHienThi = Model.DongHienThi;
 }
 
 <partial name="_TheXepLoai" model="Model.ThongKe" />
@@ -24,7 +27,14 @@
 
 <div class="the-noi-dung">
     <div class="thanh-cong-cu">
-        <h2 class="h6 mb-0">Danh sách sinh viên <span class="text-secondary fw-normal">– bấm tiêu đề cột để sắp xếp</span></h2>
+        @if (pt == null)
+        {
+            <h2 class="h6 mb-0">Danh sách sinh viên <span class="text-secondary fw-normal">– bấm tiêu đề cột để sắp xếp</span></h2>
+        }
+        else
+        {
+            <h2 class="h6 mb-0">Danh sách sinh viên</h2>
+        }
         <div class="nhom-nut">
             <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modal-pipeline">
                 <i class="bi bi-code-slash me-1"></i>Xem pipeline
@@ -62,9 +72,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for (var i = 0; i < tongSV; i++)
+                    @for (var i = 0; i < dongHienThi.Count; i++)
                     {
-                        var sv = Model.DanhSach[i];
+                        var sv = dongHienThi[i];
                         <tr>
                             <td class="text-center" data-stt>@(i + 1)</td>
                             <td class="ma">@sv.MaSV</td>
@@ -86,6 +96,38 @@
                 </tbody>
             </table>
         </div>
+        @if (pt != null)
+        {
+            @* Thanh chuyển trang: ‹ [ô số trang] / tổng › – form GET, Enter trong ô số để chuyển *@
+            @* novalidate: số ngoài min/max vẫn gửi lên, server kẹp về 1 / trang cuối *@
+            <form method="get" class="phan-trang-lop" novalidate>
+                @foreach (var (ten, giaTri) in pt.ThamSoGiuLai)
+                {
+                    if (!string.IsNullOrEmpty(giaTri))
+                    {
+                        <input type="hidden" name="@ten" value="@giaTri" />
+                    }
+                }
+                @if (pt.Trang > 1)
+                {
+                    <a class="btn btn-sm btn-outline-secondary" href="@pt.UrlTrang(pt.Trang - 1)" aria-label="Trang trước"><i class="bi bi-chevron-left"></i></a>
+                }
+                else
+                {
+                    <button type="button" class="btn btn-sm btn-outline-secondary" disabled aria-label="Trang trước"><i class="bi bi-chevron-left"></i></button>
+                }
+                <input type="number" class="form-control form-control-sm" name="trang" value="@pt.Trang" min="1" max="@pt.TongSoTrang" aria-label="Số trang" />
+                <span class="small text-secondary text-nowrap">/ @pt.TongSoTrang</span>
+                @if (pt.Trang < pt.TongSoTrang)
+                {
+                    <a class="btn btn-sm btn-outline-secondary" href="@pt.UrlTrang(pt.Trang + 1)" aria-label="Trang sau"><i class="bi bi-chevron-right"></i></a>
+                }
+                else
+                {
+                    <button type="button" class="btn btn-sm btn-outline-secondary" disabled aria-label="Trang sau"><i class="bi bi-chevron-right"></i></button>
+                }
+            </form>
+        }
     }
 </div>
 

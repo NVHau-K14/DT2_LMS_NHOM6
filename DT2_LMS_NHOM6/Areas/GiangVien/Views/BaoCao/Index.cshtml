@@ -3,10 +3,9 @@
     ViewData["Title"] = "Báo cáo học lực";
 }
 
-<div class="the-noi-dung mb-3">
+<div class="loc-ben-phai mb-3">
     <form method="get" class="thanh-loc">
-        <label class="small text-secondary" for="lhp">Lớp học phần</label>
-        <select class="form-select" id="lhp" name="lhp" data-tu-gui>
+        <select class="form-select" id="lhp" name="lhp" aria-label="Lớp học phần" data-tu-gui>
             <option value="">Tất cả lớp học phần của tôi</option>
             @foreach (var l in Model.DsLopHocPhan)
             {
@@ -16,9 +15,6 @@
         </select>
         <noscript><button type="submit" class="btn btn-primary">Lọc</button></noscript>
     </form>
-    <p class="small text-secondary mb-0 mt-2">
-        Học lực tích lũy của sinh viên thuộc các lớp học phần bạn dạy (mọi học kỳ). Mỗi môn lấy lần học tốt nhất; GPA chỉ tính các môn đạt.
-    </p>
 </div>
 
 <partial name="_BaoCaoHocLuc" model="Model.BaoCao" />

@@ -1,27 +1,18 @@
 @model LopHocPhanViewModel
 @{
     ViewData["Title"] = "Tổng quan";
-    LopHocPhanViewModel.TryParseKy(Model.KyChon, out var namHoc, out var hocKy);
 }
 
-<div class="the-noi-dung chao-mung mb-3">
-    <div class="d-flex flex-wrap align-items-center gap-3">
-        <div class="chao-mung-icon"><i class="bi bi-emoji-smile"></i></div>
-        <div class="flex-grow-1">
-            <h2 class="h4 mb-1">Xin chào, @User.HoTen()!</h2>
-            <p class="text-secondary mb-0">Các lớp học phần bạn phụ trách trong @HienThi.HocKy(namHoc, hocKy).</p>
-        </div>
-        <form method="get" class="thanh-loc">
-            <label class="small text-secondary" for="ky">Học kỳ</label>
-            <select class="form-select" id="ky" name="ky" data-tu-gui>
-                @foreach (var (nam, ky) in Model.DsHocKy)
-                {
-                    var ma = LopHocPhanViewModel.MaKy(nam, ky);
-                    <option value="@ma" selected="@(ma == Model.KyChon)">@HienThi.HocKy(nam, ky)</option>
-                }
-            </select>
-        </form>
-    </div>
+<div class="loc-ben-phai mb-3">
+    <form method="get" class="thanh-loc">
+        <select class="form-select" id="ky" name="ky" aria-label="Học kỳ" data-tu-gui>
+            @foreach (var (nam, ky) in Model.DsHocKy)
+            {
+                var ma = LopHocPhanViewModel.MaKy(nam, ky);
+                <option value="@ma" selected="@(ma == Model.KyChon)">@HienThi.HocKy(nam, ky)</option>
+            }
+        </select>
+    </form>
 </div>
 
 @* ---------- Thẻ số (từ pipeline LopHocPhanCuaGV) ---------- *@
@@ -67,12 +58,14 @@ else
                     </div>
                     <h3 class="h6 mb-0">@l.TenMon</h3>
                     <div class="small text-secondary">
-                        @l.SoTinChi TC · trọng số @l.TrongSo.Cc/@l.TrongSo.Gk/@l.TrongSo.Ck<br />
-                        Lớp: @string.Join(", ", l.CacLop) · Sĩ số <strong class="text-body">@l.SiSo</strong>
+                        @foreach (var lop in l.CacLop)
+                        {
+                            <div>@lop</div>
+                        }
                     </div>
                     <div class="mt-auto">
                         <div class="d-flex justify-content-between small mb-1">
-                            <span>Đã đủ điểm</span><span><strong>@l.SoDuDiem</strong>/@l.SiSo (@phanTram%)</span>
+                            <span>Đã đủ điểm</span><span><strong>@l.SoDuDiem</strong>/@l.SiSo</span>
                         </div>
                         <div class="progress tien-do @(phanTram == 100 ? "xong" : "")" role="progressbar" aria-valuenow="@phanTram" aria-valuemin="0" aria-valuemax="100" aria-label="Tiến độ nhập điểm">
                             <div class="progress-bar" style="width: @phanTram%"></div>

@@ -1269,3 +1269,12 @@ a.the-so-link {
 .chon-file .form-control { min-width: 0; background: #fff; }
 .chon-file:hover .input-group-text { background: #E2E8F0; }
 [data-chon-file]:focus-visible + .chon-file { outline: 2px solid #2563EB; outline-offset: 2px; border-radius: .375rem; }
+
+/* Ô chọn bộ lọc đứng riêng, căn phải, ngoài card (G-01, G-04) */
+.loc-ben-phai { display: flex; justify-content: flex-end; }
+.loc-ben-phai .thanh-loc { max-width: 100%; }
+.loc-ben-phai .form-select { max-width: 100%; }
+
+/* Phân trang theo lớp sinh hoạt (G-04): ‹ [số trang] / tổng › */
+.phan-trang-lop { display: flex; align-items: center; justify-content: center; gap: .5rem; margin-top: 1rem; }
+.phan-trang-lop .form-control { width: 4.5rem; text-align: center; }

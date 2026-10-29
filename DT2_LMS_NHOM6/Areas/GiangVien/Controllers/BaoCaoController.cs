@@ -44,8 +44,9 @@ public class BaoCaoController : GiangVienControllerBase
     }
 
     /// <param name="lhp">Lớp học phần dạng "INT301_2026-2027_1"; trống = mọi lớp học phần.</param>
+    /// <param name="trang">Trang bảng SV – mỗi trang một lớp sinh hoạt (mã lớp tăng dần); ngoài phạm vi → kẹp về 1 / trang cuối.</param>
     [HttpGet]
-    public async Task<IActionResult> Index(string? lhp)
+    public async Task<IActionResult> Index(string? lhp, int? trang)
     {
         var (dsLhp, lhpChon, boLoc) = await DocBoLocAsync(lhp);
         var phamVi = PhamViBaoCao.TichLuy();
@@ -65,6 +66,9 @@ public class BaoCaoController : GiangVienControllerBase
                 LaTichLuy = true,
                 UrlHoSoSV = null, // GV không có quyền xem hồ sơ SV
                 UrlXuatExcel = Url.Action(nameof(XuatExcel), new { lhp = lhpChon == null ? null : lhp }),
+                // Chỉ tách bảng theo lớp khi hiển thị; thẻ số, biểu đồ, Xuất Excel vẫn dùng toàn bộ danh sách
+                PhanTrang = new PhanTrangTheoLop(baoCao.DuLieu, trang,
+                    new() { ["lhp"] = lhpChon == null ? null : lhp }),
                 Pipelines =
                 [
                     PipelineDaChay.Tu("BaoCaoHocLuc", "Bảng học lực: mỗi sinh viên một dòng (GPA, xếp loại, TC, số môn nợ).", baoCao),
