@@ -87,14 +87,14 @@ public class BaoCaoHocLucViewModel
     /// <summary>Nút "Xuất Excel" – URL xuất theo đúng bộ lọc đang chọn.</summary>
     public string? UrlXuatExcel { get; set; }
 
-    /// <summary>G-04: phân trang theo lớp sinh hoạt (mỗi lớp một trang); null = không phân trang (A-10).</summary>
-    public PhanTrangTheoLop? PhanTrang { get; set; }
+    /// <summary>Phân trang theo lớp sinh hoạt (mỗi lớp một trang) – A-10 và G-04.</summary>
+    public PhanTrangTheoLop PhanTrang { get; set; } = new([], null, new());
 
     /// <summary>
-    /// Các dòng hiện trong bảng: có phân trang → chỉ SV thuộc lớp của trang hiện tại
-    /// (lọc hiển thị trên kết quả pipeline, không tính lại gì). Thẻ số và biểu đồ vẫn dùng toàn bộ.
+    /// Các dòng hiện trong bảng: chỉ SV thuộc lớp của trang hiện tại
+    /// (lọc hiển thị trên kết quả pipeline, không tính lại gì). Thẻ số, biểu đồ, Xuất Excel vẫn dùng toàn bộ.
     /// </summary>
-    public List<BaoCaoHocLucRow> DongHienThi => PhanTrang?.LopHienTai is { } lop
+    public List<BaoCaoHocLucRow> DongHienThi => PhanTrang.LopHienTai is { } lop
         ? DanhSach.Where(sv => sv.MaLop == lop).ToList()
         : DanhSach;
 
@@ -116,8 +116,8 @@ public class BaoCaoHocLucViewModel
 }
 
 /// <summary>
-/// Phân trang theo lớp sinh hoạt cho bảng báo cáo G-04: trang i = lớp thứ i (mã lớp sắp tăng dần).
-/// Chuyển trang bằng form GET (?trang=n), giữ lại các tham số lọc trong ThamSoGiuLai.
+/// Phân trang theo lớp sinh hoạt cho bảng báo cáo A-10 / G-04: trang i = lớp thứ i (mã lớp sắp tăng dần).
+/// Chuyển trang bằng form GET (?trang=n), giữ lại các tham số lọc trong ThamSoGiuLai (A-10: maLop, phamVi; G-04: lhp).
 /// </summary>
 public class PhanTrangTheoLop
 {

@@ -24,16 +24,6 @@
         </select>
         <noscript><button type="submit" class="btn btn-primary">Lọc</button></noscript>
     </form>
-    <p class="small text-secondary mb-0 mt-2">
-        @if (Model.BaoCao.LaTichLuy)
-        {
-            <text>Tích lũy: mỗi môn lấy lần học tốt nhất; GPA chỉ tính các môn đạt (A–D). Sinh viên chưa có môn nào đạt → "Chưa xếp loại".</text>
-        }
-        else
-        {
-            <text>Một học kỳ: GPA tính mọi môn đủ điểm trong kỳ, kể cả F (= 0). Học kỳ chưa có điểm cuối kỳ → "Chưa xếp loại".</text>
-        }
-    </p>
 </div>
 
 <partial name="_BaoCaoHocLuc" model="Model.BaoCao" />

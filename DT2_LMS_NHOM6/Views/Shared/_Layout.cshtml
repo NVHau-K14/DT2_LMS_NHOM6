@@ -3,7 +3,6 @@
 @{
     var tieuDe = ViewData["Title"] as string ?? "EduScore";
     var hocKy = HocKyHienTai.Value;
-    var vaiTro = User.VaiTro();
 }
 <!DOCTYPE html>
 <html lang="vi">
@@ -44,15 +43,6 @@
                         <span class="nguoi-dung-ten d-none d-md-inline">@User.HoTen()</span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end shadow-sm">
-                        @* Sinh viên, giảng viên: dropdown chỉ còn Đổi mật khẩu + Đăng xuất; chỉ Admin thấy khối tên/vai trò *@
-                        @if (vaiTro != HangSo.VaiTro.SinhVien && vaiTro != HangSo.VaiTro.GiangVien)
-                        {
-                            <li class="px-3 py-2">
-                                <div class="fw-semibold">@User.HoTen()</div>
-                                <div class="small text-secondary">@HienThi.TenVaiTro(vaiTro) · @User.TenDangNhap()</div>
-                            </li>
-                            <li><hr class="dropdown-divider" /></li>
-                        }
                         <li>
                             <a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="DoiMatKhau">
                                 <i class="bi bi-key me-2"></i>Đổi mật khẩu

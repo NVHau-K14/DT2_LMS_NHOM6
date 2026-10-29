@@ -48,8 +48,9 @@ public class BaoCaoController : AdminControllerBase
 
     /// <param name="maLop">Trống = tất cả lớp.</param>
     /// <param name="phamVi">"tichluy" (mặc định) hoặc học kỳ dạng "2025-2026_2".</param>
+    /// <param name="trang">Trang bảng SV – mỗi trang một lớp sinh hoạt (mã lớp tăng dần); ngoài phạm vi → kẹp về 1 / trang cuối.</param>
     [HttpGet]
-    public async Task<IActionResult> Index(string? maLop, string? phamVi)
+    public async Task<IActionResult> Index(string? maLop, string? phamVi, int? trang)
     {
         var loc = await DocBoLocAsync(maLop, phamVi);
         var baoCao = await _baoCao.BaoCaoHocLucAsync(loc.BoLocSinhVien, loc.PhamViBaoCao);
@@ -69,6 +70,9 @@ public class BaoCaoController : AdminControllerBase
                 LaTichLuy = loc.PhamViBaoCao.LaTichLuy,
                 UrlHoSoSV = "/Admin/SinhVien/HoSo/",
                 UrlXuatExcel = Url.Action(nameof(XuatExcel), new { maLop = loc.MaLop, phamVi = loc.PhamVi }),
+                // Chỉ tách bảng theo lớp khi hiển thị; thẻ số, biểu đồ, Xuất Excel vẫn dùng toàn bộ danh sách
+                PhanTrang = new PhanTrangTheoLop(baoCao.DuLieu, trang,
+                    new() { ["maLop"] = loc.MaLop, ["phamVi"] = loc.PhamVi }),
                 Pipelines =
                 [
                     PipelineDaChay.Tu("BaoCaoHocLuc", "Bảng học lực: mỗi sinh viên một dòng (GPA, xếp loại, TC, số môn nợ).", baoCao),
