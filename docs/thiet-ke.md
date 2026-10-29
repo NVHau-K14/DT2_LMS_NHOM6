@@ -16,7 +16,7 @@
 | Báo cáo & thiết kế CSDL (2.5đ): ưu điểm Document Store; JSON Schema hồ sơ SV chứa mảng môn học, tín chỉ, điểm | Collection `sinhvien` nhúng mảng `monHoc`; `$jsonSchema` validator ở mục 4.6 |
 | CRUD nền tảng (2.5đ): lớp học, hồ sơ SV, cập nhật điểm môn | Màn hình Admin + Giảng viên; API (tùy chọn) |
 | Nâng cao (2.5đ): `$push`, `arrayFilters`, `$set` trên mảng lồng; Aggregation (`$unwind`, `$group`, `$project`, `$cond`/`$switch`) tính GPA có trọng số + xếp loại **hoàn toàn ở tầng CSDL** | Ghi danh (`$push`), hủy ghi danh (`$pull`), nhập điểm (`$set` + `arrayFilters`), lan truyền tên (`updateMany` + `arrayFilters`); pipeline mục 3 |
-| Dữ liệu mẫu (1đ): ≥100 SV chia đều 4–6 lớp; mỗi SV 4–8 môn có điểm, tín chỉ, giảng viên | Seeder mục 7: 100 SV, 5 lớp × 20, mỗi SV 4–8 phần tử `monHoc` |
+| Dữ liệu mẫu (1đ): ≥100 SV chia đều 4–6 lớp; mỗi SV 4–8 môn có điểm, tín chỉ, giảng viên | Seeder mục 7: 100 SV, 5 lớp × 20, mỗi SV 4–8 lần học 14 môn gốc; 95 SV (trừ 5 SV kiểm thử) thêm 16 lần học môn mở rộng (tổng 5–24 phần tử `monHoc`) |
 | Demo sống (1.5đ) | (1) Nhập điểm trên web → Compass thấy điểm trong đúng phần tử mảng; (2) Báo cáo học lực từ pipeline; (3) Import/Export bảng điểm |
 
 ---
@@ -293,7 +293,7 @@ Mật khẩu mặc định (dùng khi tạo mới và khi reset):
       } } }
   } } }
 ```
-Mảng `monHoc` **không giới hạn số phần tử** (giới hạn 4–8 chỉ áp dụng cho dữ liệu mẫu). Các collection khác có validator đơn giản (required + kiểu + enum). Khởi tạo: collection chưa có → `createCollection` kèm validator; đã có → `collMod` cập nhật validator.
+Mảng `monHoc` **không giới hạn số phần tử** (giới hạn 4–8 chỉ áp dụng cho lần học 14 môn gốc của dữ liệu mẫu). Các collection khác có validator đơn giản (required + kiểu + enum). Khởi tạo: collection chưa có → `createCollection` kèm validator; đã có → `collMod` cập nhật validator.
 
 ### 4.7 Index
 | Collection | Index |
@@ -382,7 +382,8 @@ Khung chung: sidebar trái màu xanh dương (logo EduScore, menu theo vai trò,
 
 ## 7. Dữ liệu mẫu (Seeder)
 
-- Chạy tự động khi DB trống; `--reset` xóa database rồi tạo lại. **Random seed cố định 2026** → chạy lại ra đúng một bộ dữ liệu.
+- Chạy tự động khi DB trống; `--reset` xóa database rồi tạo lại. **Random seed cố định 2026** cho 14 môn gốc, **seed riêng 2027** cho môn mở rộng (sinh sau cùng nên không làm đổi dữ liệu 14 môn gốc) → chạy lại ra đúng một bộ dữ liệu.
+- Tổng: 5 lớp, 100 SV, 11 GV, **46 môn** (14 môn gốc + 19 môn mở rộng có ghi danh + 13 môn chưa mở), **2 160 lần học** (640 môn gốc + 1 520 môn mở rộng), 112 tài khoản.
 - Họ tên tiếng Việt tự nhiên (danh sách họ, tên đệm theo giới tính, tên), **không đánh số**. Ngày sinh năm 2007. Địa chỉ quận/huyện TP.HCM và các tỉnh lân cận.
 
 ### 7.1 Lớp (niên khóa 2025-2029, Khoa Công nghệ thông tin), mỗi lớp 20 SV
@@ -398,14 +399,19 @@ MSSV liên tiếp `2001250001` … `2001250100` (lớp 1: 001–020, lớp 2: 02
 ### 7.2 Giảng viên
 | maGV | Họ tên | Học vị | Dạy |
 |---|---|---|---|
-| GV001 | Nguyễn Văn An | ThS. | INT101, INT102 |
-| GV002 | Lê Quốc Cường | TS. | INT201, MAT102 |
-| GV003 | Phạm Thị Hồng | TS. | MAT101 |
-| GV004 | Võ Minh Tuấn | ThS. | POL101, POL102, LAW101 |
-| GV005 | Trần Văn Bình | ThS. | INT301, INT202 |
-| GV006 | Đặng Thu Hà | ThS. | ENG101, ENG102 |
-| GV007 | Huỳnh Gia Bảo | ThS. | INT203 |
-| GV008 | Ngô Thị Lan | CN. | SKL101 |
+| GV001 | Nguyễn Văn An | ThS. | INT101, INT102; INT107, INT207 |
+| GV002 | Lê Quốc Cường | TS. | INT201, MAT102; INT204 |
+| GV003 | Phạm Thị Hồng | TS. | MAT101; MAT103, MAT104 |
+| GV004 | Võ Minh Tuấn | ThS. | POL101, POL102, LAW101; POL103, POL104 |
+| GV005 | Trần Văn Bình | ThS. | INT301, INT202 (không dạy môn mở rộng) |
+| GV006 | Đặng Thu Hà | ThS. | ENG101, ENG102; ENG103 |
+| GV007 | Huỳnh Gia Bảo | ThS. | INT203; INT205, INT209 |
+| GV008 | Ngô Thị Lan | CN. | SKL101; INT104, SKL102 |
+| GV009 | Trương Minh Khoa | TS. | INT105, INT106, INT210 |
+| GV010 | Lý Thu Trang | ThS. | INT108, INT206 |
+| GV011 | Đinh Quốc Huy | ThS. | SKL103, INT208 |
+
+Email/SĐT GV mới: khoatm@eduscore.vn 0907445566, tranglt@eduscore.vn 0934667788, huydq@eduscore.vn 0971223344. Môn sau dấu `;` là môn mở rộng.
 
 ### 7.3 Môn học
 | maMon | Tên | TC | Trọng số | Học kỳ dùng |
@@ -425,13 +431,43 @@ MSSV liên tiếp `2001250001` … `2001250100` (lớp 1: 001–020, lớp 2: 02
 | INT203 | Mạng máy tính | 3 | 10/30/60 | HK1 26-27 |
 | INT301 | Cơ sở dữ liệu NoSQL | 3 | 10/30/60 | HK1 26-27 |
 
+**Môn mở rộng** (mọi SV của lớp áp dụng đều học, **trừ 5 SV kiểm thử**; môn thực hành 1 TC và SKL/ENG trọng số 20/30/50):
+
+| maMon | Tên | TC | Trọng số | GV | Học kỳ | Lớp |
+|---|---|---|---|---|---|---|
+| MAT103 | Đại số tuyến tính | 3 | 10/30/60 | GV003 | HK1 25-26 | mọi lớp |
+| INT104 | Kỹ năng ứng dụng công nghệ thông tin | 2 | 10/30/60 | GV008 | HK1 25-26 | mọi lớp |
+| INT105 | Nguyên lý ngôn ngữ lập trình | 3 | 10/30/60 | GV009 | HK1 25-26 | mọi lớp |
+| INT106 | Thực hành Nguyên lý ngôn ngữ lập trình | 1 | 20/30/50 | GV009 | HK1 25-26 | mọi lớp |
+| MAT104 | Xác suất và thống kê trong sản xuất, công nghệ, kỹ thuật | 3 | 10/30/60 | GV003 | HK2 25-26 | mọi lớp |
+| INT107 | Thực hành kỹ thuật lập trình | 1 | 20/30/50 | GV001 | HK2 25-26 | mọi lớp |
+| INT108 | Kiến trúc máy tính | 3 | 10/30/60 | GV010 | HK2 25-26 | mọi lớp |
+| POL103 | Chủ nghĩa xã hội khoa học | 2 | 10/30/60 | GV004 | HK2 25-26 | mọi lớp |
+| SKL102 | Đổi mới sáng tạo và khởi nghiệp | 2 | 20/30/50 | GV008 | Hè 25-26 | mọi lớp |
+| SKL103 | Phương pháp nghiên cứu khoa học | 2 | 20/30/50 | GV011 | Hè 25-26 | mọi lớp |
+| INT204 | Thực hành cấu trúc dữ liệu và giải thuật | 1 | 20/30/50 | GV002 | HK1 26-27 | mọi lớp |
+| INT205 | Thực hành mạng máy tính | 1 | 20/30/50 | GV007 | HK1 26-27 | mọi lớp |
+| INT206 | Hệ điều hành | 3 | 10/30/60 | GV010 | HK1 26-27 | mọi lớp |
+| POL104 | Tư tưởng Hồ Chí Minh | 2 | 10/30/60 | GV004 | HK1 26-27 | mọi lớp |
+| ENG103 | Anh văn 3 | 2 | 20/30/50 | GV006 | HK1 26-27 | mọi lớp |
+| INT207 | Lập trình hướng đối tượng | 3 | 10/30/60 | GV001 | HK1 26-27 | 16DHTH01, 16DHTH02 |
+| INT208 | Bảo mật máy tính | 3 | 10/30/60 | GV011 | HK1 26-27 | 16DHATTT01 |
+| INT209 | Phân tích thiết kế hệ thống | 3 | 10/30/60 | GV007 | HK1 26-27 | 16DHHTTT01 |
+| INT210 | Nhập môn Big Data | 3 | 10/30/60 | GV009 | HK1 26-27 | 16DHKHDL01 |
+
+**Môn chưa mở** (chỉ có trong `monhoc`, chưa ai ghi danh – xóa được): INT302 Hệ quản trị cơ sở dữ liệu, INT303 Bảo mật cơ sở dữ liệu, INT304 Công nghệ phần mềm, INT305 Trí tuệ nhân tạo, INT306 Lập trình web, INT307 Lập trình mạng, INT308 Lập trình di động, INT309 Khai phá dữ liệu, INT310 Deep learning, INT311 Kiểm định phần mềm, INT312 Internet of Things (đều 3 TC, 10/30/60); INT401 Thực tập nghề nghiệp (3 TC, 0/0/100); INT402 Khóa luận cử nhân (10 TC, 0/0/100). `monhoc` không có trường giảng viên nên môn chưa mở không gán GV.
+
+Không đưa vào các môn không tính GPA (Sinh hoạt đầu khóa, GDQP-AN, GDTC, …) vì hệ thống tính mọi môn vào GPA.
+
 ### 7.4 Phân bổ học kỳ (trừ 5 SV kiểm thử)
 - Ghi danh theo lớp: mỗi lớp chọn **2–3 môn HK1 25-26**, **2–3 môn HK2 25-26**, **1–2 môn HK1 26-27** từ đúng nhóm học kỳ ở bảng trên. Bắt buộc lớp 16DHTH01 và 16DHTH02 (CNTT2501, CNTT2502) có INT301 ở HK1 26-27 (GV005 – dùng cho demo nhập điểm).
 - HK1, HK2 25-26: đủ điểm. Năng lực mỗi SV ~ N(7.0, 1.3); điểm thành phần = năng lực + nhiễu N(0, 1.0), kẹp 0–10; CC làm tròn số nguyên (thường cao hơn), GK/CK làm tròn 0.5. Bảo đảm toàn bộ dữ liệu có khoảng 15–20 lần F và có SV ở mọi mức xếp loại.
 - HK hè 25-26 (~25 SV, đủ điểm): ~12 học lại môn F; ~8 cải thiện môn C/D (khoảng 3 trường hợp điểm mới **thấp hơn**); ~5 học vượt LAW101/SKL101. Vẫn còn vài SV nợ môn không học lại.
 - HK1 26-27 (học kỳ hiện tại): **CC và GK đã có, CK = null.**
 - capNhatLuc: HK1 → 2026-01-15, HK2 → 2026-06-10, hè → 2026-08-20, HK1 26-27 → 2026-10-20; capNhatBoi = maGV của lần học.
-- **Ràng buộc: mỗi SV có tổng 4–8 phần tử `monHoc`.** Seeder tự kiểm tra và báo số liệu cuối cùng (số SV/lớp, min/max số môn, số F, số học lại/cải thiện/học vượt, phân bố xếp loại).
+- **Ràng buộc: mỗi SV có 4–8 lần học thuộc 14 môn gốc.** Seeder tự kiểm tra và báo số liệu cuối cùng (số SV/lớp, min/max số môn, số F, số học lại/cải thiện/học vượt). Số liệu 14 môn gốc: 640 lần học, 19 F, hè học lại 12 / cải thiện 8 / học vượt 5, INT301 = 56 SV.
+- **Môn mở rộng** (sau khi xong toàn bộ phần trên, Random(2027) riêng): mỗi SV ngẫu nhiên học mọi môn mở rộng của lớp mình, `lanHoc` 1, Học mới, cùng GV/capNhatLuc/capNhatBoi theo học kỳ như trên. Điểm sinh quanh **cùng năng lực** của SV (SV khá ở môn gốc cũng khá ở môn mới). Học kỳ đã qua đủ điểm, Seeder điều chỉnh để F chiếm 3–5% (thực tế 29/950 = 3,05%); HK1 26-27 CK = null. Không tạo học lại cho môn mở rộng → F môn mở rộng là môn nợ. Mỗi SV ngẫu nhiên thêm 16 lần học: HK1 25-26 4, HK2 25-26 4, hè 2, HK1 26-27 6 (5 môn chung + 1 môn chuyên ngành của lớp).
+- Tổng sau mở rộng: 2 160 lần học (HK1 25-26: 621, HK2 25-26: 599, hè: 215, HK1 26-27: 725), 48 lần F (19 gốc + 29 mở rộng), mỗi SV 5–24 phần tử `monHoc` (TB 21,6). Xếp loại tích lũy toàn trường: Xuất sắc 16 · Giỏi 16 · Khá 27 · Trung bình 18 · Yếu 23 · Kém 0.
 
 ### 7.5 Năm sinh viên kiểm thử (lớp 16DHTH01 – maLop CNTT2501, MSSV 2001250001–2001250005, dữ liệu cố định, tên tự nhiên)
 Giảng viên theo bảng 7.2. Kết quả mong đợi đã tính tay – pipeline phải ra **đúng y hệt**.

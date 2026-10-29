@@ -14,6 +14,7 @@ Mỗi giai đoạn hoàn thành có một file `GD<N>.md` trong thư mục này 
 | 8 | (Tùy chọn) Hiệu năng + API/Swagger | [GD8](GD8.md) |
 | 9 | Hoàn thiện, export DB, README, tài liệu | [GD9](GD9.md) |
 | – | Bổ sung: đổi mã lớp sinh hoạt (maLop nội bộ, tenLop hiển thị) | [doi-ma-lop](doi-ma-lop.md) |
+| – | Bổ sung: mở rộng dữ liệu mẫu (11 GV, 46 môn, 2 160 lần học) | [them-mon-hoc](them-mon-hoc.md) |
 
 Khi một báo cáo được tạo, thay `_chưa có_` bằng liên kết, ví dụ `[GD1](GD1.md)`.
 

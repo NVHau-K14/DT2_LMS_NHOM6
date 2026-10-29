@@ -8,8 +8,10 @@ using static DT2_LMS_NHOM6.Data.DuLieuMau;
 namespace DT2_LMS_NHOM6.Data;
 
 /// <summary>
-/// Sinh dữ liệu mẫu theo thiết kế mục 7: 5 lớp, 8 GV, 14 môn, 100 SV (gồm 5 SV kiểm thử cố định), 109 tài khoản.
-/// Dùng Random(2026) → mỗi lần chạy ra đúng một bộ dữ liệu (trừ maDK/_id là ObjectId mới).
+/// Sinh dữ liệu mẫu theo thiết kế mục 7: 5 lớp, 11 GV, 46 môn (14 môn gốc + 19 môn mở rộng + 13 môn chưa mở),
+/// 100 SV (gồm 5 SV kiểm thử cố định), 112 tài khoản.
+/// 14 môn gốc dùng Random(2026); môn mở rộng dùng Random(2027) riêng, sinh SAU toàn bộ dữ liệu gốc
+/// → dữ liệu gốc không đổi. Mỗi lần chạy ra đúng một bộ dữ liệu (trừ maDK/_id là ObjectId mới).
 /// </summary>
 public class Seeder
 {
@@ -25,15 +27,21 @@ public class Seeder
     private const int SoCaiThien = 7;
     private const int SoCaiThienThapHon = 2;
     private const int SoHocVuot = 5;
+    // Tỉ lệ F mong muốn trên các lần học môn mở rộng của học kỳ đã qua (đủ điểm)
+    private const double TiLeFMoRongToiThieu = 0.03;
+    private const double TiLeFMoRongToiDa = 0.05;
 
     private readonly MongoContext _context;
     private readonly ILogger _logger;
     private readonly Random _rd = new(HatGiongNgauNhien);
+    private readonly Random _rdMoRong = new(HatGiongMonMoRong);
     private readonly DateTime _bayGio = DateTime.UtcNow;
 
     private readonly Dictionary<string, MonHoc> _monTheoMa = new();
     private readonly Dictionary<string, GiangVien> _gvTheoMa = new();
-    private readonly Dictionary<string, string> _gvDayMon = DuLieuMau.MonHoc.ToDictionary(m => m.MaMon, m => m.MaGV);
+    private readonly Dictionary<string, string> _gvDayMon =
+        DuLieuMau.MonHoc.Concat(MonHocMoRong).ToDictionary(m => m.MaMon, m => m.MaGV);
+    private static readonly HashSet<string> MaMonGoc = DuLieuMau.MonHoc.Select(m => m.MaMon).ToHashSet();
 
     /// <summary>Sinh viên đang dựng kèm "năng lực" (chỉ dùng khi sinh điểm, không lưu DB).</summary>
     private class SvTam
@@ -57,6 +65,7 @@ public class Seeder
         var dsSv = TaoSinhVien(lopHocs);
         DieuChinhSoLanF(dsSv);
         TaoHocKyHe(dsSv);
+        GhiDanhMonMoRong(dsSv);   // phải chạy SAU cùng: dùng Random(2027) riêng
         KiemTraRangBuoc(dsSv, lopHocs);
 
         _logger.LogInformation("Đang băm mật khẩu {So} tài khoản (BCrypt work factor {Wf})...", 1 + giangViens.Count + dsSv.Count, BcryptWorkFactor);
@@ -96,7 +105,11 @@ public class Seeder
 
     private List<MonHoc> TaoMonHoc()
     {
-        foreach (var m in DuLieuMau.MonHoc)
+        // 14 môn gốc + 19 môn mở rộng + 13 môn chưa mở (chỉ có trong danh mục)
+        var danhMuc = DuLieuMau.MonHoc.Concat(MonHocMoRong)
+            .Select(m => new MonDanhMucMau(m.MaMon, m.TenMon, m.SoTinChi, m.Cc, m.Gk, m.Ck))
+            .Concat(MonHocChuaMo);
+        foreach (var m in danhMuc)
         {
             _monTheoMa[m.MaMon] = new MonHoc
             {
@@ -407,6 +420,65 @@ public class Seeder
     }
 
     // =====================================================================
+    // Môn mở rộng (Random(2027) riêng – không chạm dữ liệu 14 môn gốc)
+    // =====================================================================
+
+    /// <summary>
+    /// Ghi danh môn mở rộng cho mọi SV ngẫu nhiên (KHÔNG ghi cho 5 SV kiểm thử) theo lớp của môn:
+    ///   - Điểm sinh quanh cùng "năng lực" của SV như môn gốc → SV khá ở môn gốc cũng khá ở môn mới.
+    ///   - Học kỳ đã qua đủ CC/GK/CK; HK1 2026-2027 (hiện tại) có CC/GK, CK = null.
+    ///   - Điều chỉnh để số F ở học kỳ đã qua chiếm 3–5% số lần học đó. Không tạo học lại cho môn mới.
+    /// Chỉ thêm phần tử mới vào cuối mảng; các phần tử môn gốc giữ nguyên (sắp lại ổn định theo học kỳ).
+    /// </summary>
+    private void GhiDanhMonMoRong(List<SvTam> ds)
+    {
+        var lanHocDaQua = new List<(SvTam Sv, MonHocDangKy Lan)>();
+
+        foreach (var x in ds.Where(x => !x.LaKiemThu))
+        {
+            foreach (var mon in MonHocMoRong.Where(m => m.ChiLop == null || m.ChiLop.Contains(x.Sv.MaLop)))
+            {
+                bool daQua = mon.Nhom != NhomHocKy.HK1_2627;
+                var lan = TaoLanHoc(mon.MaMon, HocKyCuaNhom(mon.Nhom), 1, HangSo.HinhThuc.HocMoi,
+                                    SinhDiem(x.NangLuc, coCuoiKy: daQua, _rdMoRong));
+                x.Sv.MonHoc.Add(lan);
+                if (daQua) lanHocDaQua.Add((x, lan));
+            }
+        }
+
+        int soFToiThieu = (int)Math.Ceiling(lanHocDaQua.Count * TiLeFMoRongToiThieu);
+        int soFToiDa = (int)Math.Floor(lanHocDaQua.Count * TiLeFMoRongToiDa);
+
+        // Thiếu F → hạ điểm một lần học ngẫu nhiên của nhóm 1/3 SV năng lực thấp nhất
+        while (lanHocDaQua.Count(l => LaF(l.Lan)) < soFToiThieu)
+        {
+            var ungVien = lanHocDaQua.Where(l => !LaF(l.Lan)).OrderBy(l => l.Sv.NangLuc)
+                .Take(lanHocDaQua.Count / 3).ToList();
+            var chon = ungVien[_rdMoRong.Next(ungVien.Count)];
+            SinhDiemDenKhi(chon.Lan, nangLuc: 2.8, dieuKien: tk => tk < 4.0, _rdMoRong);
+        }
+
+        // Thừa F → nâng điểm lần F của SV năng lực cao nhất
+        while (lanHocDaQua.Count(l => LaF(l.Lan)) > soFToiDa)
+        {
+            var chon = lanHocDaQua.Where(l => LaF(l.Lan)).OrderByDescending(l => l.Sv.NangLuc).First();
+            SinhDiemDenKhi(chon.Lan, nangLuc: 5.5, dieuKien: tk => tk >= 4.0, _rdMoRong);
+        }
+
+        // OrderBy ổn định: trong cùng học kỳ, môn gốc vẫn đứng trước môn mở rộng
+        foreach (var x in ds.Where(x => !x.LaKiemThu))
+            x.Sv.MonHoc = x.Sv.MonHoc.OrderBy(m => m.NamHoc).ThenBy(m => m.HocKy).ToList();
+    }
+
+    private static HocKyMau HocKyCuaNhom(NhomHocKy nhom) => nhom switch
+    {
+        NhomHocKy.HK1_2526 => HK1_2526,
+        NhomHocKy.HK2_2526 => HK2_2526,
+        NhomHocKy.He_2526 => He_2526,
+        _ => HK1_2627
+    };
+
+    // =====================================================================
     // Tài khoản
     // =====================================================================
 
@@ -438,10 +510,17 @@ public class Seeder
 
     private static void KiemTraRangBuoc(List<SvTam> ds, List<LopHoc> lopHocs)
     {
-        var viPham = ds.Where(x => x.Sv.MonHoc.Count < 4 || x.Sv.MonHoc.Count > 8).ToList();
+        // Giới hạn 4–8 chỉ áp dụng cho lần học 14 môn gốc (môn mở rộng ghi danh thêm theo lớp)
+        int SoLanHocGoc(SvTam x) => x.Sv.MonHoc.Count(m => MaMonGoc.Contains(m.MaMon));
+        var viPham = ds.Where(x => SoLanHocGoc(x) < 4 || SoLanHocGoc(x) > 8).ToList();
         if (viPham.Count > 0)
-            throw new InvalidOperationException("Seeder: SV có số môn ngoài 4–8: " +
-                string.Join(", ", viPham.Select(x => $"{x.Sv.MaSV} ({x.Sv.MonHoc.Count})")));
+            throw new InvalidOperationException("Seeder: SV có số lần học môn gốc ngoài 4–8: " +
+                string.Join(", ", viPham.Select(x => $"{x.Sv.MaSV} ({SoLanHocGoc(x)})")));
+
+        var kiemThuCoMonMoi = ds.Where(x => x.LaKiemThu && x.Sv.MonHoc.Any(m => !MaMonGoc.Contains(m.MaMon))).ToList();
+        if (kiemThuCoMonMoi.Count > 0)
+            throw new InvalidOperationException("Seeder: SV kiểm thử không được có môn mở rộng: " +
+                string.Join(", ", kiemThuCoMonMoi.Select(x => x.Sv.MaSV)));
 
         foreach (var lop in lopHocs)
         {
@@ -455,7 +534,9 @@ public class Seeder
     {
         var tatCaLanHoc = ds.SelectMany(x => x.Sv.MonHoc).ToList();
         var soMon = ds.Select(x => x.Sv.MonHoc.Count).ToList();
-        var he = tatCaLanHoc.Where(m => m.HocKy == 3).ToList();
+        var lanHocGoc = tatCaLanHoc.Where(m => MaMonGoc.Contains(m.MaMon)).ToList();
+        var lanHocMoRong = tatCaLanHoc.Where(m => !MaMonGoc.Contains(m.MaMon)).ToList();
+        var he = lanHocGoc.Where(m => m.HocKy == 3).ToList();
 
         Console.WriteLine();
         Console.WriteLine("================ THỐNG KÊ DỮ LIỆU MẪU ================");
@@ -463,9 +544,10 @@ public class Seeder
             Console.WriteLine($"  Lớp {lop.TenLop,-12} ({lop.MaLop}): {ds.Count(x => x.Sv.MaLop == lop.MaLop),3} SV");
         Console.WriteLine($"  Tổng sinh viên         : {ds.Count}");
         Console.WriteLine($"  Số phần tử monHoc / SV : min {soMon.Min()}, max {soMon.Max()}, TB {soMon.Average().ToString("0.00", CultureInfo.InvariantCulture)}");
-        Console.WriteLine($"  Tổng lần học           : {tatCaLanHoc.Count}");
-        Console.WriteLine($"  Số lần F               : {tatCaLanHoc.Count(LaF)}");
-        Console.WriteLine($"  HK hè 25-26            : học lại {he.Count(m => m.HinhThuc == HangSo.HinhThuc.HocLai)}, " +
+        Console.WriteLine($"  Tổng lần học           : {tatCaLanHoc.Count} (14 môn gốc {lanHocGoc.Count}, môn mở rộng {lanHocMoRong.Count})");
+        Console.WriteLine($"  Số lần F               : {tatCaLanHoc.Count(LaF)} (môn gốc {lanHocGoc.Count(LaF)}, " +
+                          $"môn mở rộng {lanHocMoRong.Count(LaF)}/{lanHocMoRong.Count(DuDiem)} lần đủ điểm)");
+        Console.WriteLine($"  HK hè 25-26 (môn gốc)  : học lại {he.Count(m => m.HinhThuc == HangSo.HinhThuc.HocLai)}, " +
                           $"cải thiện {he.Count(m => m.HinhThuc == HangSo.HinhThuc.CaiThien)}, " +
                           $"học vượt {he.Count(m => m.HinhThuc == HangSo.HinhThuc.HocMoi)}");
         Console.WriteLine($"  HK1 2026-2027 có ck null: {tatCaLanHoc.Count(m => m.NamHoc == HK1_2627.NamHoc && m.HocKy == HK1_2627.HocKy && m.Diem.Ck == null)}");
@@ -482,19 +564,20 @@ public class Seeder
     /// Sinh điểm thành phần quanh năng lực: thành phần = năng lực + nhiễu N(0, 1), kẹp 0–10.
     /// CC làm tròn số nguyên (thường cao hơn), GK/CK làm tròn 0.5. coCuoiKy = false → ck = null (học kỳ hiện tại).
     /// </summary>
-    private DiemThanhPhan SinhDiem(double nangLuc, bool coCuoiKy) => new()
+    // rd = null → Random(2026) của dữ liệu gốc; môn mở rộng truyền Random(2027) riêng.
+    private DiemThanhPhan SinhDiem(double nangLuc, bool coCuoiKy, Random? rd = null) => new()
     {
-        Cc = Math.Round(Math.Clamp(nangLuc + 1.0 + Chuan(), 0, 10), MidpointRounding.AwayFromZero),
-        Gk = LamTronNuaDiem(nangLuc + Chuan()),
-        Ck = coCuoiKy ? LamTronNuaDiem(nangLuc + Chuan()) : null
+        Cc = Math.Round(Math.Clamp(nangLuc + 1.0 + Chuan(rd), 0, 10), MidpointRounding.AwayFromZero),
+        Gk = LamTronNuaDiem(nangLuc + Chuan(rd)),
+        Ck = coCuoiKy ? LamTronNuaDiem(nangLuc + Chuan(rd)) : null
     };
 
     /// <summary>Sinh lại điểm (đủ 3 thành phần) cho lần học đến khi điểm TK thỏa điều kiện.</summary>
-    private void SinhDiemDenKhi(MonHocDangKy lan, double nangLuc, Func<double, bool> dieuKien)
+    private void SinhDiemDenKhi(MonHocDangKy lan, double nangLuc, Func<double, bool> dieuKien, Random? rd = null)
     {
         for (int lanThu = 0; lanThu < 1000; lanThu++)
         {
-            lan.Diem = SinhDiem(nangLuc, coCuoiKy: true);
+            lan.Diem = SinhDiem(nangLuc, coCuoiKy: true, rd);
             if (dieuKien(DiemTKMau(lan))) return;
         }
         throw new InvalidOperationException($"Seeder: không sinh được điểm phù hợp cho {lan.MaMon}.");
@@ -503,9 +586,10 @@ public class Seeder
     private static double LamTronNuaDiem(double x) => Math.Round(Math.Clamp(x, 0, 10) * 2, MidpointRounding.AwayFromZero) / 2;
 
     /// <summary>Số ngẫu nhiên phân phối chuẩn N(0, 1) (Box–Muller).</summary>
-    private double Chuan()
+    private double Chuan(Random? rd = null)
     {
-        double u1 = 1.0 - _rd.NextDouble(), u2 = _rd.NextDouble();
+        rd ??= _rd;
+        double u1 = 1.0 - rd.NextDouble(), u2 = rd.NextDouble();
         return Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Cos(2.0 * Math.PI * u2);
     }
 

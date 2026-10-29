@@ -8,7 +8,7 @@
 | `khoi-phuc.ps1` | Script PowerShell khôi phục database (tự chọn cách phù hợp với công cụ có trên máy). |
 | `nhap-json.mongosh.js` | Script mongosh nhập các file `export/*.json` (được `khoi-phuc.ps1` gọi khi máy không có Database Tools). |
 
-Số lượng document trong bản xuất (cả JSON lẫn dump, cùng một lần xuất): `sinhvien` 100 · `lophoc` 5 · `giangvien` 8 · `monhoc` 14 · `taikhoan` 109.
+Số lượng document trong bản xuất (cả JSON lẫn dump, cùng một lần xuất): `sinhvien` 100 · `lophoc` 5 · `giangvien` 11 · `monhoc` 46 · `taikhoan` 112.
 
 ---
 

@@ -1,82 +1,112 @@
 [
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec184a" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf5f75" },
   "maGV" : "GV001",
   "hoTen" : "Nguyễn Văn An",
   "hocVi" : "ThS.",
   "email" : "annv@eduscore.vn",
   "soDienThoai" : "0987654321",
   "khoa" : "Khoa Công nghệ thông tin",
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.758Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.61Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec184b" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf5f76" },
   "maGV" : "GV002",
   "hoTen" : "Lê Quốc Cường",
   "hocVi" : "TS.",
   "email" : "cuonglq@eduscore.vn",
   "soDienThoai" : "0903112233",
   "khoa" : "Khoa Công nghệ thông tin",
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.758Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.61Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec184c" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf5f77" },
   "maGV" : "GV003",
   "hoTen" : "Phạm Thị Hồng",
   "hocVi" : "TS.",
   "email" : "hongpt@eduscore.vn",
   "soDienThoai" : "0912445566",
   "khoa" : "Khoa Công nghệ thông tin",
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.758Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.61Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec184d" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf5f78" },
   "maGV" : "GV004",
   "hoTen" : "Võ Minh Tuấn",
   "hocVi" : "ThS.",
   "email" : "tuanvm@eduscore.vn",
   "soDienThoai" : "0938778899",
   "khoa" : "Khoa Công nghệ thông tin",
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.758Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.61Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec184e" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf5f79" },
   "maGV" : "GV005",
   "hoTen" : "Trần Văn Bình",
   "hocVi" : "ThS.",
   "email" : "binhtv@eduscore.vn",
   "soDienThoai" : "0909223344",
   "khoa" : "Khoa Công nghệ thông tin",
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.758Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.61Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec184f" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf5f7a" },
   "maGV" : "GV006",
   "hoTen" : "Đặng Thu Hà",
   "hocVi" : "ThS.",
   "email" : "hadt@eduscore.vn",
   "soDienThoai" : "0976556677",
   "khoa" : "Khoa Công nghệ thông tin",
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.758Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.61Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1850" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf5f7b" },
   "maGV" : "GV007",
   "hoTen" : "Huỳnh Gia Bảo",
   "hocVi" : "ThS.",
   "email" : "baohg@eduscore.vn",
   "soDienThoai" : "0918990011",
   "khoa" : "Khoa Công nghệ thông tin",
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.758Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.61Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1851" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf5f7c" },
   "maGV" : "GV008",
   "hoTen" : "Ngô Thị Lan",
   "hocVi" : "CN.",
   "email" : "lannt@eduscore.vn",
   "soDienThoai" : "0965334455",
   "khoa" : "Khoa Công nghệ thông tin",
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.758Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.61Z" }
+},
+{
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf5f7d" },
+  "maGV" : "GV009",
+  "hoTen" : "Trương Minh Khoa",
+  "hocVi" : "TS.",
+  "email" : "khoatm@eduscore.vn",
+  "soDienThoai" : "0907445566",
+  "khoa" : "Khoa Công nghệ thông tin",
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.61Z" }
+},
+{
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf5f7e" },
+  "maGV" : "GV010",
+  "hoTen" : "Lý Thu Trang",
+  "hocVi" : "ThS.",
+  "email" : "tranglt@eduscore.vn",
+  "soDienThoai" : "0934667788",
+  "khoa" : "Khoa Công nghệ thông tin",
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.61Z" }
+},
+{
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf5f7f" },
+  "maGV" : "GV011",
+  "hoTen" : "Đinh Quốc Huy",
+  "hocVi" : "ThS.",
+  "email" : "huydq@eduscore.vn",
+  "soDienThoai" : "0971223344",
+  "khoa" : "Khoa Công nghệ thông tin",
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.61Z" }
 }
 ]

@@ -59,7 +59,7 @@ dotnet run --project DT2_LMS_NHOM6
 
 Mở trình duyệt: **http://localhost:5207**
 
-- Lần chạy đầu, database `eduscore` trống → ứng dụng **tự tạo validator, index và dữ liệu mẫu** (100 sinh viên, 5 lớp, 8 giảng viên, 14 môn, 640 lần học). Không cần import gì.
+- Lần chạy đầu, database `eduscore` trống → ứng dụng **tự tạo validator, index và dữ liệu mẫu** (100 sinh viên, 5 lớp, 11 giảng viên, 46 môn – 33 môn có ghi danh + 13 môn chưa mở, 2 160 lần học). Không cần import gì.
 - MongoDB chưa chạy → console báo `Không kết nối được MongoDB tại localhost:27017 ...` và thoát.
 - Đổi chuỗi kết nối / tên database: sửa mục `MongoDB` trong `DT2_LMS_NHOM6/appsettings.json`, hoặc đặt biến môi trường `MongoDB__ConnectionString`, `MongoDB__DatabaseName`.
 - Muốn khôi phục đúng bản dữ liệu đã nộp (cùng `_id`): xem [`database/README.md`](database/README.md).
@@ -70,8 +70,8 @@ Mở trình duyệt: **http://localhost:5207**
 |---|---|---|---|
 | Admin (phòng đào tạo) | `admin` | `Admin@123` | Toàn quyền |
 | Giảng viên | `GV005` | `123456` | ThS. Trần Văn Bình – dạy **INT301 Cơ sở dữ liệu NoSQL** HK1 2026-2027 (dùng demo nhập điểm) |
-| Giảng viên | `GV001` | `123456` | ThS. Nguyễn Văn An – dạy INT101, INT102; cố vấn học tập lớp 16DHTH01 |
-| Giảng viên khác | `GV002` … `GV008` | `123456` | |
+| Giảng viên | `GV001` | `123456` | ThS. Nguyễn Văn An – dạy INT101, INT102, INT107, INT207; cố vấn học tập lớp 16DHTH01 |
+| Giảng viên khác | `GV002` … `GV011` | `123456` | |
 | Sinh viên TS1 | `2001250001` | `15032007` | Nguyễn Hoàng Minh – làm tròn nửa lên (8.45 → 8.5), GPA tích lũy 3.27 Giỏi |
 | Sinh viên TS2 | `2001250002` | `22072007` | Trần Thị Thu Trang – học lại INT101 (F → B), 2.73 Khá |
 | Sinh viên TS3 | `2001250003` | `09112007` | Lê Văn Phúc – cải thiện bị điểm thấp hơn (giữ lần cũ), 3.00 Khá |
@@ -195,7 +195,7 @@ Quy tắc điểm (Thông tư 08/2021/TT-BGDĐT): TK = CC×tsCC + GK×tsGK + CK�
 | CRUD nền tảng | 2.5 | Lớp học, hồ sơ SV, giảng viên, môn học; cập nhật điểm môn | Admin: Lớp học, Sinh viên, Giảng viên, Môn học; GV: Nhập điểm; API `/api/sinhvien` |
 | Nâng cao: thao tác mảng | 2.5 (chung) | `$push` (ghi danh), `$pull` (hủy ghi danh), `$set` + `arrayFilters` (nhập điểm, quyền GV trong arrayFilters), `updateMany` + `arrayFilters` (lan truyền tên) | Admin → Ghi danh; Hồ sơ SV → Hủy; GV → Nhập điểm; Môn học/Giảng viên → Sửa tên (toast hiện lệnh) |
 | Nâng cao: Aggregation | | `$unwind`, `$group`, `$project`, `$cond`, `$switch`, `$setWindowFields` tính TK, chữ, hệ 4, GPA có trọng số, xếp loại **hoàn toàn trong CSDL** | `DT2_LMS_NHOM6/Pipelines/`, `database/pipelines/*.json`, Báo cáo học lực → Xem pipeline |
-| Dữ liệu mẫu | 1 | 100 SV, 5 lớp × 20, mỗi SV 5–8 lần học có điểm, tín chỉ, giảng viên; 5 SV kiểm thử tính tay | `Data/Seeder.cs`, [`docs/kiem-thu-gpa.md`](docs/kiem-thu-gpa.md), `database/export/` |
+| Dữ liệu mẫu | 1 | 100 SV, 5 lớp × 20, 2 160 lần học có điểm, tín chỉ, giảng viên (5 SV kiểm thử 5–6 lần học tính tay; 95 SV còn lại 22–24 lần học); 46 môn, 11 GV | `Data/Seeder.cs`, [`docs/kiem-thu-gpa.md`](docs/kiem-thu-gpa.md), `database/export/` |
 | Demo sống | 1.5 | (1) Nhập điểm trên web → Compass thấy đúng phần tử mảng; (2) Báo cáo học lực từ pipeline; (3) Import/Export bảng điểm | [`docs/kich-ban-demo.md`](docs/kich-ban-demo.md) |
 
 ## Thông tin nhóm

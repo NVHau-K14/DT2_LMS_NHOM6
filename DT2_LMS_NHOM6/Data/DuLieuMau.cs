@@ -7,6 +7,8 @@ namespace DT2_LMS_NHOM6.Data;
 public static class DuLieuMau
 {
     public const int HatGiongNgauNhien = 2026;
+    /// <summary>Hạt giống riêng cho môn mở rộng – chạy sau toàn bộ dữ liệu cũ nên không đổi chuỗi Random(2026).</summary>
+    public const int HatGiongMonMoRong = 2027;
     public const string Khoa = "Khoa Công nghệ thông tin";
     public const string NienKhoa = "2025-2029";
     public const int SoSinhVienMoiLop = 20;
@@ -52,12 +54,17 @@ public static class DuLieuMau
         new("GV006", "Đặng Thu Hà",    "ThS.", "hadt@eduscore.vn",    "0976556677"),
         new("GV007", "Huỳnh Gia Bảo",  "ThS.", "baohg@eduscore.vn",   "0918990011"),
         new("GV008", "Ngô Thị Lan",    "CN.",  "lannt@eduscore.vn",   "0965334455"),
+        new("GV009", "Trương Minh Khoa", "TS.",  "khoatm@eduscore.vn", "0907445566"),
+        new("GV010", "Lý Thu Trang",     "ThS.", "tranglt@eduscore.vn", "0934667788"),
+        new("GV011", "Đinh Quốc Huy",    "ThS.", "huydq@eduscore.vn",   "0971223344"),
     };
 
     // ---------- 7.3 Môn học (kèm giảng viên dạy theo 7.2 và nhóm học kỳ dùng) ----------
     public enum NhomHocKy { HK1_2526, HK2_2526, He_2526, HK1_2627 }
 
-    public record MonMau(string MaMon, string TenMon, int SoTinChi, int Cc, int Gk, int Ck, string MaGV, NhomHocKy Nhom);
+    /// <summary>ChiLop = null: mọi lớp học; khác null: chỉ các lớp (maLop) này học (môn chuyên ngành).</summary>
+    public record MonMau(string MaMon, string TenMon, int SoTinChi, int Cc, int Gk, int Ck, string MaGV, NhomHocKy Nhom,
+                         string[]? ChiLop = null);
 
     public static readonly MonMau[] MonHoc =
     {
@@ -75,6 +82,51 @@ public static class DuLieuMau
         new("INT202", "Cơ sở dữ liệu",                  3, 10, 40, 50, "GV005", NhomHocKy.HK1_2627),
         new("INT203", "Mạng máy tính",                  3, 10, 30, 60, "GV007", NhomHocKy.HK1_2627),
         new("INT301", "Cơ sở dữ liệu NoSQL",            3, 10, 30, 60, "GV005", NhomHocKy.HK1_2627),
+    };
+
+    // ---------- 7.3 Môn mở rộng: mọi SV (trừ 5 SV kiểm thử) của lớp được chỉ định đều học ----------
+    // Tách khỏi mảng MonHoc ở trên để việc chọn môn ngẫu nhiên của 14 môn cũ không đổi.
+    public static readonly MonMau[] MonHocMoRong =
+    {
+        new("MAT103", "Đại số tuyến tính",                                     3, 10, 30, 60, "GV003", NhomHocKy.HK1_2526),
+        new("INT104", "Kỹ năng ứng dụng công nghệ thông tin",                  2, 10, 30, 60, "GV008", NhomHocKy.HK1_2526),
+        new("INT105", "Nguyên lý ngôn ngữ lập trình",                          3, 10, 30, 60, "GV009", NhomHocKy.HK1_2526),
+        new("INT106", "Thực hành Nguyên lý ngôn ngữ lập trình",                1, 20, 30, 50, "GV009", NhomHocKy.HK1_2526),
+        new("MAT104", "Xác suất và thống kê trong sản xuất, công nghệ, kỹ thuật", 3, 10, 30, 60, "GV003", NhomHocKy.HK2_2526),
+        new("INT107", "Thực hành kỹ thuật lập trình",                          1, 20, 30, 50, "GV001", NhomHocKy.HK2_2526),
+        new("INT108", "Kiến trúc máy tính",                                    3, 10, 30, 60, "GV010", NhomHocKy.HK2_2526),
+        new("POL103", "Chủ nghĩa xã hội khoa học",                             2, 10, 30, 60, "GV004", NhomHocKy.HK2_2526),
+        new("SKL102", "Đổi mới sáng tạo và khởi nghiệp",                       2, 20, 30, 50, "GV008", NhomHocKy.He_2526),
+        new("SKL103", "Phương pháp nghiên cứu khoa học",                       2, 20, 30, 50, "GV011", NhomHocKy.He_2526),
+        new("INT204", "Thực hành cấu trúc dữ liệu và giải thuật",              1, 20, 30, 50, "GV002", NhomHocKy.HK1_2627),
+        new("INT205", "Thực hành mạng máy tính",                               1, 20, 30, 50, "GV007", NhomHocKy.HK1_2627),
+        new("INT206", "Hệ điều hành",                                          3, 10, 30, 60, "GV010", NhomHocKy.HK1_2627),
+        new("POL104", "Tư tưởng Hồ Chí Minh",                                  2, 10, 30, 60, "GV004", NhomHocKy.HK1_2627),
+        new("ENG103", "Anh văn 3",                                             2, 20, 30, 50, "GV006", NhomHocKy.HK1_2627),
+        new("INT207", "Lập trình hướng đối tượng",                             3, 10, 30, 60, "GV001", NhomHocKy.HK1_2627, new[] { "CNTT2501", "CNTT2502" }),
+        new("INT208", "Bảo mật máy tính",                                      3, 10, 30, 60, "GV011", NhomHocKy.HK1_2627, new[] { "ATTT2501" }),
+        new("INT209", "Phân tích thiết kế hệ thống",                           3, 10, 30, 60, "GV007", NhomHocKy.HK1_2627, new[] { "HTTT2501" }),
+        new("INT210", "Nhập môn Big Data",                                     3, 10, 30, 60, "GV009", NhomHocKy.HK1_2627, new[] { "KHDL2501" }),
+    };
+
+    // ---------- 7.3 Môn chỉ có trong danh mục (chưa mở, không ai ghi danh) ----------
+    public record MonDanhMucMau(string MaMon, string TenMon, int SoTinChi, int Cc, int Gk, int Ck);
+
+    public static readonly MonDanhMucMau[] MonHocChuaMo =
+    {
+        new("INT302", "Hệ quản trị cơ sở dữ liệu",  3, 10, 30, 60),
+        new("INT303", "Bảo mật cơ sở dữ liệu",      3, 10, 30, 60),
+        new("INT304", "Công nghệ phần mềm",         3, 10, 30, 60),
+        new("INT305", "Trí tuệ nhân tạo",           3, 10, 30, 60),
+        new("INT306", "Lập trình web",              3, 10, 30, 60),
+        new("INT307", "Lập trình mạng",             3, 10, 30, 60),
+        new("INT308", "Lập trình di động",          3, 10, 30, 60),
+        new("INT309", "Khai phá dữ liệu",           3, 10, 30, 60),
+        new("INT310", "Deep learning",              3, 10, 30, 60),
+        new("INT311", "Kiểm định phần mềm",         3, 10, 30, 60),
+        new("INT312", "Internet of Things",         3, 10, 30, 60),
+        new("INT401", "Thực tập nghề nghiệp",       3, 0, 0, 100),
+        new("INT402", "Khóa luận cử nhân",          10, 0, 0, 100),
     };
 
     // ---------- Họ tên tiếng Việt ----------

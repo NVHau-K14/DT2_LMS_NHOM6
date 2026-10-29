@@ -1,6 +1,6 @@
 [
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1860" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf5fae" },
   "maLop" : "CNTT2501",
   "tenLop" : "16DHTH01",
   "nienKhoa" : "2025-2029",
@@ -10,10 +10,10 @@
     "maGV" : "GV001",
     "hoTen" : "ThS. Nguyễn Văn An"
   },
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.758Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.61Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1861" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf5faf" },
   "maLop" : "CNTT2502",
   "tenLop" : "16DHTH02",
   "nienKhoa" : "2025-2029",
@@ -23,10 +23,10 @@
     "maGV" : "GV002",
     "hoTen" : "TS. Lê Quốc Cường"
   },
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.758Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.61Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1862" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf5fb0" },
   "maLop" : "ATTT2501",
   "tenLop" : "16DHATTT01",
   "nienKhoa" : "2025-2029",
@@ -36,10 +36,10 @@
     "maGV" : "GV005",
     "hoTen" : "ThS. Trần Văn Bình"
   },
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.758Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.61Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1863" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf5fb1" },
   "maLop" : "HTTT2501",
   "tenLop" : "16DHHTTT01",
   "nienKhoa" : "2025-2029",
@@ -49,10 +49,10 @@
     "maGV" : "GV007",
     "hoTen" : "ThS. Huỳnh Gia Bảo"
   },
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.758Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.61Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1864" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf5fb2" },
   "maLop" : "KHDL2501",
   "tenLop" : "16DHKHDL01",
   "nienKhoa" : "2025-2029",
@@ -62,6 +62,6 @@
     "maGV" : "GV003",
     "hoTen" : "TS. Phạm Thị Hồng"
   },
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.758Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.61Z" }
 }
 ]

@@ -91,9 +91,9 @@ Những gì **không lưu** (luôn tính bằng pipeline): điểm tổng kết,
 
 ### 1.6 Giới hạn 16 MB của document – vì sao không là vấn đề
 
-- Đo trên dữ liệu mẫu: một phần tử `monHoc` ≈ **350 byte**; document `sinhvien` lớn nhất ≈ **3.2 KB** (8 lần học), trung bình ≈ 2.6 KB.
-- 16 MB / 350 B ≈ **47 000 lần học** cho một sinh viên. Một chương trình đại học 4–5 năm khoảng 50–70 môn (kể cả học lại, cải thiện) → ≈ 25 KB, tức **~0.15 %** giới hạn.
-- Mảng `monHoc` tăng có giới hạn tự nhiên (theo số môn của chương trình), không phải mảng "tăng vô hạn" như log hay bình luận. Vì vậy validator **không** đặt `maxItems` (giới hạn 4–8 môn chỉ áp dụng cho dữ liệu mẫu).
+- Đo trên dữ liệu mẫu (`$bsonSize`): một phần tử `monHoc` ≈ **360 byte**; document `sinhvien` lớn nhất ≈ **9.0 KB** (24 lần học), trung bình ≈ 8.2 KB.
+- 16 MB / 360 B ≈ **46 000 lần học** cho một sinh viên. Một chương trình đại học 4–5 năm khoảng 50–70 môn (kể cả học lại, cải thiện) → ≈ 25 KB, tức **~0.15 %** giới hạn.
+- Mảng `monHoc` tăng có giới hạn tự nhiên (theo số môn của chương trình), không phải mảng "tăng vô hạn" như log hay bình luận. Vì vậy validator **không** đặt `maxItems` (giới hạn 4–8 lần học chỉ là quy ước của 14 môn gốc trong dữ liệu mẫu).
 
 ### 1.7 Nhược điểm và cách xử lý
 
@@ -101,7 +101,7 @@ Những gì **không lưu** (luôn tính bằng pipeline): điểm tổng kết,
 |---|---|
 | **Không có transaction** (MongoDB standalone không hỗ trợ multi-document transaction) | Thao tác nghiệp vụ chính (ghi danh, hủy, nhập điểm) chỉ đụng **1 document** → nguyên tử sẵn. Thao tác nhiều collection (tạo SV + tài khoản, xóa SV + tài khoản, nhập Excel danh sách SV) **ghi tuần tự, bước sau lỗi thì hoàn tác bước trước** (ví dụ `insertMany` tài khoản lỗi → xóa các SV vừa chèn theo `_id`). |
 | **Trùng lặp dữ liệu** (tên môn, tên GV) | Lan truyền bằng `updateMany` + `arrayFilters` ngay khi sửa (mục 1.5); trường ảnh chụp có chủ đích thì không lan truyền. |
-| **Báo cáo xuyên nhiều SV phải `$unwind`** | Dùng index multikey trên `monHoc.*` cho bước `$match` đầu pipeline; dữ liệu nhỏ (640 lần học) chạy vài ms – đo ở trang Hiệu năng (A-12). |
+| **Báo cáo xuyên nhiều SV phải `$unwind`** | Dùng index multikey trên `monHoc.*` cho bước `$match` đầu pipeline; dữ liệu nhỏ (2 160 lần học) chạy vài ms – đo ở trang Hiệu năng (A-12). |
 | **Không có khóa ngoại** | Service kiểm tra trước khi ghi: không xóa lớp còn SV, không xóa môn đã có người học, không xóa GV đang dạy / làm CVHT; mã lớp/môn/GV phải tồn tại khi ghi danh, nhập Excel. |
 | **Schema tự do dễ sai kiểu** | Validator `$jsonSchema` strict cho cả 5 collection; C# map kiểu rõ ràng (`int` cho tín chỉ, `double?` cho điểm, `DateTime` UTC). |
 | **Truy vấn một phần tử mảng** | Phần tử có định danh riêng `maDK` (ObjectId) → `arrayFilters: [{"e.maDK": ...}]` chỉ đúng một phần tử, không phụ thuộc vị trí trong mảng. |
@@ -168,14 +168,14 @@ classDiagram
 Ví dụ thật (TS5, lần học INT301 ở học kỳ hiện tại – chưa có điểm CK):
 ```jsonc
 {
-  "_id": ObjectId("6ae333208c446cfd23ec1869"),
+  "_id": ObjectId("6ae33b904c4fe44e7fbf5fb7"),
   "maSV": "2001250005", "hoTen": "Võ Ngọc Bảo Anh",
   "ngaySinh": ISODate("2007-05-28T00:00:00Z"), "gioiTinh": "Nữ",
   "email": "2001250005@sv.eduscore.vn", "soDienThoai": "0988678905", "diaChi": "Thủ Đức, TP.HCM",
   "maLop": "CNTT2501", "trangThai": "Đang học",   // lớp 16DHTH01 (tenLop trong lophoc)
   "monHoc": [
-    // ... 4 lần học HK1, HK2 2025-2026 ...
-    { "maDK": ObjectId("6ae333178c446cfd23ec15e4"),
+    // ... 4 lần học HK1, HK2 2025-2026 (TS5 là SV kiểm thử nên không có môn mở rộng) ...
+    { "maDK": ObjectId("6ae33b894c4fe44e7fbf571f"),
       "maMon": "INT301", "tenMon": "Cơ sở dữ liệu NoSQL", "soTinChi": 3,
       "namHoc": "2026-2027", "hocKy": 1, "lanHoc": 1, "hinhThuc": "Học mới",
       "giangVien": { "maGV": "GV005", "hoTen": "ThS. Trần Văn Bình" },
@@ -395,11 +395,11 @@ db.sinhvien.updateOne(
 ```js
 db.sinhvien.updateOne(
   { maSV: "2001250005",
-    monHoc: { $elemMatch: { maDK: ObjectId("6ae333178c446cfd23ec15e4"), "giangVien.maGV": "GV005" } } },
+    monHoc: { $elemMatch: { maDK: ObjectId("6ae33b894c4fe44e7fbf571f"), "giangVien.maGV": "GV005" } } },
   { $set: { "monHoc.$[e].diem.ck": 8.5,
             "monHoc.$[e].capNhatLuc": ISODate(), "monHoc.$[e].capNhatBoi": "GV005",
             ngayCapNhat: ISODate() } },
-  { arrayFilters: [ { "e.maDK": ObjectId("6ae333178c446cfd23ec15e4"), "e.giangVien.maGV": "GV005" } ] })
+  { arrayFilters: [ { "e.maDK": ObjectId("6ae33b894c4fe44e7fbf571f"), "e.giangVien.maGV": "GV005" } ] })
 ```
 - `$[e]` là **filtered positional operator**: chỉ các phần tử thỏa điều kiện của `e` trong `arrayFilters` bị sửa. `maDK` xác định đúng một lần học, không phụ thuộc vị trí trong mảng.
 - **Quyền của giảng viên nằm ngay trong câu lệnh**: `e.giangVien.maGV` = mã GV lấy từ claim đăng nhập. GV khác gửi `maDK` của lớp không phải mình dạy → không phần tử nào khớp → `modifiedCount = 0` → báo "Không có quyền hoặc không tìm thấy lần học".

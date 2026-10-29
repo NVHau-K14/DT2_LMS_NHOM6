@@ -1,1201 +1,1234 @@
 [
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18c9" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6017" },
   "tenDangNhap" : "admin",
-  "matKhauHash" : "$2a$10$CWmAuLgzMlfKEwD7.qTngeCRlDaYQPtctkWYPd3w4gFef2Eg4edk2",
+  "matKhauHash" : "$2a$10$XJcvBvCkCDr8NfmR8xyQhOOOvO4Lk66sTL5IEPIGqBVKGQ3j4UYjG",
   "vaiTro" : "Admin",
   "maThamChieu" : "admin",
   "hoTen" : "Quản trị hệ thống",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18ca" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6018" },
   "tenDangNhap" : "GV001",
-  "matKhauHash" : "$2a$10$9TR5fdUgoECTU9q0o7KE4eBilV/BpUIktPrmHtpexiY0Xjrsj6kUi",
+  "matKhauHash" : "$2a$10$ThIe5dJUnhN6BmKJXI3gN.FZKf1MWeUc5UV3W/JFxlzmfPoCN4hKi",
   "vaiTro" : "GiangVien",
   "maThamChieu" : "GV001",
   "hoTen" : "ThS. Nguyễn Văn An",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18cb" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6019" },
   "tenDangNhap" : "GV002",
-  "matKhauHash" : "$2a$10$.ZeRtGh76uUGK4PmK9BlXO8QdANXjK8pI1Y5mZ4rV3mTdm6mBs1.W",
+  "matKhauHash" : "$2a$10$BsF3YUEWA6TpMSYXahFeuu.FCZxM0jLNYEoXsnJoRLSK41k2d64LC",
   "vaiTro" : "GiangVien",
   "maThamChieu" : "GV002",
   "hoTen" : "TS. Lê Quốc Cường",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18cc" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf601a" },
   "tenDangNhap" : "GV003",
-  "matKhauHash" : "$2a$10$rRBpATxIdwhRopw5IIoIG.UWAevGs5kah7GhjnV65wFIxJlNdQtp.",
+  "matKhauHash" : "$2a$10$414Y03MRrBs30AkYzCsvXeyEkErbEzwQd8t9RjOz2B.JRXjT./YAa",
   "vaiTro" : "GiangVien",
   "maThamChieu" : "GV003",
   "hoTen" : "TS. Phạm Thị Hồng",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18cd" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf601b" },
   "tenDangNhap" : "GV004",
-  "matKhauHash" : "$2a$10$634mM5DI48ht35r0USUe9u4pzDYrnGdmiR/d0AG5C5/9H6wnrmI.K",
+  "matKhauHash" : "$2a$10$Ptoig/Dgu0x.4OQ1TGku7Ov6TAFr8iNUURXUkBWpGyP9tj2AaF3fW",
   "vaiTro" : "GiangVien",
   "maThamChieu" : "GV004",
   "hoTen" : "ThS. Võ Minh Tuấn",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18ce" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf601c" },
   "tenDangNhap" : "GV005",
-  "matKhauHash" : "$2a$10$7nwQ.p75hUB/On/dhTCBt.cHY2DSIl4JVk0bWwMXpMleD5l4e03dW",
+  "matKhauHash" : "$2a$10$CNA8e264nSoaycyRpyPiROBc3quqvBGFbHJ/gH7kJ8GrvU5Zu1MR.",
   "vaiTro" : "GiangVien",
   "maThamChieu" : "GV005",
   "hoTen" : "ThS. Trần Văn Bình",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18cf" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf601d" },
   "tenDangNhap" : "GV006",
-  "matKhauHash" : "$2a$10$EF5x1nDWNKaySx8GJ4PmP.dUDy5Sqs8g0QOJyr.6RGtb0uSQer5ky",
+  "matKhauHash" : "$2a$10$PtaFzeCyLXDvrZxtt8dnmOSXY53VCFETIO.cPhuetfRtTucN..r2O",
   "vaiTro" : "GiangVien",
   "maThamChieu" : "GV006",
   "hoTen" : "ThS. Đặng Thu Hà",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18d0" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf601e" },
   "tenDangNhap" : "GV007",
-  "matKhauHash" : "$2a$10$Ke2cqSZ1FfnjF8CzYSECQO.OjZOKuUXNKoibsjrMn/fMVzg.RqAJS",
+  "matKhauHash" : "$2a$10$XZ8spaRwGRq3WmO/GOaqEe3aJGTq78ygS1T6AhY2duhl6HMCDSsne",
   "vaiTro" : "GiangVien",
   "maThamChieu" : "GV007",
   "hoTen" : "ThS. Huỳnh Gia Bảo",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18d1" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf601f" },
   "tenDangNhap" : "GV008",
-  "matKhauHash" : "$2a$10$DanyPzwPstCYRfC6MRSSQedkrlVARk/QEOMAWKV7ZfTP3axmw.NOy",
+  "matKhauHash" : "$2a$10$ySpGYeHcUe//4aGeozhIk.8ed3e997qegQbDVorQ3mvYCSf2G84Qe",
   "vaiTro" : "GiangVien",
   "maThamChieu" : "GV008",
   "hoTen" : "CN. Ngô Thị Lan",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18d2" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6020" },
+  "tenDangNhap" : "GV009",
+  "matKhauHash" : "$2a$10$birV4De2FrizEVqpf/EYaeYn9sHroBOY4Q9twb1YP3zIiMsRsVYkm",
+  "vaiTro" : "GiangVien",
+  "maThamChieu" : "GV009",
+  "hoTen" : "TS. Trương Minh Khoa",
+  "trangThai" : "Hoạt động",
+  "lanDangNhapCuoi" : null,
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
+},
+{
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6021" },
+  "tenDangNhap" : "GV010",
+  "matKhauHash" : "$2a$10$oqc5lpCyhY854GdYbrHULOpFqA.b4KIBA2YTrlgT1re5Vet6ylfqm",
+  "vaiTro" : "GiangVien",
+  "maThamChieu" : "GV010",
+  "hoTen" : "ThS. Lý Thu Trang",
+  "trangThai" : "Hoạt động",
+  "lanDangNhapCuoi" : null,
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
+},
+{
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6022" },
+  "tenDangNhap" : "GV011",
+  "matKhauHash" : "$2a$10$U1OD4mBWtHlxq4zZG1QBZ.ocaBjVqLNGpxsOUCcfSZkEawtRGleXC",
+  "vaiTro" : "GiangVien",
+  "maThamChieu" : "GV011",
+  "hoTen" : "ThS. Đinh Quốc Huy",
+  "trangThai" : "Hoạt động",
+  "lanDangNhapCuoi" : null,
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
+},
+{
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6023" },
   "tenDangNhap" : "2001250001",
-  "matKhauHash" : "$2a$10$bMZ/v4XRuF1NosAzPA4SSu3Fq8rL.TbPtBs2A7duQSzMGCdLjdAfu",
+  "matKhauHash" : "$2a$10$KuVG4aSx4TmqkNLjelwGGOtuJTJLruURvG5p3s/8HM4OMtaw89Q6e",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250001",
   "hoTen" : "Nguyễn Hoàng Minh",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18d3" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6024" },
   "tenDangNhap" : "2001250002",
-  "matKhauHash" : "$2a$10$AEamR4fBHe/Tiz3KifNSe.LZfPcOVdLu3zuM9GsPf47uO.XopbqsG",
+  "matKhauHash" : "$2a$10$iO/CYNL.kKsGKQRFNB5hku2PDLi0ImbBS.u6gHo1LtKmjse58YLva",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250002",
   "hoTen" : "Trần Thị Thu Trang",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18d4" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6025" },
   "tenDangNhap" : "2001250003",
-  "matKhauHash" : "$2a$10$zNofPXJ0In4hRfEfPZlU/e2ahBxstMJh5tinejdm2vfoUYf89VTl6",
+  "matKhauHash" : "$2a$10$JHokYvd/P8804zJ2xhLP8uqtFQbiOox8g7bPXnoaHhHo2IVxOMzC.",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250003",
   "hoTen" : "Lê Văn Phúc",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18d5" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6026" },
   "tenDangNhap" : "2001250004",
-  "matKhauHash" : "$2a$10$TSEzG.85QuzYlt9rNngwVe5HC6KcwaF19CGToRtwjJ6dJlC39Nxg.",
+  "matKhauHash" : "$2a$10$EIp63d8MR9wkdbMHH4I9duu..bCIykAYxYFIrNlFU3SxLmbq9kpjK",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250004",
   "hoTen" : "Phạm Gia Huy",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18d6" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6027" },
   "tenDangNhap" : "2001250005",
-  "matKhauHash" : "$2a$10$8PY7Qwq1Q4y2hQaHzP6M9uGJa3hFkTTbvY7I3XFChxKtlDX7m/S2i",
+  "matKhauHash" : "$2a$10$NFeOSC4ium5XpDZVbf484uVk43l.6wh238b.zMN15NVfM66YCNKy6",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250005",
   "hoTen" : "Võ Ngọc Bảo Anh",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18d7" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6028" },
   "tenDangNhap" : "2001250006",
-  "matKhauHash" : "$2a$10$SYunK8apS/HM5dMjfROR7.sCvRvtXU3v1mh1s9YyYoMC9ctH9EMlO",
+  "matKhauHash" : "$2a$10$MG21H8RbwEFWDFU7WZ5xuufkaRZ/kDyTgBlNb5J28pKmnHWC2cspi",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250006",
   "hoTen" : "Phan Anh Đạt",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18d8" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6029" },
   "tenDangNhap" : "2001250007",
-  "matKhauHash" : "$2a$10$DS7ToLKlRubr/mNedr95WeEV5g22R4JCX1t3QDHNbCbipY2va4Qrm",
+  "matKhauHash" : "$2a$10$mcIcctzcM6vWNuJZUmj7xeAFt4JmxwNzL9ei0X029pNiJkubSYTAC",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250007",
   "hoTen" : "Mai Đức Tâm",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18d9" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf602a" },
   "tenDangNhap" : "2001250008",
-  "matKhauHash" : "$2a$10$4A2ytEiIkrHxWAZrB8kUeuL7ZKOfN0.MXCQi7zaHSbbqw1P/vBYGe",
+  "matKhauHash" : "$2a$10$PP1wQ7jY.sxwAaTdjNZnD.1P3V74NW6XlLrPqARFYnRzhOhHrX.hy",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250008",
   "hoTen" : "Tô Hữu Kiên",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18da" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf602b" },
   "tenDangNhap" : "2001250009",
-  "matKhauHash" : "$2a$10$V4.ZPwWn5SaRf.SPmo/YWOtXz95FCY6eTnWCr9LryZHGHt4KeAALm",
+  "matKhauHash" : "$2a$10$ndzg1CEk5wBUYN.qPzA.Xe0Ufm5RT5TLtmgi8Iqgja/DQABZ7p3Y6",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250009",
   "hoTen" : "Lê Tuấn Khoa",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18db" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf602c" },
   "tenDangNhap" : "2001250010",
-  "matKhauHash" : "$2a$10$0MC.zSvwi6sWQdq/d.jsg.0fbqqn6a5IT2EZf9qANCDUGMeUD1IZ2",
+  "matKhauHash" : "$2a$10$CxeKxtXCdQP27wW9oN9qJOkRt4ZCu9a7XjL10PC8DKhw3Q0Dm6/Im",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250010",
   "hoTen" : "Nguyễn Hoàng Đạt",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18dc" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf602d" },
   "tenDangNhap" : "2001250011",
-  "matKhauHash" : "$2a$10$3MRtWGP8D350nbiw/GwIMed5adjiiFgeWkYsLqwW3.X4UtYMH4Ire",
+  "matKhauHash" : "$2a$10$9XBjnSVJf0RQ3BtgsOcjqeTRYcAl87wPd0xQX3BmNoxhNRc9JbsL.",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250011",
   "hoTen" : "Nguyễn Bảo Thắng",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18dd" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf602e" },
   "tenDangNhap" : "2001250012",
-  "matKhauHash" : "$2a$10$T7UsxLZoQi.fmdHO.B7u4OVcBtRwy.87lAAEaCV6Blli/SnbtP36q",
+  "matKhauHash" : "$2a$10$/h.tqvfK2vOkaA4kWVSznuQNObBag8E/xR1BaHvzVoouIL.6q1tb6",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250012",
   "hoTen" : "Lê Đức Nhân",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18de" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf602f" },
   "tenDangNhap" : "2001250013",
-  "matKhauHash" : "$2a$10$2vxbNbX1twb8sDSsv94xD.C0RMFTb8F3B7ki4rQ5vmtCdTah6Y/la",
+  "matKhauHash" : "$2a$10$lMfMQCGlw2i.or.5KzVaA.W7elRcRPZvW42aIx98MMmboViCVpUVm",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250013",
   "hoTen" : "Bùi Minh Linh",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18df" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6030" },
   "tenDangNhap" : "2001250014",
-  "matKhauHash" : "$2a$10$WKk.eicSWye8dhxxnmR4bOVfN9LN6pZbk3fNrjowYm9lZTwOA1jR.",
+  "matKhauHash" : "$2a$10$BOWBKsGVkCfXcoKIp79FZO9KJ74ppAn97296ObbhEvto9xm02sL1u",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250014",
   "hoTen" : "Nguyễn Bảo Sơn",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18e0" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6031" },
   "tenDangNhap" : "2001250015",
-  "matKhauHash" : "$2a$10$Abv7XRsqKsFPSAr2gAJQeu9FQhWZVHdKDGhcWiXEADcs7R6pHxZEq",
+  "matKhauHash" : "$2a$10$a2lv/LF/9d/nF01pIZgclORR.LE4oOlTVSCQpWr7mIhpltoKusJ6S",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250015",
   "hoTen" : "Đỗ Minh Đức Vũ",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18e1" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6032" },
   "tenDangNhap" : "2001250016",
-  "matKhauHash" : "$2a$10$kil3WmXL2oEt72zu5ET6duaB6v9Rx479.pXaCw4KTmh//fUJMCywe",
+  "matKhauHash" : "$2a$10$2SHMixe0KCeoW7wvI9oM5eMYvOtavAqNN.3Hfnfg8j5rkg8hAlsva",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250016",
   "hoTen" : "Trương Trọng Quân",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18e2" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6033" },
   "tenDangNhap" : "2001250017",
-  "matKhauHash" : "$2a$10$Ue3U/Fbt4qG6/0js6vXXJes3.gFOKdSuRREyzQEiKEPB90QwNSp72",
+  "matKhauHash" : "$2a$10$QGJnzqO13Z.l7VWhdZn71eZ.ee6rprRIZcMGrY7zCGGn.4L2OUKme",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250017",
   "hoTen" : "Phan Hoàng Phúc",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18e3" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6034" },
   "tenDangNhap" : "2001250018",
-  "matKhauHash" : "$2a$10$uerwADa8U2ISfqgQSAgXouSolC3ZsXTeyqAcD8rntgu8fixxJll7C",
+  "matKhauHash" : "$2a$10$fgMjVI9PLkYUyXuKo55HKeJ662f.TDMqdwnMB585Zgs/hbv1Kl2mi",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250018",
   "hoTen" : "Vũ Mai Hương",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18e4" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6035" },
   "tenDangNhap" : "2001250019",
-  "matKhauHash" : "$2a$10$aQB4TVSDlaWzkNN3OclSJ.prelmZP5zNTlR3HBCtaGN2MG8ctS2Ii",
+  "matKhauHash" : "$2a$10$xIEOC0Tu.DJlecqDPW8s/OoM43FX7YpOzSXc6fCsPIxK9pqLbRpnC",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250019",
   "hoTen" : "Đinh Tuấn Khải",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18e5" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6036" },
   "tenDangNhap" : "2001250020",
-  "matKhauHash" : "$2a$10$aF7MoWmxzjjt2hGHqFSIrOABpNjku5bGJvB1U6CXeaq/GGsSwIEL.",
+  "matKhauHash" : "$2a$10$ltVUSkwxfnyCN8fBfw8Z.ezQtJDw15R1UUAqi4goaI724mg00aTci",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250020",
   "hoTen" : "Huỳnh Quỳnh Anh",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18e6" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6037" },
   "tenDangNhap" : "2001250021",
-  "matKhauHash" : "$2a$10$wwInQJfBW0mX7epyLCVkguCRu.LW3Wobb4/qo0Wdtb4Mm66MnUn9a",
+  "matKhauHash" : "$2a$10$dcmLWTn5ahOOi/RWDtDwde.MnR1p1lWqO7pZXW8wpXU8wGwMge.cm",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250021",
   "hoTen" : "Đinh Phương Linh",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18e7" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6038" },
   "tenDangNhap" : "2001250022",
-  "matKhauHash" : "$2a$10$ipD54Xb0c.wzSuPVjvQBSOYE3TD3K.zXZFD8cJzr/6ycoh3WTEZ1i",
+  "matKhauHash" : "$2a$10$1e1rVDCVWon2wDbN.k//be.Fm/SmdVztY/txWL3.PtCeqTgv8dWhS",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250022",
   "hoTen" : "Lê Hoàng Linh",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18e8" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6039" },
   "tenDangNhap" : "2001250023",
-  "matKhauHash" : "$2a$10$i8YQtDi.0XRKY9glafvUG.ETqS5AyXSNKwTwzneTkaE4ykQhdDQ46",
+  "matKhauHash" : "$2a$10$LYtPLVdjV6RLGL1T3QRZHuD6LORado9DUo6oGOuV/F8ZLmXt96IEa",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250023",
   "hoTen" : "Lê Diệu Dung",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18e9" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf603a" },
   "tenDangNhap" : "2001250024",
-  "matKhauHash" : "$2a$10$2br3ljQqWle0OcvP7aPDhu0XYIqVBlXVvgHpA7eIwkk9afBtWi65e",
+  "matKhauHash" : "$2a$10$7HXQJwz9NXurlTg2bCgnCeoNrsF0f3EEs8CyhGYsYmHQrzU4xAb3S",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250024",
   "hoTen" : "Võ Thị Thu Trang",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18ea" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf603b" },
   "tenDangNhap" : "2001250025",
-  "matKhauHash" : "$2a$10$vkwPwKlTUZQDv/JQY9YOUuLW5qyKOzRJ.KGY/ni8gkLGEib/sWiOC",
+  "matKhauHash" : "$2a$10$Me2nQU.l6gCDjkdsQRkdFu02No769A0d1xbEMMmmXtEtOgmVVDUJq",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250025",
   "hoTen" : "Tô Thị Thu Nhi",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18eb" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf603c" },
   "tenDangNhap" : "2001250026",
-  "matKhauHash" : "$2a$10$92Dq5uQ9k8oXVBFAie2wR.jdX1c5GGH8W3zBDKXsiSD2Ol4WYzUxK",
+  "matKhauHash" : "$2a$10$DZM1E6vOah3IkSEZbjBaQOBQdVRtZITzE/6NtcKUilmetVe4uOEXu",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250026",
   "hoTen" : "Phan Hoàng Phát",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18ec" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf603d" },
   "tenDangNhap" : "2001250027",
-  "matKhauHash" : "$2a$10$/ysPUqEDUbtneFpvww9Ap.0kOYR1VagHTaLp3B.iO9CmSRiPo3UJW",
+  "matKhauHash" : "$2a$10$48jpQDkSh59ZnP.ybtgveOhj09EhRnlD.6IRYhi0A0HrXOlTdNWi6",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250027",
   "hoTen" : "Phan Diệu Yến",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18ed" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf603e" },
   "tenDangNhap" : "2001250028",
-  "matKhauHash" : "$2a$10$DQcptJAxT8Z.rZrZpslFk.5H3K6HNCu7dreQfzPF3I.I8u0L.LHRi",
+  "matKhauHash" : "$2a$10$43qqj0QODHlxuDwz7wKCguFPTDNWjF/ZL4MiiHHCwIdWvHjwnfjyq",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250028",
   "hoTen" : "Phạm Quang Huy",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18ee" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf603f" },
   "tenDangNhap" : "2001250029",
-  "matKhauHash" : "$2a$10$rPKDeQHs214h9gjJQl1Pl.fe0y9XxkkF2mryVEmxeoJ6IENpmaCAO",
+  "matKhauHash" : "$2a$10$vfzxtS3xfX97HQQb9LcaKOSbG1wbtlrZOesSfjUvJZF99QiAGcRsm",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250029",
   "hoTen" : "Tô Thị Ngọc Nhung",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18ef" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6040" },
   "tenDangNhap" : "2001250030",
-  "matKhauHash" : "$2a$10$ZH7OdjGNzf2Dm6BriYVM0ukSuCDeF0f25mh86AAuj8WyTaSAQ7U66",
+  "matKhauHash" : "$2a$10$0LwI8xICJjWRSjvRtOo2vObzbNqAif/8J8FXhpaXvy8t2eOoo9rbG",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250030",
   "hoTen" : "Đinh Quốc Tài",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18f0" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6041" },
   "tenDangNhap" : "2001250031",
-  "matKhauHash" : "$2a$10$KtWi.bDCo2gvsUooZe3i5uLhO3ed9UIwzmL2.gkvP/qKfdQBTrSvq",
+  "matKhauHash" : "$2a$10$7MWCufwgk8joEKtcg2XleOt72MFjAbtcibKaEa2jkgphbkQRcyl8K",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250031",
   "hoTen" : "Châu Trọng Tài",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18f1" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6042" },
   "tenDangNhap" : "2001250032",
-  "matKhauHash" : "$2a$10$oUg3hVhIJKuxJ9RhLNd8Lu7s3DG4iXPOb.bpyM1CI0tD.38daBTDu",
+  "matKhauHash" : "$2a$10$qTt4egKmqa7q5JGXwDVltuI1q0AqRzE/e8Y4TzucBgR0LlKCGv4s2",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250032",
   "hoTen" : "Đinh Minh Lộc",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18f2" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6043" },
   "tenDangNhap" : "2001250033",
-  "matKhauHash" : "$2a$10$fBwBQ/YFmxrPqUSie5j/ZuIbBnJc0BJ69pFaJgBlop7gmFfhXPQFW",
+  "matKhauHash" : "$2a$10$zNAtM4Xx5C5uOsN.CY4D/ebTue0BZwO7TShQAzeEUIwmj.uOt8Tpi",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250033",
   "hoTen" : "Võ Hoàng Phúc",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18f3" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6044" },
   "tenDangNhap" : "2001250034",
-  "matKhauHash" : "$2a$10$hhCgr4SwB0TgCYZczf2LPeMunID0Ol4OZjT8eRDc3ZWGxeHRmlGEq",
+  "matKhauHash" : "$2a$10$pBQyxczL1JjZ6bQP7d0YpOLAmWcwjptaMsUp3TmfrkdDdxgqh10yu",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250034",
   "hoTen" : "Nguyễn Thị Dung",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18f4" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6045" },
   "tenDangNhap" : "2001250035",
-  "matKhauHash" : "$2a$10$nPjQLsZlOKEKCu.HDS7O7elHf0rW0RAFE8bbVBci5ewJ6j4HXtPXO",
+  "matKhauHash" : "$2a$10$C2aNr8jxz/JIAb8oG850e.3aHPWUxqxEDmGsKwFRbJ.X8CjXX5mzm",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250035",
   "hoTen" : "Nguyễn Minh Tuấn",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18f5" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6046" },
   "tenDangNhap" : "2001250036",
-  "matKhauHash" : "$2a$10$8jH.tm2DkQbizR0LHBK6..RPg2BRw4Nd4AjTUICJNmYeY2zssTn3C",
+  "matKhauHash" : "$2a$10$9wNrO1DmxK23m8GxyZgE5ee8/l/ejNkzIabJCt8wcphBAd8FVSufW",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250036",
   "hoTen" : "Trần Bảo My",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18f6" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6047" },
   "tenDangNhap" : "2001250037",
-  "matKhauHash" : "$2a$10$D.PI4U0m98RHyKY37XpgY.OvA19XccdduWx5rQ5mimdvpWlOSm6xa",
+  "matKhauHash" : "$2a$10$K9GT.HOxPCq.I3julJDvw./Tpx9reQNUk51fb/36jZEVgmPFrHnOm",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250037",
   "hoTen" : "Hồ Thảo Uyên",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18f7" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6048" },
   "tenDangNhap" : "2001250038",
-  "matKhauHash" : "$2a$10$.sP8ozKEBF4O2XL4SDnjeuz5hbwv7mVd1Kcy4hO4KF53FXtwyO.zW",
+  "matKhauHash" : "$2a$10$7pdZ2uLV1yBzAO8A/GZyIOLg54ftx7XLkabRrew3knxpPsjnBX7t.",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250038",
   "hoTen" : "Nguyễn Nhật Nghĩa",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18f8" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6049" },
   "tenDangNhap" : "2001250039",
-  "matKhauHash" : "$2a$10$F1zu3vT/2rRmRLdP5BGAQ.p4DOn3yYexfrqxMdbHYThkNANX/tvIK",
+  "matKhauHash" : "$2a$10$sg36PzOGqZ9dQz2gsFYOT.KHZYh1VMz1Kcv5t0Q93flPS31ac8K5u",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250039",
   "hoTen" : "Phạm Ngọc Bảo Hân",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18f9" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf604a" },
   "tenDangNhap" : "2001250040",
-  "matKhauHash" : "$2a$10$t7cAzabaDh9ZYm.MmGTuzuCN5k0YaXLwoC87ZYQHWBLFjFI2u.eKe",
+  "matKhauHash" : "$2a$10$0uzQ6TSUX2vy2qiFvrmIR.eo3PGt8jIfX3N4VTJUCcSGv/X0Wop/K",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250040",
   "hoTen" : "Trương Công Huy",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18fa" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf604b" },
   "tenDangNhap" : "2001250041",
-  "matKhauHash" : "$2a$10$MRLllhXVNQU4lX70r2qVAuVbMmf3Q3CE3gyQp.eFapgajmgT1O2GG",
+  "matKhauHash" : "$2a$10$i8hmHWnqNlGcPlESrBNbI.J1AWwk4SEA0ZhLhfreh9WgC1dDcWJOS",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250041",
   "hoTen" : "Lê Anh Đạt",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18fb" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf604c" },
   "tenDangNhap" : "2001250042",
-  "matKhauHash" : "$2a$10$cQqmHrFGxmRI0WxNryXLRuo1qRr7ycX8x9NW0B8iddjqzLll/adrG",
+  "matKhauHash" : "$2a$10$btgilVbL/6/e3QZX5Hdq7u7hciMZmDJAoqH4WCp8BnR94nFh0nQCG",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250042",
   "hoTen" : "Phạm Thảo Linh",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18fc" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf604d" },
   "tenDangNhap" : "2001250043",
-  "matKhauHash" : "$2a$10$rCyKn5lZ4uinm33YpL6dWOsN8tqbRSEy7jwZM1qVXWtTwbpvhSJg2",
+  "matKhauHash" : "$2a$10$f4S2rrmlO6F7pgAKqzxL0.xxQ7dDowpcL2A0OZXoUDavsHOYWirPq",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250043",
   "hoTen" : "Lâm Tuấn Hiếu",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18fd" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf604e" },
   "tenDangNhap" : "2001250044",
-  "matKhauHash" : "$2a$10$6ZCeG5uzaNMKXw4JGU4BBeLnEqarqSwyF8aAg/lSzrgLq5YLIr1pq",
+  "matKhauHash" : "$2a$10$pmC6o02V1zfoBkTkg1KkZ.HuTugy7HLzcJ5epOvbs9q.Ql5wI41f.",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250044",
   "hoTen" : "Phạm Quốc Phát",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18fe" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf604f" },
   "tenDangNhap" : "2001250045",
-  "matKhauHash" : "$2a$10$HEYwfAu/k2PE.Nrxd8nYNe0jj1pOQp3z15K8JLAK/OrwY2sL.DuyS",
+  "matKhauHash" : "$2a$10$vsY90WPnF5EzYAryvy1Gw.suIKLZYJHSIxLGyZmsNdJRHpJ6mUgCa",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250045",
   "hoTen" : "Trần Quang Vũ",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec18ff" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6050" },
   "tenDangNhap" : "2001250046",
-  "matKhauHash" : "$2a$10$7t6KidMzp5pbtw714pe/IeSXyw73AYrqU9Wty3dPTFttG77gDqLUC",
+  "matKhauHash" : "$2a$10$YMrq2ViCSXU7ixphOTeXgemw7Kef0zwZfKkO/SoEC7nPXI8/zMZoq",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250046",
   "hoTen" : "Ngô Văn Phát",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1900" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6051" },
   "tenDangNhap" : "2001250047",
-  "matKhauHash" : "$2a$10$iKYwDKI6rKQ137/Vmof/NOQlT6kCwN1L7iJJFHY2l1UjzjM.DVk3K",
+  "matKhauHash" : "$2a$10$pNvMB7ACgTqjTnkiQvnTb.dsD3Yj1a8XPE4w6XhTpyIpzWVQOnQ52",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250047",
   "hoTen" : "Tô Trọng Hiếu",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1901" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6052" },
   "tenDangNhap" : "2001250048",
-  "matKhauHash" : "$2a$10$5aPC/gelSvvF3h9MmnGine3yggIv8F06WVrQ.W1JJ/Jj4ntrVTlk.",
+  "matKhauHash" : "$2a$10$/16376Wb7cd1YXtYpctgnel7neBO6qzHrBZBpgad0HuPFDF84h3Wa",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250048",
   "hoTen" : "Lâm Hoàng Nhân",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1902" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6053" },
   "tenDangNhap" : "2001250049",
-  "matKhauHash" : "$2a$10$A.eMzyb3OGkbNZRzS9qpDeUchVfsqeLZzvq9d9p2t3a2hJK8/rvJK",
+  "matKhauHash" : "$2a$10$TJ3E7WeE9QajUFMVPZ.VOOIt9jr1vNY/xEYWekd4z5q8MyJhD96vu",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250049",
   "hoTen" : "Vũ Văn Tài",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1903" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6054" },
   "tenDangNhap" : "2001250050",
-  "matKhauHash" : "$2a$10$JyRW.Doe27H3/L93wOB9uOwpk/UAmN2UhxnqRfnzn3rMVEiXkXiBu",
+  "matKhauHash" : "$2a$10$QGXctRLbuoadywMsqejG2u68MqEnLq4JW14mfHiQf.v4R03DHyVau",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250050",
   "hoTen" : "Trần Văn Phong",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1904" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6055" },
   "tenDangNhap" : "2001250051",
-  "matKhauHash" : "$2a$10$393ia4HdcQYZqT9g/Hq3we4ctKvbSqWrDCe8T1VBUify3Es6JF5v6",
+  "matKhauHash" : "$2a$10$Arr8xJCsdmveGBocu8fpZOiW4e9YRTyW257H9EzCD9WMgVxAIaXc.",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250051",
   "hoTen" : "Trương Thu Giang",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1905" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6056" },
   "tenDangNhap" : "2001250052",
-  "matKhauHash" : "$2a$10$tCyLZWMYuEONlj/Tg2Xc8uIWkTS5GIOZ4BDHAJGQaeO87/tTup1CO",
+  "matKhauHash" : "$2a$10$26l3FC24FeChb6t7lqL3Behl4dYta2ZWYpdoyLxEQ8JDEeye0hLPO",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250052",
   "hoTen" : "Võ Thảo Vy",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1906" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6057" },
   "tenDangNhap" : "2001250053",
-  "matKhauHash" : "$2a$10$gVVFI9BRAewAWSH3AGVc5.e0BAJx5U9PxpzFGnnApstinNavOlKoG",
+  "matKhauHash" : "$2a$10$ixvO7omDs7lk/2v2gHkPVO/xlIdyduopF8BEtu95jq9AFC/inJQXO",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250053",
   "hoTen" : "Trần Thị Ngọc Nga",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1907" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6058" },
   "tenDangNhap" : "2001250054",
-  "matKhauHash" : "$2a$10$AzXukNA4AC41bIoP0IdbE.Zxm3KShbAlxFiahGdCRSYuxo/iXtl.i",
+  "matKhauHash" : "$2a$10$uef.Qva0ssd7z27/mzgm/ujq.4xt5O/AWLStB055sV.LymS11o.i2",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250054",
   "hoTen" : "Nguyễn Hoàng Toàn",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1908" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6059" },
   "tenDangNhap" : "2001250055",
-  "matKhauHash" : "$2a$10$gCNNhi/Agc98UITRiVPpXenUuHpptD57su8gnbOkoGWEpWaD0VHq6",
+  "matKhauHash" : "$2a$10$o6SaVqYvYUywzLqteCHV8OKt7Z198emlKe4GZAcm551T.hUHu4s.u",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250055",
   "hoTen" : "Nguyễn Hoàng Nga",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1909" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf605a" },
   "tenDangNhap" : "2001250056",
-  "matKhauHash" : "$2a$10$OZdIs0VY.1SCapPk1wXIyOHRqSsViPYZqSxZ.F1Wq9Y32e95fw1du",
+  "matKhauHash" : "$2a$10$sXOOgoYNaFq8FL4oTolDkuSsLkUVe.MrKaXs3.ZYQCoPTvtOLX2iS",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250056",
   "hoTen" : "Trương Quốc Bảo",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec190a" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf605b" },
   "tenDangNhap" : "2001250057",
-  "matKhauHash" : "$2a$10$ODWaAu42k5CzCzzlTNubPufDWlwDjdApi0znMyopvY1G0s073Hvse",
+  "matKhauHash" : "$2a$10$QPakpNJ.j8KF1lTe0qmbj.3y7NkQhOVT.Nbz6QEXuCX2xRn68jepy",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250057",
   "hoTen" : "Lý Ngọc Giang",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec190b" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf605c" },
   "tenDangNhap" : "2001250058",
-  "matKhauHash" : "$2a$10$6iQ2UUm0qALdC0MkVfP.UuRxQ7q2ZAAL9O.C96oBq03RSd2mCVdCm",
+  "matKhauHash" : "$2a$10$6En3iODEXfzPwSPQdyFmbuVGdKiYhfTPjcVtKU6iyXAmHVA.SMG5m",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250058",
   "hoTen" : "Bùi Ngọc Bảo Hằng",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec190c" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf605d" },
   "tenDangNhap" : "2001250059",
-  "matKhauHash" : "$2a$10$ISr/PpA.rDlHbWkuyQaRWeEoop0jBSKD5wZ.mB10QnCssAAc6KWDi",
+  "matKhauHash" : "$2a$10$s9srw/t9CL3RpNpoDz4coOuFNyUdvEgZeltr47WlAdYMlSXoGOayO",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250059",
   "hoTen" : "Cao Gia Nam",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec190d" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf605e" },
   "tenDangNhap" : "2001250060",
-  "matKhauHash" : "$2a$10$UNTQ6uKNlOvlrY.Ubp5VHu03EXVQJe/4rHZf8ERjIOJGKdQ.g.27i",
+  "matKhauHash" : "$2a$10$zEwaYaETh4PgwBqw1DgsdevWxfrRVHLy6u9M3mff8q05o8JK5F31O",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250060",
   "hoTen" : "Đặng Hữu Trí",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec190e" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf605f" },
   "tenDangNhap" : "2001250061",
-  "matKhauHash" : "$2a$10$fWpeKJACVF1094//vCu56.qsrPGYRblCN.w6BuiFjeM2dFd5cYJx2",
+  "matKhauHash" : "$2a$10$7P.tRRcOa1tgGNjiVahF4O6B9Hb.39hIJhY5pMYoWNQqd9d9JP.se",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250061",
   "hoTen" : "Hoàng Hoàng Dung",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec190f" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6060" },
   "tenDangNhap" : "2001250062",
-  "matKhauHash" : "$2a$10$PQQxtSpqGZld5Nfddg3hHeFervrECUluE6rSE9DGILDD4PbE/ftM2",
+  "matKhauHash" : "$2a$10$lk22R.Pj2rFKw9HJmJF2SunRWHLEUpLD1tEQ3vCvjgBcwQjyQfWkO",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250062",
   "hoTen" : "Đỗ Văn Dũng",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1910" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6061" },
   "tenDangNhap" : "2001250063",
-  "matKhauHash" : "$2a$10$TJUHeLcnEOPDrQkMFq/QXOa.jG7xbRs8UABRL4OrM5l0AIeFcjaEu",
+  "matKhauHash" : "$2a$10$K52vJbhGPbaU.zl0voV9ae1CKjPVLIRochEKcomhZP7DetKX87GWm",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250063",
   "hoTen" : "Phạm Nhật Thái",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1911" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6062" },
   "tenDangNhap" : "2001250064",
-  "matKhauHash" : "$2a$10$BeT2MZS/btwwgigYm1h50uWpn/YU4CEaQjqqGjdZmgB0pGkqSNa4W",
+  "matKhauHash" : "$2a$10$qPvKSD/S2MLonmBXhAa.3eMVdRMo/FRipAE4sHp0vDBbs85nXVKE2",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250064",
   "hoTen" : "Phan Phương Châu",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1912" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6063" },
   "tenDangNhap" : "2001250065",
-  "matKhauHash" : "$2a$10$S1wyCDIh8RX8tT1fzRHqye/gXpkO3jtlYzB.lu0ku0dsoYVX/m492",
+  "matKhauHash" : "$2a$10$O/91UqE5H51wrHstK3UTpuqgh/4hU1AeL9OPMp24EPhsVDRlYaAv.",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250065",
   "hoTen" : "Trần Quốc Phúc",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1913" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6064" },
   "tenDangNhap" : "2001250066",
-  "matKhauHash" : "$2a$10$ofmaioMPsH8XbEUufDvIl.aI898ePQg5BZrWtYDLCLyPenQD80HVa",
+  "matKhauHash" : "$2a$10$n5WJ0laoRTSOaODlTcmGXuupxqmCWmuz/sYY.CHBB2ihUTGX.1RGq",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250066",
   "hoTen" : "Đỗ Anh Phong",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1914" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6065" },
   "tenDangNhap" : "2001250067",
-  "matKhauHash" : "$2a$10$fswp7OqDom..6RgPXcvRPe033kdyFzz.dd/19fA6oTRqqjNm4/npC",
+  "matKhauHash" : "$2a$10$rkvo.kvJslskFXZOU4qvzeXv1BZL5pIqwohNYiGMGLD9KP3igfXnm",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250067",
   "hoTen" : "Nguyễn Hoàng Gia Tâm",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1915" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6066" },
   "tenDangNhap" : "2001250068",
-  "matKhauHash" : "$2a$10$E/cq4CnR4R6ZTXvttYk/I.6quhb32zoiL/WLd6GP5xjIF0BBMElau",
+  "matKhauHash" : "$2a$10$waaz6UC1pBNsCK6zSidrN.XnrwzSh7p6bEYruPD6ICsxyvmWXzKlq",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250068",
   "hoTen" : "Đỗ Công Việt",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1916" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6067" },
   "tenDangNhap" : "2001250069",
-  "matKhauHash" : "$2a$10$dVg2xIDnTl5FxsrrWFWxE.eENSBTc88zMJhQVCUBUQsvf6hjmukvK",
+  "matKhauHash" : "$2a$10$GmmK.SH8E1L12c4tWZ9BIe1.b7IdccMR0ZrM59ziu/vnUTTrnYySi",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250069",
   "hoTen" : "Tô Thị Thu Nhung",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1917" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6068" },
   "tenDangNhap" : "2001250070",
-  "matKhauHash" : "$2a$10$rHd3/muOKRt7q1R0C9gbJefWfUa2ges3TqfJaBJi7wk1fjmOsMQZi",
+  "matKhauHash" : "$2a$10$xBCe8/HmXOFB5jZ3IdPYd.MCTKatak6bGOQhhmG.odAQ8ZCjy085K",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250070",
   "hoTen" : "Phạm Bảo Sơn",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1918" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6069" },
   "tenDangNhap" : "2001250071",
-  "matKhauHash" : "$2a$10$YHe6eces.lskZ0B4CQoYZe2SqtKVM1wY0Gi7Oxv.c7UTn9Dz/2moq",
+  "matKhauHash" : "$2a$10$awE7qCvt1LIfHNMOJpUuw.ggJd0F2CHem8xqjzZ02gB/lavEzPidG",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250071",
   "hoTen" : "Đặng Hoàng Toàn",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1919" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf606a" },
   "tenDangNhap" : "2001250072",
-  "matKhauHash" : "$2a$10$LAcKBncYcuNhmHWOvLDeyOD6wEtNijFWkXbQLpQULvbMYOqtNpOXC",
+  "matKhauHash" : "$2a$10$MmBrrdSYP6ScOAJx0Ai1dujD7T01Odmg1S6V/D18xz7mI3uYLnNca",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250072",
   "hoTen" : "Đỗ Quốc Nam",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec191a" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf606b" },
   "tenDangNhap" : "2001250073",
-  "matKhauHash" : "$2a$10$eBFlH/sUPyzUlEwk7ZFnvu0zyfmwFegKzd5iSgrSY2WxqyRIYoZ7.",
+  "matKhauHash" : "$2a$10$KNQpfOC4/s/YoFh.vOXH5uyVPaZ9G6kPLGXmunoUFAI6RzQv7Z1L2",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250073",
   "hoTen" : "Lý Đình Tuấn",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec191b" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf606c" },
   "tenDangNhap" : "2001250074",
-  "matKhauHash" : "$2a$10$wBpxslymk7vW6MRQu6nx7.6rDrEizz2LigdMaYajNe9C9glgrdZHe",
+  "matKhauHash" : "$2a$10$x82NfkCyw2AwsTKVUasIHOqyhWmXTVQeaWJG9PWhbIvmBZnbhDAD.",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250074",
   "hoTen" : "Châu Mai Mai",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec191c" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf606d" },
   "tenDangNhap" : "2001250075",
-  "matKhauHash" : "$2a$10$2BvnvA4uu.BiuK2qYFmS0OrKYMu8YrNVkV67AdezFQw7jFwoWyqKm",
+  "matKhauHash" : "$2a$10$R9M/C1TP9TrVrJ/fuqDOc.f1tmwxa2U5/VDVMlrefLeYns28y.TKm",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250075",
   "hoTen" : "Lý Trọng Trí",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec191d" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf606e" },
   "tenDangNhap" : "2001250076",
-  "matKhauHash" : "$2a$10$pk.L43uOAIsPsz37DYegDuW6X7qIu57MFtUbT6f08G/6kaIP.wn3y",
+  "matKhauHash" : "$2a$10$uZsnLhXmfLOq67yucJhQBeHn48vEXerI9MTgXlhbivH73SnwE2Ziu",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250076",
   "hoTen" : "Nguyễn Hữu Kiệt",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec191e" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf606f" },
   "tenDangNhap" : "2001250077",
-  "matKhauHash" : "$2a$10$aCF6Vqv7lfSGgYDpUP.Sauk.fGzankoXhRFm0j3ysYTCO1SBfRdlC",
+  "matKhauHash" : "$2a$10$jSQ6LNJJVZ0dqG5RXicyPuLjly7JTTT2nUSWUbbpePFkmTgQDVhLK",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250077",
   "hoTen" : "Phạm Ngọc Bảo Vy",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec191f" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6070" },
   "tenDangNhap" : "2001250078",
-  "matKhauHash" : "$2a$10$oky95nuEwFoJ13t5tlBkPOecb0BNxgYWxt6SY2TzvBAVtYb8ZiwUK",
+  "matKhauHash" : "$2a$10$cmnexkyi7cqBUjXC.gFU8.w4sBEZ3RcebRCLNJMZ/qP0NMZSfY0rO",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250078",
   "hoTen" : "Dương Thành Hải",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1920" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6071" },
   "tenDangNhap" : "2001250079",
-  "matKhauHash" : "$2a$10$LG1Lm7E45zDTJV2i34Ieku0gLkzZ/IyHESvDZo4Hc6Q1HZC9mvDpK",
+  "matKhauHash" : "$2a$10$Qn1MMKyqpce2ml2ITkxTjOEaOdo9SemaJAzwOpwzZBBjO3BLVHnPa",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250079",
   "hoTen" : "Trần Hà Anh",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1921" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6072" },
   "tenDangNhap" : "2001250080",
-  "matKhauHash" : "$2a$10$9UpELJ3aSn7g7/bdMS0F3uTqHeV3Xt8ib/SyATcj.8MQ5YiZG3fca",
+  "matKhauHash" : "$2a$10$4tKDjQNPNb/bpzMedUmHkO5WoscCYjpDGXrRSHrq1JW0QKpjc8FUC",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250080",
   "hoTen" : "Trương Hữu Sơn",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1922" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6073" },
   "tenDangNhap" : "2001250081",
-  "matKhauHash" : "$2a$10$DeQiKbOjFUI7VppLnf7h4eA0E4B3sf5sDPzi8.DEHivrhpxXzr2nq",
+  "matKhauHash" : "$2a$10$J4kRftrx/n.LmvVO1FBCYOqI0xO6dKRz.5ujU83BS4SFK/.XN50Xy",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250081",
   "hoTen" : "Võ Thị Nga",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1923" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6074" },
   "tenDangNhap" : "2001250082",
-  "matKhauHash" : "$2a$10$oKrFELQpqTONwMKU./5.wO/McPcTmhlOXa5qvrj/Qs6g2V6URNAKS",
+  "matKhauHash" : "$2a$10$XvyenV1J4JI8TcNkdpZhpufLGQuLJuwC99Ht19/6zV2kap27nR3QW",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250082",
   "hoTen" : "Lý Gia Long",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1924" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6075" },
   "tenDangNhap" : "2001250083",
-  "matKhauHash" : "$2a$10$tZ83lKvQhk369ZHsKil3TOf1bzQGKw2E43geo2nTg9vk2LMdJQ946",
+  "matKhauHash" : "$2a$10$3Z4KftRqiX9cJrog9.GJJOyhmY1eb38fuKbbV1/202bRxAiGx/1kK",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250083",
   "hoTen" : "Phan Thị Hà",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1925" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6076" },
   "tenDangNhap" : "2001250084",
-  "matKhauHash" : "$2a$10$FW6ocGtorVE8tbVr6Uojp.2kxmKcbiir1XsR0OrXg1RDUyuwrtTwO",
+  "matKhauHash" : "$2a$10$.UcSTEk2s3Res8RjzJ7Tfu5eOFqg8Vw2KWdRkb/4fsMjLo1/Ipsii",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250084",
   "hoTen" : "Nguyễn Gia An",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1926" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6077" },
   "tenDangNhap" : "2001250085",
-  "matKhauHash" : "$2a$10$HDtikamxhFwBsB32yfisUOZwVGWUAtM/8G2.EMWwh6pYAib/peM3.",
+  "matKhauHash" : "$2a$10$jL0K.8y89HCCXxG3fUaXne7dOOnIGNEj9mrbNVmIUA4QBAlusYJcW",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250085",
   "hoTen" : "Võ Thu Nga",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1927" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6078" },
   "tenDangNhap" : "2001250086",
-  "matKhauHash" : "$2a$10$IcP0kflpBgZBgfsP32VCJuEMM.hao9wTFtWs8LvlOynbUfaxnNYbG",
+  "matKhauHash" : "$2a$10$7EZJiSgQSmnBf.Ht7aixKO560UJr8wPQWd5SfjVMq7f770tx/sLwe",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250086",
   "hoTen" : "Võ Thanh Toàn",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1928" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6079" },
   "tenDangNhap" : "2001250087",
-  "matKhauHash" : "$2a$10$nixNApesuM6auHwCWGjL1eipFN2piuwZMxkp3949XBieYuOtHS8Q2",
+  "matKhauHash" : "$2a$10$/eBrxZEl12D1OvllYrXG4Ont2BEX6KFXkAyfpWiNRRdSsechMbZbK",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250087",
   "hoTen" : "Lâm Kim Hân",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1929" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf607a" },
   "tenDangNhap" : "2001250088",
-  "matKhauHash" : "$2a$10$kGYXukuW3tSThQhJoNdnnu2LLLhDnV6GzM3DUHy6LEWB3yBiOsLZe",
+  "matKhauHash" : "$2a$10$H6Kc/o5BIuB12Cxx9bflPuFcSnrc4a3lcv32TSrMgHTrKBtVjQNEa",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250088",
   "hoTen" : "Nguyễn Phương Nhung",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec192a" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf607b" },
   "tenDangNhap" : "2001250089",
-  "matKhauHash" : "$2a$10$WWYZxRB279SgB2r/PsNQ4.UgZCtnyrs/4oMSiA8Yjp7w.DOULG1Ky",
+  "matKhauHash" : "$2a$10$0okZoXnmYeOvcGUGlBqD7OWefZwWOfDMmiE0lyzCH1vbNg0bWZCBa",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250089",
   "hoTen" : "Cao Thành Sơn",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec192b" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf607c" },
   "tenDangNhap" : "2001250090",
-  "matKhauHash" : "$2a$10$SUVsvSSQ3qhP/EIxYQ/vk.mrATDfPNMZRIet2U/IModjXwIjafI2.",
+  "matKhauHash" : "$2a$10$mbwI508xam8So8uI1Dqdy.hFeLGnbxHpOrj1vO/7ilAegfX7U6ZnS",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250090",
   "hoTen" : "Bùi Thị Minh Trinh",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec192c" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf607d" },
   "tenDangNhap" : "2001250091",
-  "matKhauHash" : "$2a$10$42w1w.ls9E54w7KO9ZFGIO883GX7mYrDbT78olDbY0KTFJMuwqQou",
+  "matKhauHash" : "$2a$10$foLn1fbTooQ0ytAfRAUCou7cHshfjY/07HpTl1NwrPGviJoTq/Zoq",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250091",
   "hoTen" : "Nguyễn Ngọc Quyên",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec192d" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf607e" },
   "tenDangNhap" : "2001250092",
-  "matKhauHash" : "$2a$10$oL5TmhaBpfBWOAy/CQAcy.jSVfhPycMdEUles.iaVbun7uECznB3G",
+  "matKhauHash" : "$2a$10$IDhLNSoemJ5af5D6NioXBuhtHSV8KC1BQU.PD944Me8EQlOKHHzZS",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250092",
   "hoTen" : "Ngô Thị Minh Dung",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec192e" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf607f" },
   "tenDangNhap" : "2001250093",
-  "matKhauHash" : "$2a$10$5npt81ap2Qp91dFnxUnv7.iZJFG24hibOe3YE0yPYbzfwXEXR5P5m",
+  "matKhauHash" : "$2a$10$AUbANXXg413fZK0eUZgQ6.ZnbvLXzw7HIca7kfqCyn5GhHl8CWeC2",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250093",
   "hoTen" : "Lý Kim Hân",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec192f" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6080" },
   "tenDangNhap" : "2001250094",
-  "matKhauHash" : "$2a$10$Zchys0RtCFi.oeKyyNhRVeo3Bry.H.nOD7iJYZPHe4uC9b4rA01s2",
+  "matKhauHash" : "$2a$10$35ygdb0m8Qh0u/S0.R47a.NnuGU9LX4N6O.bTDrpNkORW4KVcxYSq",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250094",
   "hoTen" : "Ngô Hoàng Gia Hải",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1930" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6081" },
   "tenDangNhap" : "2001250095",
-  "matKhauHash" : "$2a$10$5uuDUV8bxiACX7un1Oo25OZT.V.2exXW0revcL1qwuKOmhwhmg76K",
+  "matKhauHash" : "$2a$10$u8aC8aVCyw2cPcurLu8B7Oo7NgDVBE8sXDb6UA3i97GhwY8gk9H4W",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250095",
   "hoTen" : "Nguyễn Hoàng Lan",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1931" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6082" },
   "tenDangNhap" : "2001250096",
-  "matKhauHash" : "$2a$10$fDC0I/0UsgDFYhgfxQ14zuOtuVLQ3PEqXy19hj2Nl.4Ur1FMAp.ge",
+  "matKhauHash" : "$2a$10$V4mrFpYsZ2iK2zJ2cbdX/eV6VhxjnLnUtWK9zWQV4mrxhVkH0CK8i",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250096",
   "hoTen" : "Lâm Đình Danh",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1932" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6083" },
   "tenDangNhap" : "2001250097",
-  "matKhauHash" : "$2a$10$WhJl0iR.Ajmva0TLA/uYau3JZQHPQJBtXAVNkiLxI.Zf6auU43LYW",
+  "matKhauHash" : "$2a$10$B5Pkb0sNgEsLVuYapZbPzeiNIv5i5S8YqtI33aerp6PClDpDuObyu",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250097",
   "hoTen" : "Nguyễn Hoàng Gia Bảo",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1933" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6084" },
   "tenDangNhap" : "2001250098",
-  "matKhauHash" : "$2a$10$yr7Li0HMd6eDFipya05dYOpRweIzvDNcEJAEibZyVgHTbh93BOkFq",
+  "matKhauHash" : "$2a$10$LQb6LUAb6bdpPIh0u9jPz.EkShrxa9xdUTRBdirZCipQ9GbNCUcE6",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250098",
   "hoTen" : "Ngô Nhật Lộc",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1934" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6085" },
   "tenDangNhap" : "2001250099",
-  "matKhauHash" : "$2a$10$X0ff6ngSQ8iUpwl1Mg8eieR3t/GLsq.JFXlC5HoixiIMbZU36n3ja",
+  "matKhauHash" : "$2a$10$alafYJS9OpTmiSrB/IOnTeuflMPt7dK/fgmHqPswq/cYqKWHAs8aG",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250099",
   "hoTen" : "Tô Gia Phúc",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 },
 {
-  "_id" : { "$oid" : "6ae333208c446cfd23ec1935" },
+  "_id" : { "$oid" : "6ae33b904c4fe44e7fbf6086" },
   "tenDangNhap" : "2001250100",
-  "matKhauHash" : "$2a$10$Vh4dV9t4dEpvgjXqT6Oj8.RgjX/xdnq6wcOHDkYMtZcMedHWnSgOy",
+  "matKhauHash" : "$2a$10$3bJcwt3mjY.wG/avPd1Xuu9INldzEyyGs7NK/.Ryn/uzjLqJeV1AS",
   "vaiTro" : "SinhVien",
   "maThamChieu" : "2001250100",
   "hoTen" : "Phạm Đình Việt",
   "trangThai" : "Hoạt động",
   "lanDangNhapCuoi" : null,
-  "ngayTao" : { "$date" : "2026-10-29T11:50:47.779Z" }
+  "ngayTao" : { "$date" : "2026-10-29T12:26:49.652Z" }
 }
 ]

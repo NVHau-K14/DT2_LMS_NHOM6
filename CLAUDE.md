@@ -79,6 +79,7 @@ mongosh eduscore --quiet --eval "db.sinhvien.countDocuments()"
 | 7 | Nhập/Xuất Excel | ✅ A-11 + nút ở A-03/04/06/10, G-03/04, S-02; nhập SV (insertMany + TK, hoàn tác) và điểm (bulkWrite $set+arrayFilters, ô trống giữ nguyên) qua xem trước; `--tao-file-demo` 4 file |
 | 8 | (Tùy chọn) Hiệu năng + API/Swagger | ✅ A-12 explain có/không index (IXSCAN·EXPRESS_IXSCAN vs COLLSCAN) + BaoCaoHocLuc 20 lần; 9 endpoint `/api` dùng chung service, API ghi trả `mongoCommand`; Swagger `/swagger` (Development) |
 | 9 | Hoàn thiện, export DB, README, tài liệu | ✅ Rà soát 3 vai trò (crawl 450+ trang, Chrome headless: 0 lỗi JS, 375px không tràn); báo lỗi kết nối MongoDB; `--export` 5 JSON + dump + `khoi-phuc.ps1`; README, `thiet-ke-csdl.md`, `kich-ban-demo.md`; clone sạch OK |
+| + | Mở rộng dữ liệu mẫu (nhánh `them-mon-hoc`) | ✅ 11 GV, 46 môn (14 gốc + 19 mở rộng + 13 chưa mở), 2 160 lần học; 640 lần học gốc giống từng điểm; 200/200 PASS |
 
 ## Ghi chú kỹ thuật
 (Claude Code bổ sung các quyết định phát sinh ở đây, ngắn gọn.)
@@ -142,3 +143,6 @@ mongosh eduscore --quiet --eval "db.sinhvien.countDocuments()"
 - Pipeline không đổi, vẫn trả và lọc `maLop`. Thứ tự theo tên lớp làm lại bằng C# (OrderBy ổn định): `DiemService.DanhSachNhapDiemAsync`, `cacLop` của `LopHocPhanCuaGVAsync`, `PhanTrangTheoLop`, `GhiDanhService` xem trước, biểu đồ `GpaTheoLop` A-01, `LopHocService` `SortBy(TenLop)`.
 - `LopHocService`: tên lớp không trùng (không phân biệt hoa thường) và không trùng mã của lớp khác; mã lớp mới không trùng tên lớp khác. Bắt DuplicateKey theo tên index.
 - Excel: `ExcelService` nhận `BangTenLop` cho cột Lớp. File mẫu SV có cột "Lớp" (`TimHeader` coi "Mã lớp" của file cũ là "Lớp"); `NhapExcelService` quy đổi bằng `TimMaLop`. Tên file báo cáo/danh sách theo tenLop. API `/api/sinhvien`, `/api/baocao/hocluc`: tham số/body `maLop` nhận cả tenLop; response có thêm `tenLop` (`BaoCaoHocLucRow.TenLop` là `[BsonIgnore]`, API gán).
+- Mở rộng dữ liệu mẫu (nhánh `them-mon-hoc`): `DuLieuMau.MonHoc` (14 môn gốc) **không được sửa/thêm** – `ChonMonChoLop` chọn ngẫu nhiên theo mảng này. Môn mới ở `MonHocMoRong` (19, `ChiLop` = maLop của môn chuyên ngành) và `MonHocChuaMo` (13, chỉ danh mục, INT401/INT402 trọng số 0/0/100). GV009–GV011 thêm cuối mảng GV.
+- `Seeder.GhiDanhMonMoRong` chạy sau `TaoHocKyHe`, dùng `_rdMoRong = Random(2027)`; hàm sinh điểm nhận `Random?` (null = `_rd` 2026). Không ghi cho SV kiểm thử, GV005 không dạy môn mới. F môn mở rộng điều chỉnh vào 3–5% lần học đủ điểm, không học lại. `KiemTraRangBuoc`: 4–8 chỉ đếm lần học môn gốc + chặn SV kiểm thử có môn mới.
+- Kiểm tra dữ liệu gốc không đổi: so `database/export/sinhvien.json` trước/sau, lọc lần học 14 môn gốc, bỏ `maDK`/`_id`. File demo xlsx khác nhị phân mỗi lần tạo ("Ngày xuất") → so nội dung sheet/sharedStrings.
