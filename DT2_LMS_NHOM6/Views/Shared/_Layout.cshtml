@@ -2,7 +2,6 @@
 @inject IOptions<HocKyHienTaiOptions> HocKyHienTai
 @{
     var tieuDe = ViewData["Title"] as string ?? "EduScore";
-    var breadcrumb = ViewData["Breadcrumb"] as IEnumerable<MucBreadcrumb> ?? [];
     var hocKy = HocKyHienTai.Value;
     var vaiTro = User.VaiTro();
 }
@@ -32,23 +31,6 @@
 
             <div class="thanh-dau-tieu-de">
                 <h1 class="tieu-de-trang">@tieuDe</h1>
-                <nav aria-label="Đường dẫn trang">
-                    <ol class="breadcrumb mb-0">
-                        <li class="breadcrumb-item"><a href="@User.TrangChuTheoVaiTro()"><i class="bi bi-house-door"></i> Trang chủ</a></li>
-                        @foreach (var muc in breadcrumb)
-                        {
-                            if (muc.Url != null)
-                            {
-                                <li class="breadcrumb-item"><a href="@muc.Url">@muc.Ten</a></li>
-                            }
-                            else
-                            {
-                                <li class="breadcrumb-item">@muc.Ten</li>
-                            }
-                        }
-                        <li class="breadcrumb-item active" aria-current="page">@tieuDe</li>
-                    </ol>
-                </nav>
             </div>
 
             <div class="thanh-dau-phai">
